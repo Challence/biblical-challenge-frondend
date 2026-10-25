@@ -1,0 +1,12 @@
+.topActions {
+  margin-inline-start: auto;
+}
+
+.brand {
+  width: 100%;
+  justify-content: center;
+}
+
+.brandLogo {
+  max-width: 100%;
+}

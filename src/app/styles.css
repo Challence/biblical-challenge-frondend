@@ -1,0 +1,176 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  color-scheme: light;
+
+  --background: #f7eedc;
+  --foreground: #241711;
+  --card: #fffaf0;
+  --card-foreground: #241711;
+  --popover: #fffaf0;
+  --popover-foreground: #241711;
+  --primary: #6b4a2e;
+  --primary-foreground: #ffffff;
+  --secondary: #2e1a12;
+  --secondary-foreground: #ffffff;
+  --muted: #dcc9a8;
+  --muted-foreground: #6b4a2e;
+  --accent: #e0b84d;
+  --accent-foreground: #241711;
+  --destructive: #b9383f;
+  --destructive-foreground: #ffffff;
+  --border: #cdb992;
+  --input: #a99068;
+  --ring: #6b4a2e;
+
+  --shape-8: 0.5rem;
+  --shape-12: 0.75rem;
+  --shape-16: 1rem;
+  --shape-20: 1.25rem;
+
+  --elevation-card: 0 0.5rem 1.875rem rgb(46 26 18 / 10%);
+  --elevation-card-hover: 0 0.75rem 2rem rgb(46 26 18 / 16%);
+
+  --gradient-sidebar: linear-gradient(158deg, #6b4a2e 0%, #2e1a12 52%, #241711 100%);
+  --gradient-page: linear-gradient(135deg, #f7eedc 0%, #fffaf0 70%, #dcc9a8 100%);
+  --gradient-primary: linear-gradient(180deg, #8a643d 0%, #6b4a2e 100%);
+}
+
+.dark {
+  color-scheme: dark;
+
+  --background: #241711;
+  --foreground: #f7eedc;
+  --card: #362319;
+  --card-foreground: #fffaf0;
+  --popover: #422c1d;
+  --popover-foreground: #fffaf0;
+  --primary: #e0b84d;
+  --primary-foreground: #241711;
+  --secondary: #dcc9a8;
+  --secondary-foreground: #241711;
+  --muted: #4d3323;
+  --muted-foreground: #dcc9a8;
+  --accent: #e0b84d;
+  --accent-foreground: #241711;
+  --destructive: #ef8b89;
+  --destructive-foreground: #351313;
+  --border: #765337;
+  --input: #99724b;
+  --ring: #e0b84d;
+
+  --elevation-card: 0 0.5rem 1.875rem rgb(0 0 0 / 18%);
+  --elevation-card-hover: 0 0.75rem 2rem rgb(0 0 0 / 28%);
+
+  --gradient-sidebar: linear-gradient(158deg, #6b4a2e 0%, #2e1a12 52%, #160d09 100%);
+  --gradient-page: linear-gradient(135deg, #241711 0%, #362319 70%, #422c1d 100%);
+  --gradient-primary: linear-gradient(180deg, #f0ca62 0%, #c9962f 100%);
+}
+
+@theme inline {
+  --font-sans: 'Montserrat', Montserrat, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --radius-sm: var(--shape-8);
+  --radius-md: var(--shape-12);
+  --radius-lg: var(--shape-16);
+  --radius-xl: var(--shape-20);
+  --shadow-card: var(--elevation-card);
+  --shadow-card-hover: var(--elevation-card-hover);
+  --background-image-sidebar: var(--gradient-sidebar);
+  --background-image-page: var(--gradient-page);
+  --background-image-primary: var(--gradient-primary);
+
+  --spacing: 0.25rem;
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    height: 100%;
+    min-width: 20rem;
+    overflow: hidden;
+    font-family: var(--font-sans);
+    background-color: var(--background);
+  }
+
+  body {
+    height: 100%;
+    min-width: 20rem;
+    min-height: 0;
+    margin: 0;
+    overflow: hidden;
+    color: var(--foreground);
+    background: var(--gradient-page);
+    font-family: inherit;
+    line-height: 1.5;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: 'Merriweather', Georgia, 'Times New Roman', serif;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+  }
+
+  :focus-visible {
+    outline: 0.125rem solid var(--ring);
+    outline-offset: 0.125rem;
+  }
+
+  a,
+  button,
+  input,
+  select,
+  textarea {
+    transition: color 160ms ease, background-color 160ms ease, border-color 160ms ease,
+      box-shadow 160ms ease, transform 160ms ease;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+    }
+  }
+}
