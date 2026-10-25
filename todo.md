@@ -8,3 +8,35 @@
   - Validación: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
   - Responsable: Orquestador / subagente Web.
   - Evidencia: `src/app/features/segments/SegmentsPage.tsx`, ruta `/segmentos`; `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 tests), y `pnpm build` exitosos.
+
+- [x] **WEB-002 — Crear segmento con selección de días**
+  - Ámbito: Web
+  - Objetivo: agregar el formulario dividido de creación de segmento con información, calendario mensual y selección múltiple de días.
+  - Alcance: `src/app/features/segments`, componentes shadcn necesarios y `src/app/router.tsx`.
+  - Fuera de alcance: API, persistencia real y edición de segmentos existentes.
+  - Dependencias: WEB-001.
+  - Criterios de aceptación: `/segmentos/nuevo` renderiza el formulario; valida título, mes y días; permite navegar meses, seleccionar días, cancelar y guardar mock; funciona en escritorio y móvil.
+  - Validación: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Responsable: Orquestador / subagente Web.
+  - Evidencia: `src/app/features/segments/NewSegmentPage.tsx`, ruta `/segmentos/nuevo`, navegación desde el listado; `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 tests), y `pnpm build` exitosos.
+
+- [x] **WEB-003 — Configurar contenido por día**
+  - Ámbito: Web
+  - Objetivo: abrir un modal al seleccionar un día del calendario para configurar video y lectura.
+  - Alcance: `src/app/features/segments/NewSegmentPage.tsx`, componentes shadcn de diálogo y pruebas específicas si aplican.
+  - Fuera de alcance: API, editor rich-text externo y persistencia real.
+  - Dependencias: WEB-002.
+  - Criterios de aceptación: el día abre un modal accesible; permite editar video y lectura; cancelar descarta; guardar conserva estado local y marca el día configurado.
+  - Validación: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Responsable: Orquestador / subagente Web.
+  - Evidencia: modal integrado en `src/app/features/segments/NewSegmentPage.tsx` y `src/app/shared/components/ui/dialog.tsx`; `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 tests), y `pnpm build` exitosos.
+- [x] **WEB-025 — Configurar Husky para control de calidad Git**
+  - Ámbito: Web
+  - Objetivo: ejecutar validaciones automáticas mediante hooks de Git.
+  - Alcance: `package.json`, lockfile y `.husky/`.
+  - Fuera de alcance: cambios de UI, API, lógica de negocio y reescritura del historial.
+  - Dependencias: ninguna.
+  - Criterios de aceptación: Husky se instala reproduciblemente; `pre-commit` valida lint/typecheck; `pre-push` valida tests/build; hooks ejecutables y documentados por sus comandos.
+  - Validación: instalación, ejecución de hooks y `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Responsable: Subagente Tooling; verificación final Orquestador.
+  - Evidencia: Husky `9.1.7` instalado; hooks ejecutables `pre-commit` (lint/typecheck) y `pre-push` (test/build); validaciones completas exitosas.
