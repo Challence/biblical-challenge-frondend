@@ -1,0 +1,12 @@
+node_modules
+supabase/.temp/
+.vercel/
+dist/
+
+# Local environment files and secrets
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.secret

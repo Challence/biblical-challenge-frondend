@@ -1,0 +1,10 @@
+- [x] **WEB-001 — Listado de segmentos funcional**
+  - Ámbito: Web
+  - Objetivo: reemplazar el placeholder de segmentos por una pantalla con breadcrumb, título, buscador, tabla, acciones, crear segmento y paginación.
+  - Alcance: `src/app/features/segments`, `src/app/router.tsx`, pruebas específicas.
+  - Fuera de alcance: API, persistencia real y formularios de creación/edición.
+  - Dependencias: ninguna; datos mock locales.
+  - Criterios de aceptación: la ruta `/segmentos` renderiza el listado; búsqueda, paginación y acciones funcionan; la tabla es usable en móvil y accesible.
+  - Validación: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Responsable: Orquestador / subagente Web.
+  - Evidencia: `src/app/features/segments/SegmentsPage.tsx`, ruta `/segmentos`; `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 tests), y `pnpm build` exitosos.
