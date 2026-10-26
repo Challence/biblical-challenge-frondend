@@ -30,6 +30,28 @@
   - Validación: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
   - Responsable: Orquestador / subagente Web.
   - Evidencia: modal integrado en `src/app/features/segments/NewSegmentPage.tsx` y `src/app/shared/components/ui/dialog.tsx`; `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 tests), y `pnpm build` exitosos.
+
+- [x] **WEB-004 — Portada de segmento y banner de guía activa**
+  - Ámbito: Web
+  - Objetivo: permitir cargar una portada al crear un segmento y mostrarla en el banner de la guía activa.
+  - Alcance: `src/app/features/segments`, `src/app/features/guide`, `src/app/router.tsx` y persistencia mock/local.
+  - Fuera de alcance: API, Storage real y sincronización multiusuario.
+  - Dependencias: WEB-002.
+  - Criterios de aceptación: el formulario permite seleccionar y previsualizar portada; la guía muestra la portada del segmento activo, progreso y navegación a `/lectura-hoy`.
+  - Validación: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Responsable: Orquestador / subagente Web.
+  - Evidencia: selector y preview en `NewSegmentPage.tsx`, almacenamiento local en `segmentStorage.ts`, banner en `GuidePage.tsx`; `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 tests), y `pnpm build` exitosos.
+
+- [x] **WEB-005 — Listado de guías de lectura**
+  - Ámbito: Web
+  - Objetivo: mostrar un banner principal y un listado responsive de guías con portada, fechas, progreso y navegación.
+  - Alcance: `src/app/features/guide/**` y datos mock locales.
+  - Fuera de alcance: API y persistencia real de guías.
+  - Dependencias: WEB-004.
+  - Criterios de aceptación: la guía activa aparece destacada; las demás se muestran en tarjetas; cada tarjeta tiene información y navegación; la portada cargada del segmento activo se conserva.
+  - Validación: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Responsable: Orquestador / subagente Web.
+  - Evidencia: banner y listado implementados en `src/app/features/guide/GuidePage.tsx`; `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 tests), y `pnpm build` exitosos.
 - [x] **WEB-025 — Configurar Husky para control de calidad Git**
   - Ámbito: Web
   - Objetivo: ejecutar validaciones automáticas mediante hooks de Git.
@@ -40,3 +62,47 @@
   - Validación: instalación, ejecución de hooks y `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
   - Responsable: Subagente Tooling; verificación final Orquestador.
   - Evidencia: Husky `9.1.7` instalado; hooks ejecutables `pre-commit` (lint/typecheck) y `pre-push` (test/build); validaciones completas exitosas.
+
+- [x] **WEB-026 — Detalle móvil de lectura de hoy para visitante**
+  - Ámbito: Web
+  - Objetivo: reemplazar el placeholder de `/lectura-hoy` por el detalle público del día, conservando la estructura desktop actual y aplicando en móvil el estilo de la referencia.
+  - Alcance: `src/app/features/reading`, `src/app/router.tsx`, `todo.md`.
+  - Fuera de alcance: API, autenticación real, persistencia de progreso y cambios en el shell desktop.
+  - Dependencias: WEB-004.
+  - Criterios de aceptación: muestra portada, metadatos, video, versículo, reflexión y acción de completar; en modo no autenticado la acción de completar solicita autenticación; no hay scroll horizontal y el contenido funciona en móvil y desktop.
+  - Validación: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Responsable: Orquestador.
+  - Evidencia: `src/app/features/reading/ReadingTodayPage.tsx`, ruta `/lectura-hoy`; `pnpm lint` (sin errores, warning preexistente en `ui/button.tsx`), `pnpm typecheck`, `pnpm test` (2 tests) y `pnpm build` exitosos.
+
+- [x] **WEB-027 — Appbar y menú móvil público**
+  - Ámbito: Web
+  - Objetivo: aplicar el color primary al appbar público móvil y permitir abrir/cerrar el sidebar desde un botón hamburguesa.
+  - Alcance: `src/app/layouts/PublicLayout.tsx`, `todo.md`.
+  - Fuera de alcance: estructura desktop, rutas, autenticación y navegación inferior.
+  - Dependencias: ninguna.
+  - Criterios de aceptación: el appbar móvil usa primary; el botón tiene nombre accesible, abre un panel con los enlaces actuales, permite cerrar con botón, Escape o backdrop y devuelve el foco al activador.
+  - Validación: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Responsable: Orquestador.
+  - Evidencia: `src/app/layouts/PublicLayout.tsx`; appbar móvil primary y menú lateral accesible con cierre por botón, Escape, backdrop y restauración de foco; `pnpm lint` (sin errores, warning preexistente en `ui/button.tsx`), `pnpm typecheck`, `pnpm test` (2 tests) y `pnpm build` exitosos.
+
+- [x] **WEB-028 — Guías en columna horizontal para desktop**
+  - Ámbito: Web
+  - Objetivo: mostrar las tres guías como tarjetas apiladas de ancho completo en desktop, siguiendo la referencia visual.
+  - Alcance: `src/app/features/guide/GuidePage.tsx`, `todo.md`.
+  - Fuera de alcance: banner activo, datos, rutas, shell público y API.
+  - Dependencias: WEB-005.
+  - Criterios de aceptación: cada tarjeta muestra portada, título, fechas, progreso y navegación; las tres aparecen en una sola columna; mantiene accesibilidad y adaptación móvil.
+  - Validación: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Responsable: Orquestador.
+  - Evidencia: `src/app/features/guide/GuidePage.tsx` ya muestra las tres tarjetas en una columna horizontal con portada, progreso y navegación; `pnpm lint` (sin errores, warning preexistente en `ui/button.tsx`), `pnpm typecheck`, `pnpm test` (2 tests) y `pnpm build` exitosos.
+
+- [x] **WEB-029 — Configuración pública y acceso visual**
+  - Ámbito: Web
+  - Objetivo: reemplazar el placeholder de `/configuracion` por las secciones Notificaciones y Administración, con switch visual y formulario de inicio de sesión en modal/bottom sheet.
+  - Alcance: `src/app/features/settings`, `src/app/router.tsx`, pruebas específicas y `todo.md`.
+  - Fuera de alcance: API, autenticación real, persistencia del switch y navegación tras iniciar sesión.
+  - Dependencias: componentes UI existentes.
+  - Criterios de aceptación: ambas secciones son responsive y accesibles; el switch es solo visual; “Iniciar sesión” abre un diálogo centrado en escritorio y bottom sheet en móvil con validación local de correo y contraseña.
+  - Validación: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Responsable: Subagente Web; verificación final Orquestador.
+  - Evidencia: `src/app/features/settings/SettingsPage.tsx` y ruta `/configuracion`; switch visual no interactivo y diálogo responsive con validación local; `pnpm lint` (sin errores, warning preexistente en `ui/button.tsx`), `pnpm typecheck`, `pnpm test` (2 tests) y `pnpm build` exitosos.

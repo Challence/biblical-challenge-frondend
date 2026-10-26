@@ -12,14 +12,17 @@ const placeholderStyles = tv({
 
 const pages = {
   dashboard: ['Resumen general', 'Consulta el estado de tu contenido y tus métricas principales.'],
-  segmentos: ['Segmentos', 'Organiza y consulta los segmentos de Palabra Viva.'],
+  segmentos: ['Segmentos', 'Organiza y consulta los segmentos.'],
   usuarios: ['Usuarios', 'Gestiona las personas que colaboran en tu espacio.'],
   reportes: ['Reportes', 'Revisa los reportes y la actividad de tu organización.'],
   configuracion: ['Configuración', 'Ajusta las preferencias de tu espacio de trabajo.'],
+  guia: ['Guía de lectura', 'Encuentra una guía sencilla para acercarte a la lectura diaria.'],
+  lecturaHoy: ['Lectura de hoy', 'Tu lectura de hoy está lista para acompañarte en este momento.'],
+  configuracionPublica: ['Configuración', 'Personaliza tus preferencias de lectura.'],
 } as const
 
 export function PlaceholderPage({ segment }: { segment: keyof typeof pages }) {
   const [title, description] = pages[segment]
   const styles = placeholderStyles()
-  return <section className={styles.page()} aria-labelledby="page-title"><p className={styles.eyebrow()}>Palabra Viva</p><h1 className={styles.title()} id="page-title">{title}</h1><p className={styles.description()}>{description}</p><div className={styles.notice()}>Este espacio estará disponible próximamente.</div></section>
+  return <section className={styles.page()} aria-labelledby="page-title"><p className={styles.eyebrow()}>Palabra</p><h1 className={styles.title()} id="page-title">{title}</h1><p className={styles.description()}>{description}</p><div className={styles.notice()}>Este espacio estará disponible próximamente.</div></section>
 }

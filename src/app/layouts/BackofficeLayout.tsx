@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { NavLink, Outlet } from 'react-router-dom'
-import { IconBell, IconChartBar, IconInfoCircle, IconLayoutDashboard, IconMenu2, IconSettings, IconTags, IconUsers, IconX } from '@tabler/icons-react'
+import { NavLink, Outlet, useNavigate } from 'react-router-dom'
+import { IconBell, IconChartBar, IconChevronDown, IconInfoCircle, IconLayoutDashboard, IconLogout, IconMenu2, IconSettings, IconTags, IconUsers, IconX } from '@tabler/icons-react'
 import logo from '@/assets/desafio-biblico-logo.webp'
 import { tv } from '@/app/shared/lib/tv'
 
@@ -19,8 +19,12 @@ const layoutStyles = tv({
     topActions: 'ml-auto flex items-center gap-3',
     iconButton: 'grid place-items-center w-11 h-11 border-0 rounded-full text-[var(--foreground)] bg-transparent cursor-pointer hover:bg-[var(--muted)]',
     mobileMenu: 'hidden max-[48rem]:grid',
-    profile: 'grid gap-0.5 text-right [&>strong]:text-[.9rem] [&>span]:text-[.75rem] [&>span]:text-[var(--muted-foreground)] max-[32rem]:hidden',
-    avatar: 'grid place-items-center w-9 h-9 rounded-full text-[#35251e] bg-[#d4a84f] font-extrabold',
+     profile: 'relative',
+     profileButton: 'flex min-h-11 items-center gap-2 border-0 bg-transparent px-1 text-right cursor-pointer',
+     profileText: 'grid gap-0.5 [&>strong]:text-[.9rem] [&>span]:text-[.75rem] [&>span]:text-[var(--muted-foreground)] max-[32rem]:hidden',
+     avatar: 'grid place-items-center w-9 h-9 rounded-full text-[#35251e] bg-[#d4a84f] font-extrabold',
+     profileMenu: 'absolute right-0 top-full z-10 mt-2 min-w-44 rounded-md border border-border bg-card p-1 shadow-lg',
+     logout: 'flex min-h-11 w-full items-center gap-2 rounded-sm px-3 text-left text-sm hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
     content: 'min-h-0 overflow-y-auto overflow-x-hidden overscroll-contain p-[clamp(1.25rem,4vw,2rem)]',
     bottomBar: 'flex items-center justify-between min-h-11 px-[clamp(1rem,3vw,2.5rem)] py-2 border-t border-[#e5d7bd] text-[#806b51] bg-[#fffaf0] text-xs',
     bottomBarInfo: 'inline-flex items-center gap-2',
@@ -29,16 +33,18 @@ const layoutStyles = tv({
 })
 
 const links = [
-  { to: '/', label: 'Dashboard', Icon: IconLayoutDashboard, end: true },
-  { to: '/segmentos', label: 'Segmentos', Icon: IconTags },
-  { to: '/usuarios', label: 'Usuarios', Icon: IconUsers },
-  { to: '/reportes', label: 'Reportes', Icon: IconChartBar },
-  { to: '/configuracion', label: 'Configuración', Icon: IconSettings },
+  { to: '/admin', label: 'Dashboard', Icon: IconLayoutDashboard, end: true },
+  { to: '/admin/segmentos', label: 'Segmentos', Icon: IconTags },
+  { to: '/admin/usuarios', label: 'Usuarios', Icon: IconUsers },
+  { to: '/admin/reportes', label: 'Reportes', Icon: IconChartBar },
+  { to: '/admin/configuracion', label: 'Configuración', Icon: IconSettings },
 ]
 
 export function BackofficeLayout() {
   const styles = layoutStyles()
+  const navigate = useNavigate()
   const [open, setOpen] = useState(false)
+  const [profileOpen, setProfileOpen] = useState(false)
   const triggerRef = useRef<HTMLButtonElement>(null)
   const firstLinkRef = useRef<HTMLAnchorElement>(null)
   const close = () => { setOpen(false); requestAnimationFrame(() => triggerRef.current?.focus()) }
@@ -50,13 +56,13 @@ export function BackofficeLayout() {
     return <div className={styles.shell()} onKeyDown={onKeyDown}>
        {open && <button className={styles.overlay()} aria-label="Cerrar menú" onClick={close} />}
        <aside className={`${styles.sidebar()} ${open ? styles.sidebarOpen() : ''}`} aria-label="Navegación principal">
-         <NavLink className={styles.brand()} to="/" onClick={close} aria-label="Desafío Bíblico, ir al inicio"><img className={styles.brandLogo()} src={logo} alt="Desafío Bíblico" /></NavLink>
+          <NavLink className={styles.brand()} to="/admin" onClick={close} aria-label="Desafío Bíblico, ir al inicio"><img className={styles.brandLogo()} src={logo} alt="Desafío Bíblico" /></NavLink>
          <nav className={styles.nav()}>{links.map(({ to, label, Icon, end }, index) => <NavLink ref={index === 0 ? firstLinkRef : undefined} key={to} to={to} end={end} className={styles.navLink()} onClick={close}><Icon size={20} aria-hidden="true" /><span>{label}</span></NavLink>)}</nav>
     </aside>
        <div className={styles.main()}>
-          <header className={styles.topbar()}><button ref={triggerRef} className={`${styles.iconButton()} ${styles.mobileMenu()}`} aria-label={open ? 'Cerrar menú' : 'Abrir menú'} aria-expanded={open} onClick={toggle}>{open ? <IconX aria-hidden="true" /> : <IconMenu2 aria-hidden="true" />}</button><div className={styles.topActions()}><button className={styles.iconButton()} aria-label="Notificaciones"><IconBell aria-hidden="true" /></button><div className={styles.profile()}><strong>María López</strong><span>Administradora</span></div><span className={styles.avatar()} aria-label="Perfil de María López">ML</span></div></header>
+           <header className={styles.topbar()}><button ref={triggerRef} className={`${styles.iconButton()} ${styles.mobileMenu()}`} aria-label={open ? 'Cerrar menú' : 'Abrir menú'} aria-expanded={open} onClick={toggle}>{open ? <IconX aria-hidden="true" /> : <IconMenu2 aria-hidden="true" />}</button><div className={styles.topActions()}><button className={styles.iconButton()} aria-label="Notificaciones"><IconBell aria-hidden="true" /></button><div className={styles.profile()}><button className={styles.profileButton()} aria-label="Abrir menú de perfil" aria-expanded={profileOpen} aria-haspopup="menu" onClick={() => setProfileOpen((value) => !value)}><span className={styles.profileText()}><strong>María López</strong><span>Administradora</span></span><span className={styles.avatar()} aria-hidden="true">ML</span><IconChevronDown size={16} aria-hidden="true" /></button>{profileOpen && <div className={styles.profileMenu()} role="menu"><button className={styles.logout()} role="menuitem" onClick={() => { setProfileOpen(false); navigate('/') }}><IconLogout size={18} aria-hidden="true" />Cerrar sesión</button></div>}</div></div></header>
           <main className={styles.content()}><Outlet /></main>
-          <footer className={styles.bottomBar()}><span className={styles.bottomBarInfo()}><IconInfoCircle size={16} aria-hidden="true" /><span>Palabra Viva · Back Office</span></span><span className={styles.bottomBarStatus()}>Sesión activa</span></footer>
+          <footer className={styles.bottomBar()}><span className={styles.bottomBarInfo()}><IconInfoCircle size={16} aria-hidden="true" /><span> · Back Office</span></span><span className={styles.bottomBarStatus()}>Sesión activa</span></footer>
      </div>
   </div>
 }

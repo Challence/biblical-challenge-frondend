@@ -28,8 +28,8 @@ export function DialogContent({ className, children, ...props }: React.HTMLAttri
     return () => { document.removeEventListener('keydown', onKeyDown); previous?.focus() }
   }, [context])
   if (!context?.open) return null
-  return <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" role="presentation" onMouseDown={(e) => e.target === e.currentTarget && context.onOpenChange(false)}>
-    <div ref={ref} role="dialog" aria-modal="true" className={cn('w-full max-w-2xl rounded-lg border bg-background p-6 shadow-lg', className)} {...props}>{children}</div>
+  return <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 p-3 sm:items-center sm:p-4" role="presentation" onMouseDown={(e) => e.target === e.currentTarget && context.onOpenChange(false)}>
+    <div ref={ref} role="dialog" aria-modal="true" className={cn('relative w-full max-w-2xl rounded-lg border bg-background p-6 shadow-lg', className)} {...props}>{children}</div>
   </div>
 }
 export function DialogHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) { return <div className={cn('mb-5 space-y-1.5', className)} {...props} /> }
