@@ -217,7 +217,7 @@
   - Responsable: Subagente Web; verificación final Orquestador.
   - Evidencia: `BackofficeLayout.tsx` muestra `Versión __APP_VERSION__` al pie del sidebar desktop y móvil, con `mt-auto`, ancho mínimo y salto de línea; `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 tests) y `pnpm build` exitosos.
 
-- [ ] **WEB-042 — Mostrar versión en ambos sidebars**
+- [x] **WEB-042 — Mostrar versión en ambos sidebars**
   - Ámbito: Web
   - Objetivo: mostrar la versión compilada tanto en el sidebar público como en el sidebar del backoffice.
   - Alcance: `src/app/layouts/PublicLayout.tsx`, `src/app/layouts/BackofficeLayout.tsx`, `todo.md`.
@@ -226,4 +226,4 @@
   - Criterios de aceptación: ambos sidebars muestran `Versión <valor>`; el valor proviene de `__APP_VERSION__`; desktop y móvil no presentan overflow.
   - Validación: revisión responsive, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
   - Responsable: Subagente Web; verificación final Orquestador.
-  - Evidencia: pendiente hasta validación del orquestador.
+  - Evidencia: `PublicLayout.tsx` muestra `Versión __APP_VERSION__` en el sidebar desktop y menú móvil; `BackofficeLayout.tsx` conserva la misma versión; `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 tests) y `pnpm build` exitosos.
