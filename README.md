@@ -50,3 +50,4 @@ pnpm supabase:stop
 ### Seguridad
 
 No expongas `SECRET_KEY` ni `SERVICE_ROLE_KEY` al frontend. Estas claves son secretas y deben permanecer exclusivamente en servicios de servidor o en entornos seguros.
+# biblical-challenge-frondend
