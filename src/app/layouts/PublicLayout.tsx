@@ -3,6 +3,7 @@ import { IconBook2, IconInfoCircle, IconMenu2, IconSettings, IconSun, IconX } fr
 import { NavLink, Outlet } from 'react-router-dom'
 import logo from '@/assets/desafio-biblico-logo.webp'
 import { tv } from '@/app/shared/lib/tv'
+import { PwaInstallPrompt } from '@/app/shared/components/pwa-install/PwaInstallPrompt'
 
 const styles = tv({
   slots: {
@@ -65,5 +66,6 @@ export function PublicLayout() {
         <nav className="grid gap-2" aria-label="Navegación móvil">{links.map(({ to, label, Icon }) => <NavLink key={to} to={to} onClick={() => setMenuOpen(false)} className="flex min-h-11 items-center gap-3 rounded-lg px-3 py-2.5 text-secondary-foreground hover:bg-secondary-foreground/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"><Icon size={20} aria-hidden="true" /><span>{label}</span></NavLink>)}</nav>
       </div>
     </div>}
+    <PwaInstallPrompt />
   </div>
 }

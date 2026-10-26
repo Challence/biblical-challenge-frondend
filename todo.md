@@ -96,7 +96,7 @@
   - Responsable: Orquestador.
   - Evidencia: `src/app/features/guide/GuidePage.tsx` ya muestra las tres tarjetas en una columna horizontal con portada, progreso y navegación; `pnpm lint` (sin errores, warning preexistente en `ui/button.tsx`), `pnpm typecheck`, `pnpm test` (2 tests) y `pnpm build` exitosos.
 
-- [x] **WEB-029 — Configuración pública y acceso visual**
+ - [x] **WEB-029 — Configuración pública y acceso visual**
   - Ámbito: Web
   - Objetivo: reemplazar el placeholder de `/configuracion` por las secciones Notificaciones y Administración, con switch visual y formulario de inicio de sesión en modal/bottom sheet.
   - Alcance: `src/app/features/settings`, `src/app/router.tsx`, pruebas específicas y `todo.md`.
@@ -105,4 +105,26 @@
   - Criterios de aceptación: ambas secciones son responsive y accesibles; el switch es solo visual; “Iniciar sesión” abre un diálogo centrado en escritorio y bottom sheet en móvil con validación local de correo y contraseña.
   - Validación: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
   - Responsable: Subagente Web; verificación final Orquestador.
-  - Evidencia: `src/app/features/settings/SettingsPage.tsx` y ruta `/configuracion`; switch visual no interactivo y diálogo responsive con validación local; `pnpm lint` (sin errores, warning preexistente en `ui/button.tsx`), `pnpm typecheck`, `pnpm test` (2 tests) y `pnpm build` exitosos.
+   - Evidencia: `src/app/features/settings/SettingsPage.tsx` y ruta `/configuracion`; switch visual no interactivo y diálogo responsive con validación local; `pnpm lint` (sin errores, warning preexistente en `ui/button.tsx`), `pnpm typecheck`, `pnpm test` (2 tests) y `pnpm build` exitosos.
+
+- [x] **WEB-030 — Base PWA instalable**
+  - Ámbito: Web
+  - Objetivo: configurar manifest, iconos, metadatos móviles y service worker para instalar la plataforma como PWA standalone.
+  - Alcance: `vite.config.ts`, `index.html`, `public/`, `package.json`, lockfile y archivos PWA necesarios.
+  - Fuera de alcance: API, APK/IPA nativo y cambios visuales del backoffice.
+  - Dependencias: ninguna.
+  - Criterios de aceptación: el build genera manifest y service worker válidos; la app declara nombre, colores, iconos y modo standalone; las rutas SPA tienen fallback.
+  - Validación: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build` e inspección de artefactos.
+  - Responsable: Subagente Web; verificación final Orquestador.
+  - Evidencia: `vite-plugin-pwa` en `vite.config.ts`, metadatos en `index.html`, iconos en `public/icons/`; build genera `dist/manifest.webmanifest`, `dist/sw.js` y fallback SPA; `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 tests) y `pnpm build` exitosos.
+
+- [x] **WEB-031 — Flujo público de instalación PWA**
+  - Ámbito: Web
+  - Objetivo: sugerir la instalación al abrir el área pública y ejecutar el prompt nativo en Android o instrucciones de Añadir a pantalla de inicio en iOS.
+  - Alcance: `src/app/shared/`, `src/app/layouts/PublicLayout.tsx`, pruebas específicas y `todo.md`.
+  - Fuera de alcance: backoffice, API y generación de aplicaciones nativas.
+  - Dependencias: WEB-030.
+  - Criterios de aceptación: el aviso no aparece en `/admin`; Android usa `beforeinstallprompt` tras acción explícita; iOS muestra instrucciones reales; standalone y descarte se reconocen; foco, Escape y accesibilidad funcionan.
+  - Validación: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build` y pruebas de estados Android/iOS/standalone.
+  - Responsable: Subagente Web; verificación final Orquestador.
+  - Evidencia: hook `usePwaInstall`, componente `PwaInstallPrompt` y montaje exclusivo en `PublicLayout`; soporte para `beforeinstallprompt`, `appinstalled`, standalone, iOS y descarte de 7 días; `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 tests) y `pnpm build` exitosos.
