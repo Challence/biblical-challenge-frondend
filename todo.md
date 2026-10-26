@@ -194,3 +194,36 @@
   - Validación: ejecución del script, prueba del hook con commit de validación, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
   - Responsable: Subagente Tooling; verificación final Orquestador.
   - Evidencia: `scripts/bump-version.mjs` incrementa patch y sincroniza `package.json`/`public/version.json`; `.husky/pre-commit` ejecuta validaciones antes del bump y agrega ambos archivos; `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build` y `pnpm version:bump` exitosos.
+
+- [x] **TRV-040 — Skill independiente de observación de versiones**
+  - Ámbito: Web/API
+  - Objetivo: documentar como skill reutilizable el versionado automático por commit y la detección de nuevas versiones sin depender de PWA.
+  - Alcance: `skills/version-observer/SKILL.md`, `AGENTS.md` y referencias locales estrictamente necesarias.
+  - Fuera de alcance: cambios de runtime, configuración PWA, API y nuevas dependencias.
+  - Dependencias: WEB-038 y WEB-039 como comportamiento de referencia.
+  - Criterios de aceptación: la skill tiene frontmatter válido, estructura LLM-first, triggers claros, decisiones web/service worker opcional y queda registrada en AGENTS; no prescribe `vite-plugin-pwa`.
+  - Validación: revisión de estructura, referencias locales y búsqueda de dependencias PWA obligatorias.
+  - Responsable: Subagente Tooling; verificación final Orquestador.
+  - Evidencia: `skills/version-observer/SKILL.md` creada con frontmatter y secciones LLM-first; registra versionado SemVer y monitor web agnóstico de PWA con service worker opcional; `AGENTS.md` actualizado; revisión textual y `git diff --check` exitosos.
+
+- [x] **WEB-041 — Mostrar versión en sidebar del backoffice**
+  - Ámbito: Web
+  - Objetivo: mostrar la versión compilada actual en la parte inferior del sidebar del backoffice.
+  - Alcance: `src/app/layouts/BackofficeLayout.tsx`, `todo.md` y pruebas específicas si aplican.
+  - Fuera de alcance: sidebar público, lógica de versionado, API y cambios de navegación.
+  - Dependencias: WEB-038 y WEB-039.
+  - Criterios de aceptación: el sidebar muestra `Versión <valor>` con la versión compilada; permanece visible en desktop y en el sidebar móvil; no genera overflow horizontal.
+  - Validación: revisión responsive, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Responsable: Subagente Web; verificación final Orquestador.
+  - Evidencia: `BackofficeLayout.tsx` muestra `Versión __APP_VERSION__` al pie del sidebar desktop y móvil, con `mt-auto`, ancho mínimo y salto de línea; `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 tests) y `pnpm build` exitosos.
+
+- [ ] **WEB-042 — Mostrar versión en ambos sidebars**
+  - Ámbito: Web
+  - Objetivo: mostrar la versión compilada tanto en el sidebar público como en el sidebar del backoffice.
+  - Alcance: `src/app/layouts/PublicLayout.tsx`, `src/app/layouts/BackofficeLayout.tsx`, `todo.md`.
+  - Fuera de alcance: lógica de versionado, API, navegación y diseño de páginas.
+  - Dependencias: WEB-041.
+  - Criterios de aceptación: ambos sidebars muestran `Versión <valor>`; el valor proviene de `__APP_VERSION__`; desktop y móvil no presentan overflow.
+  - Validación: revisión responsive, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Responsable: Subagente Web; verificación final Orquestador.
+  - Evidencia: pendiente hasta validación del orquestador.

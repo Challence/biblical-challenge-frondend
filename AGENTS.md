@@ -5,6 +5,7 @@ Estas reglas son obligatorias para toda actividad del proyecto.
 ## Skills de proyecto
 
 - `./.agents/skills/react-behavior-implementation/SKILL.md`: comportamiento e implementación general para proyectos React.
+- `./skills/version-observer/SKILL.md`: versionado SemVer por commit y observación no bloqueante de versiones desplegadas.
 
 ## 1. Precedencia, ámbitos y planificación
 

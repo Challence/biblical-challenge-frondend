@@ -4,6 +4,8 @@ import { IconBell, IconChartBar, IconChevronDown, IconInfoCircle, IconLayoutDash
 import logo from '@/assets/desafio-biblico-logo.webp'
 import { tv } from '@/app/shared/lib/tv'
 
+declare const __APP_VERSION__: string
+
 const layoutStyles = tv({
   slots: {
     shell: 'h-[100dvh] min-h-0 grid grid-cols-[16.5rem_minmax(0,1fr)] overflow-hidden bg-[#fffaf0] max-[48rem]:grid-cols-[minmax(0,1fr)]',
@@ -13,6 +15,7 @@ const layoutStyles = tv({
     brand: 'flex w-full items-center justify-center min-h-12 mb-10 text-[#fff8e9] no-underline',
     brandLogo: 'block w-full max-w-56 max-h-[4.5rem] h-auto object-contain object-center',
     nav: 'grid gap-2 min-h-0 overflow-y-auto overscroll-contain',
+    sidebarVersion: 'mt-auto min-w-0 pt-8 text-center text-xs text-white break-words',
     navLink: 'flex items-center gap-3 min-h-11 px-3 py-2.5 border-l-[3px] border-l-transparent rounded-lg text-[#e8d5aa] no-underline hover:text-[#fff8e9] hover:bg-[#49352a] aria-[current=page]:border-l-[#d4a84f] aria-[current=page]:text-[#fff8e9] aria-[current=page]:bg-[#49352a]',
     main: 'min-w-0 min-h-0 grid grid-rows-[auto_minmax(0,1fr)_auto]',
     topbar: 'flex items-center justify-between min-h-[4.5rem] px-[clamp(1rem,3vw,2.5rem)] py-3 border-b border-[#e5d7bd] bg-[#fffaf0] max-[32rem]:min-h-16',
@@ -58,7 +61,8 @@ export function BackofficeLayout() {
        <aside className={`${styles.sidebar()} ${open ? styles.sidebarOpen() : ''}`} aria-label="Navegación principal">
           <NavLink className={styles.brand()} to="/admin" onClick={close} aria-label="Desafío Bíblico, ir al inicio"><img className={styles.brandLogo()} src={logo} alt="Desafío Bíblico" /></NavLink>
          <nav className={styles.nav()}>{links.map(({ to, label, Icon, end }, index) => <NavLink ref={index === 0 ? firstLinkRef : undefined} key={to} to={to} end={end} className={styles.navLink()} onClick={close}><Icon size={20} aria-hidden="true" /><span>{label}</span></NavLink>)}</nav>
-    </aside>
+          <div className={styles.sidebarVersion()}>Versión {__APP_VERSION__}</div>
+      </aside>
        <div className={styles.main()}>
            <header className={styles.topbar()}><button ref={triggerRef} className={`${styles.iconButton()} ${styles.mobileMenu()}`} aria-label={open ? 'Cerrar menú' : 'Abrir menú'} aria-expanded={open} onClick={toggle}>{open ? <IconX aria-hidden="true" /> : <IconMenu2 aria-hidden="true" />}</button><div className={styles.topActions()}><button className={styles.iconButton()} aria-label="Notificaciones"><IconBell aria-hidden="true" /></button><div className={styles.profile()}><button className={styles.profileButton()} aria-label="Abrir menú de perfil" aria-expanded={profileOpen} aria-haspopup="menu" onClick={() => setProfileOpen((value) => !value)}><span className={styles.profileText()}><strong>María López</strong><span>Administradora</span></span><span className={styles.avatar()} aria-hidden="true">ML</span><IconChevronDown size={16} aria-hidden="true" /></button>{profileOpen && <div className={styles.profileMenu()} role="menu"><button className={styles.logout()} role="menuitem" onClick={() => { setProfileOpen(false); navigate('/') }}><IconLogout size={18} aria-hidden="true" />Cerrar sesión</button></div>}</div></div></header>
           <main className={styles.content()}><Outlet /></main>
