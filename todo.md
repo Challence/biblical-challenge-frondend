@@ -128,3 +128,14 @@
   - Validación: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build` y pruebas de estados Android/iOS/standalone.
   - Responsable: Subagente Web; verificación final Orquestador.
   - Evidencia: hook `usePwaInstall`, componente `PwaInstallPrompt` y montaje exclusivo en `PublicLayout`; soporte para `beforeinstallprompt`, `appinstalled`, standalone, iOS y descarte de 7 días; `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 tests) y `pnpm build` exitosos.
+
+- [x] **WEB-034 — Renombrar la aplicación a Desafío Bíblico**
+  - Ámbito: Web
+  - Objetivo: reemplazar el nombre Jacobito por Desafío Bíblico en la identidad visible y técnica del proyecto.
+  - Alcance: `package.json`, `index.html`, `vite.config.ts`, `README.md`, almacenamiento local y lockfile si aplica.
+  - Fuera de alcance: cambios de funcionalidades, API y diseño visual ajeno al nombre.
+  - Dependencias: ninguna.
+  - Criterios de aceptación: la identidad visible y técnica usa Desafío Bíblico/desafio-biblico; la referencia legacy de almacenamiento se conserva únicamente para migración y usuarios existentes mantienen sus portadas.
+  - Validación: búsqueda global, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Responsable: Subagente Web; verificación final Orquestador.
+  - Evidencia: nombre actualizado en `package.json`, `README.md`, `index.html` y `vite.config.ts`; migración de `jacobito:active-segment-cover` implementada en `segmentStorage.ts`; `supabase/config.toml` conserva el `project_id` técnico existente para no romper el proyecto Supabase; `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 tests) y `pnpm build` exitosos.

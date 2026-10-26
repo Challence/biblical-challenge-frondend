@@ -1,4 +1,4 @@
-# Jacobito
+# Desafío Bíblico
 
 ## Stack local de Supabase
 
