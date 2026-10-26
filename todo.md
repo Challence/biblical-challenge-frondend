@@ -139,3 +139,14 @@
   - Validación: búsqueda global, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
   - Responsable: Subagente Web; verificación final Orquestador.
   - Evidencia: nombre actualizado en `package.json`, `README.md`, `index.html` y `vite.config.ts`; migración de `jacobito:active-segment-cover` implementada en `segmentStorage.ts`; `supabase/config.toml` conserva el `project_id` técnico existente para no romper el proyecto Supabase; `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 tests) y `pnpm build` exitosos.
+
+- [x] **WEB-035 — Favicon y meta description**
+  - Ámbito: Web
+  - Objetivo: añadir favicon de marca y descripción SEO básica al documento HTML.
+  - Alcance: `public/`, `index.html`, `todo.md`.
+  - Fuera de alcance: cambios de contenido, rutas, API y rediseño de marca.
+  - Dependencias: ninguna.
+  - Criterios de aceptación: el favicon se sirve desde una ruta pública válida y `index.html` incluye una meta description descriptiva en español.
+  - Validación: inspección del asset, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Responsable: Subagente Web; verificación final Orquestador.
+  - Evidencia: favicon PNG 64×64 en `public/favicon.png`, enlace incorporado en `index.html` y meta description en español; `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 tests) y `pnpm build` exitosos.
