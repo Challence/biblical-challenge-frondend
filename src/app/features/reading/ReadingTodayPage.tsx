@@ -3,14 +3,16 @@ import { IconArrowLeft, IconCheck, IconDots, IconPlayerPlay, IconShare, IconX } 
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Button } from '@/app/shared/components/ui/button'
 import { Card } from '@/app/shared/components/ui/card'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/app/shared/components/ui/dialog'
 import { DEFAULT_SEGMENT_COVER, getActiveSegmentCover } from '@/app/features/segments/segmentStorage'
+import { getCompletedDays, saveCompletedDay } from './readingProgressStorage'
 
 export function ReadingTodayPage() {
   const navigate = useNavigate()
   const location = useLocation()
-  const selectedDay = (location.state as { day?: number } | null)?.day ?? 6
-  const [authDialogOpen, setAuthDialogOpen] = useState(false)
+  const readingState = location.state as { day?: number; guide?: string } | null
+  const selectedDay = readingState?.day ?? 6
+  const guide = readingState?.guide ?? 'Lecturas de febrero'
+  const [completed, setCompleted] = useState(() => getCompletedDays(guide).includes(selectedDay))
   const [videoOpen, setVideoOpen] = useState(false)
   const cover = getActiveSegmentCover() || DEFAULT_SEGMENT_COVER
 
@@ -40,12 +42,11 @@ export function ReadingTodayPage() {
           <h2 id="reading-section-title" className="font-[Merriweather,Georgia,serif] text-2xl font-bold sm:text-3xl">Lectura</h2>
           <blockquote className="mt-4 border-b border-border pb-4 font-[Merriweather,Georgia,serif] text-lg leading-relaxed sm:text-xl">«Porque por gracia ustedes han sido salvos mediante la fe, y esto no procede de ustedes, sino que es el regalo de Dios; no por obras, para que nadie se jacte».<footer className="mt-2 font-sans text-sm text-muted-foreground">Efesios 2:8–9 (NVI)</footer></blockquote>
           <div className="mt-4 space-y-3 text-[0.98rem] leading-relaxed text-foreground/85"><p>La fe nos invita a caminar cada día confiando en que Dios tiene un plan mejor, aun cuando no podemos ver todo el camino. No se trata de tener todas las respuestas, sino de dar el siguiente paso con la seguridad de que Él va con nosotros.</p><p>Hoy podemos elegir caminar en fe. La fe transforma nuestra manera de ver las pruebas, porque nos recuerda que Dios sigue obrando, incluso cuando todo parece incierto.</p></div>
-          <Button type="button" onClick={() => setAuthDialogOpen(true)} className="mt-5 min-h-11 w-full gap-2 rounded-xl bg-secondary text-accent hover:bg-secondary/90"><IconCheck size={20} className="rounded-full bg-accent p-0.5 text-secondary" aria-hidden="true" />Marcar como completado</Button>
+          <Button type="button" onClick={() => { saveCompletedDay(guide, selectedDay); setCompleted(true) }} disabled={completed} aria-live="polite" className="mt-5 min-h-11 w-full gap-2 rounded-xl bg-secondary text-accent hover:bg-secondary/90 disabled:opacity-100"><IconCheck size={20} className="rounded-full bg-accent p-0.5 text-secondary" aria-hidden="true" />{completed ? 'Lectura completada' : 'Marcar como completado'}</Button>
         </section>
       </article>
       {videoOpen && <Card className="mx-auto mt-4 w-full max-w-5xl p-3 sm:p-5" aria-label="Video de la lectura"><div className="mb-3 flex items-center justify-between"><h2 className="font-[Merriweather,Georgia,serif] text-lg font-bold">Video de la lectura</h2><Button type="button" variant="ghost" size="icon" onClick={() => setVideoOpen(false)} aria-label="Cerrar video"><IconX size={20} aria-hidden="true" /></Button></div><div className="aspect-video overflow-hidden rounded-[var(--shape-12)] bg-black"><iframe className="h-full w-full" src="https://www.youtube.com/embed/MC8BqGu9B8A" title="Caminando en fe — video de la lectura" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen loading="lazy" /></div></Card>}
 
-      <Dialog open={authDialogOpen} onOpenChange={setAuthDialogOpen}><DialogContent aria-labelledby="auth-title" aria-describedby="auth-description"><DialogHeader><DialogTitle id="auth-title">Inicia sesión para guardar tu progreso</DialogTitle><DialogDescription id="auth-description">La lectura está disponible sin autenticación. Para marcarla como completada necesitas iniciar sesión o crear una cuenta.</DialogDescription></DialogHeader><div className="flex justify-end gap-2"><Button type="button" variant="outline" onClick={() => setAuthDialogOpen(false)}>Ahora no</Button><Button type="button" onClick={() => setAuthDialogOpen(false)}>Entendido</Button></div></DialogContent></Dialog>
     </>
   )
 }

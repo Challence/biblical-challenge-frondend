@@ -150,3 +150,25 @@
   - Validación: inspección del asset, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
   - Responsable: Subagente Web; verificación final Orquestador.
   - Evidencia: favicon PNG 64×64 en `public/favicon.png`, enlace incorporado en `index.html` y meta description en español; `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 tests) y `pnpm build` exitosos.
+
+- [x] **WEB-036 — Acceso directo al administrador**
+  - Ámbito: Web
+  - Objetivo: redirigir a `/admin` al pulsar “Iniciar sesión” desde Configuración, sin solicitar ni validar credenciales.
+  - Alcance: `src/app/features/settings/SettingsPage.tsx`, pruebas específicas y `todo.md`.
+  - Fuera de alcance: autenticación real, API, permisos y cambios del backoffice.
+  - Dependencias: ninguna.
+  - Criterios de aceptación: el botón navega directamente a `/admin`; no se renderiza modal ni se validan correo/contraseña.
+  - Validación: prueba de navegación, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Responsable: Subagente Web; verificación final Orquestador.
+  - Evidencia: `SettingsPage.tsx` usa `useNavigate` para navegar directamente a `/admin`; se eliminaron modal, formulario, estados y validaciones; `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 tests) y `pnpm build` exitosos.
+
+- [x] **WEB-037 — Persistir seguimiento de lectura local**
+  - Ámbito: Web
+  - Objetivo: guardar localmente los días completados y restaurar el progreso al volver a la aplicación.
+  - Alcance: `src/app/features/reading`, `src/app/features/guide`, pruebas específicas y `todo.md`.
+  - Fuera de alcance: API, autenticación, sincronización entre dispositivos y cambios del backoffice.
+  - Dependencias: ninguna.
+  - Criterios de aceptación: completar una lectura guarda guía/día en localStorage; el progreso se restaura al recargar; la guía y su calendario reflejan días completados sin duplicarlos.
+  - Validación: pruebas de almacenamiento y flujo, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Responsable: Subagente Web; verificación final Orquestador.
+  - Evidencia: `readingProgressStorage.ts` persiste días por guía en `desafio-biblico:reading-progress`; `ReadingTodayPage` guarda y confirma la lectura; `GuidePage` restaura progreso y calendario; `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 tests) y `pnpm build` exitosos.

@@ -6,6 +6,7 @@ import { Card } from '@/app/shared/components/ui/card'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/app/shared/components/ui/dialog'
 import { SEGMENT_COVER_KEY } from '@/app/features/segments/segmentStorage'
 import guideCover from '@temp/image.png'
+import { getCompletedDays } from '@/app/features/reading/readingProgressStorage'
 
 const readGuideCover = (from: string, to: string) =>
   `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 360'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='${encodeURIComponent(from)}'/%3E%3Cstop offset='1' stop-color='${encodeURIComponent(to)}'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='640' height='360' fill='url(%23g)'/%3E%3Ccircle cx='520' cy='80' r='100' fill='%23ffffff' fill-opacity='.18'/%3E%3Cpath d='M0 290 Q180 210 360 300 T640 250 V360 H0Z' fill='%23ffffff' fill-opacity='.12'/%3E%3C/svg%3E`
@@ -19,6 +20,7 @@ const guides = [
 export function GuidePage() {
   const navigate = useNavigate()
   const [selectedGuide, setSelectedGuide] = useState<(typeof guides)[number] | null>(null)
+  const [completedByGuide] = useState(() => Object.fromEntries(guides.map((guide) => [guide.title, getCompletedDays(guide.title, guide.progress)])))
   const activeCover = typeof window !== 'undefined' ? window.localStorage.getItem(SEGMENT_COVER_KEY) || guideCover : guideCover
   const goToReading = () => navigate('/lectura-hoy')
   const openGuide = (guide: (typeof guides)[number]) => setSelectedGuide(guide)
@@ -54,7 +56,9 @@ export function GuidePage() {
         <h2 id="other-guides-title" className="font-[Merriweather,Georgia,serif] text-xl tracking-[-0.03em] sm:text-2xl">Guías de lectura</h2>
         <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
           {guides.map((guide) => {
-            const percentage = Math.round((guide.progress / guide.total) * 100)
+            const completedDays = completedByGuide[guide.title] ?? []
+            const progress = completedDays.length
+            const percentage = Math.round((progress / guide.total) * 100)
             return (
               <Card key={guide.title} className="group h-full overflow-hidden transition-shadow hover:shadow-[var(--elevation-card-hover)]">
                 <button type="button" onClick={() => openGuide(guide)} className="flex min-h-24 w-full min-w-0 items-center gap-3 p-3 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset sm:gap-4 sm:p-4" aria-label={`Ver días de ${guide.title}`}>
@@ -62,8 +66,8 @@ export function GuidePage() {
                   <div className="min-w-0 flex-1">
                     <h3 className="truncate font-[Merriweather,Georgia,serif] text-base font-bold sm:text-lg">{guide.title}</h3>
                     <p className="mt-0.5 truncate text-xs text-muted-foreground sm:text-sm">{guide.dates}</p>
-                    <div className="mt-2 flex min-w-0 items-center justify-between gap-2 text-xs font-bold sm:text-sm"><span className="truncate">{guide.progress} de {guide.total} días</span><span className="shrink-0">{percentage}%</span></div>
-                    <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-muted" role="progressbar" aria-label={`Progreso de ${guide.title}`} aria-valuemin={0} aria-valuemax={guide.total} aria-valuenow={guide.progress}><div className="h-full rounded-full bg-primary" style={{ width: `${percentage}%` }} /></div>
+                    <div className="mt-2 flex min-w-0 items-center justify-between gap-2 text-xs font-bold sm:text-sm"><span className="truncate">{progress} de {guide.total} días</span><span className="shrink-0">{percentage}%</span></div>
+                    <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-muted" role="progressbar" aria-label={`Progreso de ${guide.title}`} aria-valuemin={0} aria-valuemax={guide.total} aria-valuenow={progress}><div className="h-full rounded-full bg-primary" style={{ width: `${percentage}%` }} /></div>
                   </div>
                   <IconArrowRight className="shrink-0 text-primary" size={20} aria-hidden="true" />
                 </button>
@@ -86,8 +90,8 @@ export function GuidePage() {
             <div className="grid grid-cols-7 gap-2" aria-label={`Días de ${selectedGuide.title}`}>
               {Array.from({ length: selectedGuide.total }, (_, index) => {
                 const day = index + 1
-                const completed = day <= selectedGuide.progress
-                const current = day === selectedGuide.progress + 1
+                const completed = (completedByGuide[selectedGuide.title] ?? []).includes(day)
+                const current = !completed && day === (completedByGuide[selectedGuide.title]?.length ?? 0) + 1
                 return <button key={day} type="button" data-autofocus={day === selectedGuide.progress + 1 ? true : undefined} onClick={() => selectDay(day)} className={`flex aspect-square min-h-11 flex-col items-center justify-center rounded-[var(--shape-8)] border text-sm font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${completed ? 'border-primary bg-primary text-primary-foreground hover:bg-primary/90' : current ? 'border-primary bg-primary/10 text-primary ring-2 ring-primary/20' : 'border-border bg-muted/40 text-muted-foreground hover:bg-muted'}`} aria-label={`Día ${day}${completed ? ', completado' : current ? ', día actual' : ', pendiente'}`}>
                   {completed ? <IconCheck size={17} aria-hidden="true" /> : day}
                   {current && <span className="sr-only">Día actual</span>}
