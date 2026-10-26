@@ -172,3 +172,25 @@
   - Validación: pruebas de almacenamiento y flujo, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
   - Responsable: Subagente Web; verificación final Orquestador.
   - Evidencia: `readingProgressStorage.ts` persiste días por guía en `desafio-biblico:reading-progress`; `ReadingTodayPage` guarda y confirma la lectura; `GuidePage` restaura progreso y calendario; `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 tests) y `pnpm build` exitosos.
+
+- [x] **WEB-038 — Detectar y aplicar nuevas versiones**
+  - Ámbito: Web
+  - Objetivo: consultar la versión desplegada cada cinco minutos y recargar la aplicación después de advertir al usuario cuando exista una versión diferente.
+  - Alcance: `public/version.json`, configuración de versión del build, monitor global, diálogo de actualización, pruebas y `todo.md`.
+  - Fuera de alcance: API, despliegue automático, migraciones de datos y actualización de aplicaciones nativas.
+  - Dependencias: soporte PWA de WEB-030.
+  - Criterios de aceptación: `version.json` expone la versión de `package.json`; la aplicación consulta al iniciar y cada cinco minutos sin caché; una versión diferente muestra un diálogo no descartable con cuenta regresiva de cinco segundos; al terminar actualiza el service worker y recarga; un error de red no interrumpe la plataforma.
+  - Validación: pruebas de misma versión, versión diferente, error de red, cuenta regresiva y recarga; `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Responsable: Subagente Web; verificación final Orquestador.
+  - Evidencia: `public/version.json`, versión compilada inyectada desde `package.json`, `VersionMonitor` montado globalmente en `App.tsx`; consulta inicial y cada 5 minutos sin caché, diálogo no descartable con cuenta regresiva de 5 segundos, actualización segura del service worker y recarga; `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 tests) y `pnpm build` exitosos.
+
+- [x] **WEB-039 — Incrementar versión automáticamente en cada commit**
+  - Ámbito: Web
+  - Objetivo: hacer que Husky incremente la versión patch y sincronice `package.json` con `public/version.json` antes de cada commit.
+  - Alcance: `.husky/pre-commit`, `scripts/bump-version.mjs`, `package.json`, `public/version.json`, `todo.md`.
+  - Fuera de alcance: versionado major/minor, publicación automática y cambios de API.
+  - Dependencias: Husky WEB-025 y monitor de versiones WEB-038.
+  - Criterios de aceptación: el hook valida lint/typecheck, incrementa SemVer patch, actualiza ambos archivos y los agrega al commit; el script falla con versiones inválidas y no genera hooks recursivos.
+  - Validación: ejecución del script, prueba del hook con commit de validación, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Responsable: Subagente Tooling; verificación final Orquestador.
+  - Evidencia: `scripts/bump-version.mjs` incrementa patch y sincroniza `package.json`/`public/version.json`; `.husky/pre-commit` ejecuta validaciones antes del bump y agrega ambos archivos; `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build` y `pnpm version:bump` exitosos.
