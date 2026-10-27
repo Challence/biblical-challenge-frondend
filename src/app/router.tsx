@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router-dom'
+import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { BackofficeLayout } from './layouts/BackofficeLayout'
 import { PublicLayout } from './layouts/PublicLayout'
 import { DashboardPage } from './features/dashboard/DashboardPage'
@@ -14,7 +14,7 @@ export const router = createBrowserRouter([
   {
     element: <PublicLayout />,
     children: [
-      { path: '/', element: <GuidePage /> },
+      { path: '/', element: <Navigate to="/guia" replace /> },
       { path: '/guia', element: <GuidePage /> },
       { path: '/lectura-hoy', element: <ReadingTodayPage /> },
       { path: '/configuracion', element: <SettingsPage /> },

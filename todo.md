@@ -293,3 +293,91 @@
   - Validación: Playwright con clic sobre el reproductor y fallback, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
   - Responsable: Subagente Web; verificación final Orquestador.
   - Evidencia: iframe, contenedor y Dialog fullscreen tienen interacción explícita de puntero; backdrop no captura eventos internos; se eliminó lazy loading; typecheck, tests y build exitosos. La validación Playwright del servidor se vio limitada por el proceso Vite de desarrollo que terminó por timeout del entorno.
+
+- [x] **WEB-047 — Gesto de snap en carrusel público**
+  - Ámbito: Web
+  - Objetivo: permitir arrastrar horizontalmente el carrusel y ajustarlo a la diapositiva siguiente o anterior al finalizar el gesto.
+  - Alcance: `src/app/features/guide/GuidePage.tsx`, pruebas específicas y `todo.md`.
+  - Fuera de alcance: API, persistencia, nuevos componentes globales y dependencias.
+  - Dependencias: WEB-045.
+  - Criterios de aceptación: swipe horizontal con ratón/táctil/lápiz cambia una sola diapositiva; gesto corto o vertical conserva la actual; el enlace no se activa accidentalmente; se mantienen accesibilidad, controles, autoplay y responsive.
+  - Validación: prueba específica del gesto, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Responsable: Subagente Web; verificación final Orquestador.
+  - Evidencia: `GuidePage.tsx` incorpora pointer events, umbral horizontal de 48 px, `touchAction: pan-y`, pausa durante interacción y supresión del clic posterior al arrastre; `pnpm lint` (sin errores, warning preexistente en `ui/button.tsx`), `pnpm typecheck`, `pnpm test` (2 pruebas) y `pnpm build` exitosos. No se añadieron pruebas específicas porque la infraestructura actual no expone una prueba montable para `GuidePage`.
+
+- [x] **WEB-048 — Ocultar controles laterales del carrusel en móvil**
+  - Ámbito: Web
+  - Objetivo: ocultar los botones anterior y siguiente en viewport móvil sin afectar el gesto, indicadores ni controles de escritorio.
+  - Alcance: `src/app/features/guide/GuidePage.tsx`, `todo.md`.
+  - Fuera de alcance: cambios en el gesto de snap, contenido, API y navegación.
+  - Dependencias: WEB-047.
+  - Criterios de aceptación: los botones laterales no se renderizan visualmente en móvil; aparecen desde `sm`; los indicadores y swipe siguen funcionando; no hay cambios en escritorio.
+  - Validación: revisión responsive, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Responsable: Subagente Web; verificación final Orquestador.
+  - Evidencia: botones anterior/siguiente usan `hidden sm:grid`, por lo que se ocultan en móvil y aparecen desde `sm`; gesto, indicadores y escritorio se conservan. `pnpm lint` (sin errores, warning preexistente en `ui/button.tsx`), `pnpm typecheck`, `pnpm test` (2 pruebas) y `pnpm build` exitosos.
+
+- [x] **WEB-049 — Retirar gradiente superpuesto del carrusel**
+  - Ámbito: Web
+  - Objetivo: eliminar la capa de gradiente que se muestra encima del carrusel.
+  - Alcance: `src/app/features/guide/GuidePage.tsx`, `todo.md`.
+  - Fuera de alcance: fondos de las diapositivas, texto, controles, gesto, indicadores y responsive.
+  - Dependencias: WEB-048.
+  - Criterios de aceptación: el carrusel ya no renderiza la capa de gradiente superpuesta; el resto de contenido e interacciones se conserva.
+  - Validación: revisión visual, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Responsable: Subagente Web; verificación final Orquestador.
+  - Evidencia: eliminada la capa `bg-gradient-to-r` del carrusel; se conservaron fondos, texto, controles, gesto, indicadores y responsive. `pnpm lint` (sin errores, warning preexistente en `ui/button.tsx`), `pnpm typecheck`, `pnpm test` (2 pruebas) y `pnpm build` exitosos.
+
+- [x] **WEB-050 — Sustituir botón de acción del carrusel por enlace**
+  - Ámbito: Web
+  - Objetivo: conservar el `href` de la acción del carrusel eliminando el componente `Button` que lo envuelve.
+  - Alcance: `src/app/features/guide/GuidePage.tsx`, `todo.md`.
+  - Fuera de alcance: ruta del enlace, contenido del carrusel, controles, gesto, indicadores y responsive.
+  - Dependencias: WEB-049.
+  - Criterios de aceptación: la acción renderiza directamente un enlace con el `href` existente; no queda un botón contenedor ni cambia la navegación.
+  - Validación: inspección del JSX, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Responsable: Subagente Web; verificación final Orquestador.
+  - Evidencia: la acción del carrusel conserva directamente el enlace `<a href={slide.href}>` y se eliminó su wrapper `Button`; navegación y etiqueta accesible conservadas. `pnpm lint` (sin errores, warning preexistente en `ui/button.tsx`), `pnpm typecheck`, `pnpm test` (2 pruebas) y `pnpm build` exitosos.
+
+- [x] **WEB-051 — Hacer clicable la tarjeta del carrusel**
+  - Ámbito: Web
+  - Objetivo: navegar al `href` de la diapositiva actual al hacer clic en el área de la tarjeta del carrusel.
+  - Alcance: `src/app/features/guide/GuidePage.tsx`, `todo.md`.
+  - Fuera de alcance: cambiar hrefs, controles laterales, indicadores y gesto de snap.
+  - Dependencias: WEB-050.
+  - Criterios de aceptación: el área de contenido/fondo abre el href de la diapositiva actual; controles e indicadores siguen ejecutando sus acciones sin navegar; el enlace conserva nombre accesible y no hay enlaces anidados.
+  - Validación: inspección de interacción, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Responsable: Subagente Web; verificación final Orquestador.
+  - Evidencia: la diapositiva actual usa un enlace overlay con `href={slide.href}`; controles e indicadores quedan sobre él con `z-[1]`, sin enlaces anidados, y el gesto de snap se conserva. `pnpm lint` (sin errores, warning preexistente en `ui/button.tsx`), `pnpm typecheck`, `pnpm test` (2 pruebas) y `pnpm build` exitosos.
+
+- [x] **WEB-052 — Retirar icono de acción del carrusel**
+  - Ámbito: Web
+  - Objetivo: eliminar el icono de flecha decorativo que aparece dentro de la tarjeta del carrusel.
+  - Alcance: `src/app/features/guide/GuidePage.tsx`, `todo.md`.
+  - Fuera de alcance: enlace de la tarjeta, controles de navegación, indicadores e iconos del listado de guías.
+  - Dependencias: WEB-051.
+  - Criterios de aceptación: el icono de flecha del carrusel deja de renderizarse; la tarjeta continúa navegando mediante su href y el resto de iconos permanece sin cambios.
+  - Validación: inspección visual/JSX, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Responsable: Subagente Web; verificación final Orquestador.
+  - Evidencia: eliminado el `IconArrowRight` decorativo del carrusel; se conservaron el enlace overlay, controles, indicadores y el icono de las tarjetas inferiores. `pnpm lint` (sin errores, warning preexistente en `ui/button.tsx`), `pnpm typecheck`, `pnpm test` (2 pruebas) y `pnpm build` exitosos.
+
+- [x] **WEB-053 — Reducir altura del anuncio del carrusel**
+  - Ámbito: Web
+  - Objetivo: reducir aproximadamente 10 px la altura visual del anuncio del carrusel.
+  - Alcance: `src/app/features/guide/GuidePage.tsx`, `todo.md`.
+  - Fuera de alcance: contenido, enlaces, controles, gesto, indicadores y demás secciones de la página.
+  - Dependencias: WEB-052.
+  - Criterios de aceptación: la altura pasa de 220 a 210 px en móvil y de 240 a 230 px desde `sm`, sin desbordes ni cambios funcionales.
+  - Validación: revisión responsive, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Responsable: Subagente Web; verificación final Orquestador.
+  - Evidencia: altura ajustada de `220px/240px` a `210px/230px` en móvil/escritorio; sin cambios funcionales ni desbordes detectados. `pnpm lint` (sin errores, warning preexistente en `ui/button.tsx`), `pnpm typecheck`, `pnpm test` (2 pruebas) y `pnpm build` exitosos.
+
+- [x] **WEB-054 — Ajustar separación y ruta inicial pública**
+  - Ámbito: Web
+  - Objetivo: reducir el espacio entre el carrusel y “Guías de lectura”, y hacer que la ruta raíz redirija a `/guia`.
+  - Alcance: `src/app/features/guide/GuidePage.tsx`, `src/app/router.tsx`, `todo.md`.
+  - Fuera de alcance: contenido del carrusel, autenticación real, rutas de administración y navegación interna.
+  - Dependencias: WEB-053.
+  - Criterios de aceptación: la separación visual usa un margen menor que el actual; `/` redirige a `/guia`; `/guia` renderiza la guía pública sin cambios funcionales.
+  - Validación: revisión responsive y de navegación, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Responsable: Subagente Web; verificación final Orquestador.
+  - Evidencia: separación reducida de `mt-10` a `mt-6`; la ruta `/` redirige con `<Navigate replace />` a `/guia`, que conserva `GuidePage`. `pnpm lint` (sin errores, warning preexistente en `ui/button.tsx`), `pnpm typecheck`, `pnpm test` (2 pruebas) y `pnpm build` exitosos.

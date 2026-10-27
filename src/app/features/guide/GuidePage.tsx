@@ -1,5 +1,5 @@
 import { IconArrowRight, IconCheck, IconChevronLeft, IconChevronRight, IconX } from '@tabler/icons-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/app/shared/components/ui/button'
 import { Card } from '@/app/shared/components/ui/card'
@@ -43,6 +43,8 @@ export function GuidePage() {
   const [selectedGuide, setSelectedGuide] = useState<(typeof guides)[number] | null>(null)
   const [activeSlide, setActiveSlide] = useState(0)
   const [carouselPaused, setCarouselPaused] = useState(false)
+  const carouselGesture = useRef<{ pointerId: number; startX: number; startY: number; dragging: boolean } | null>(null)
+  const suppressSlideClick = useRef(false)
   const [completedByGuide] = useState(() => Object.fromEntries(guides.map((guide) => [guide.title, getCompletedDays(guide.title, guide.progress)])))
   const openGuide = (guide: (typeof guides)[number]) => setSelectedGuide(guide)
   const selectDay = (day: number) => {
@@ -64,44 +66,74 @@ export function GuidePage() {
   const moveSlide = (direction: -1 | 1) => {
     showSlide((activeSlide + direction + carouselSlides.length) % carouselSlides.length)
   }
+  const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    carouselGesture.current = { pointerId: event.pointerId, startX: event.clientX, startY: event.clientY, dragging: false }
+    event.currentTarget.setPointerCapture(event.pointerId)
+    setCarouselPaused(true)
+  }
+  const handlePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    const gesture = carouselGesture.current
+    if (!gesture || gesture.pointerId !== event.pointerId) return
+    const deltaX = event.clientX - gesture.startX
+    const deltaY = event.clientY - gesture.startY
+    if (!gesture.dragging && Math.abs(deltaX) > 12 && Math.abs(deltaX) > Math.abs(deltaY)) gesture.dragging = true
+    if (gesture.dragging) event.preventDefault()
+  }
+  const handlePointerEnd = (event: React.PointerEvent<HTMLDivElement>) => {
+    const gesture = carouselGesture.current
+    if (!gesture || gesture.pointerId !== event.pointerId) return
+    const deltaX = event.clientX - gesture.startX
+    if (gesture.dragging && Math.abs(deltaX) >= 48) {
+      setActiveSlide((current) => (current + (deltaX < 0 ? 1 : -1) + carouselSlides.length) % carouselSlides.length)
+      suppressSlideClick.current = true
+    }
+    carouselGesture.current = null
+  }
 
   return (
-    <main className="mx-auto w-full max-w-6xl px-1 pb-6 sm:px-8 sm:pb-10" aria-labelledby="guide-title">
+    <main className="mx-auto w-full max-w-6xl px-1 pb-6 sm:px-8 sm:pb-5" aria-labelledby="guide-title">
       <section className="mx-auto max-w-5xl overflow-hidden rounded-[var(--shape-20)] border border-border shadow-[var(--elevation-card)]" aria-roledescription="carrusel" aria-label="Anuncios y lecturas destacadas">
         <div
-          className="relative h-[220px] bg-cover bg-center sm:h-[240px]"
-          style={{ backgroundImage: slide.bg.startsWith('linear-gradient') ? slide.bg : `url(${slide.bg})` }}
+          className="relative h-[210px] bg-cover bg-center sm:h-[230px]"
           onMouseEnter={() => setCarouselPaused(true)}
           onMouseLeave={() => setCarouselPaused(false)}
           onFocus={() => setCarouselPaused(true)}
           onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node)) setCarouselPaused(false) }}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerEnd}
+          onPointerCancel={handlePointerEnd}
+          onClick={(event) => {
+            if (suppressSlideClick.current) {
+              event.preventDefault()
+              suppressSlideClick.current = false
+            }
+          }}
+          style={{ backgroundImage: slide.bg.startsWith('linear-gradient') ? slide.bg : `url(${slide.bg})`, touchAction: 'pan-y' }}
         >
-            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/30" aria-hidden="true" />
-            <button type="button" onClick={() => moveSlide(-1)} className="absolute left-3 top-1/2 z-[1] grid size-10 -translate-y-1/2 place-items-center rounded-full bg-black/45 text-white transition-colors hover:bg-black/65 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white sm:left-4" aria-label="Anuncio anterior">
+            <button type="button" onClick={() => moveSlide(-1)} className="absolute left-3 top-1/2 z-[1] hidden size-10 -translate-y-1/2 place-items-center rounded-full bg-black/45 text-white transition-colors hover:bg-black/65 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white sm:left-4 sm:grid" aria-label="Anuncio anterior">
               <IconChevronLeft size={20} aria-hidden="true" />
             </button>
-            <button type="button" onClick={() => moveSlide(1)} className="absolute right-3 top-1/2 z-[1] grid size-10 -translate-y-1/2 place-items-center rounded-full bg-black/45 text-white transition-colors hover:bg-black/65 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white sm:right-4" aria-label="Siguiente anuncio">
+            <button type="button" onClick={() => moveSlide(1)} className="absolute right-3 top-1/2 z-[1] hidden size-10 -translate-y-1/2 place-items-center rounded-full bg-black/45 text-white transition-colors hover:bg-black/65 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white sm:right-4 sm:grid" aria-label="Siguiente anuncio">
               <IconChevronRight size={20} aria-hidden="true" />
             </button>
-            <div className="flex h-full items-center justify-between gap-4 p-4 text-white sm:p-6">
+            <a href={slide.href} aria-label={`Abrir: ${slide.title}`} className="absolute inset-0 z-0 rounded-[inherit] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset">
+              <span className="sr-only">Abrir: {slide.title}</span>
+            </a>
+            <div className="pointer-events-none relative z-0 flex h-full items-center justify-between gap-4 p-4 text-white sm:p-6">
               <div className="min-w-0 max-w-2xl">
                 <p className="mb-1 text-xs font-bold uppercase tracking-[0.14em] !text-white" style={{ color: '#fff' }}>{'label' in slide ? slide.label : 'Destacado'}</p>
                 <h1 id="guide-title" className="font-[Merriweather,Georgia,serif] text-2xl tracking-[-0.04em] !text-white sm:text-4xl" style={{ color: '#fff' }}>{slide.title}</h1>
                 <p className="mt-1 max-w-lg text-sm !text-white" style={{ color: '#fff' }}>{slide.description}</p>
               </div>
-              <Button asChild className="size-11 shrink-0 rounded-full p-0 sm:size-12">
-                <a href={slide.href} aria-label={`Abrir: ${slide.title}`}>
-                  <IconArrowRight size={18} aria-hidden="true" />
-                </a>
-              </Button>
             </div>
-            <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-2" role="tablist" aria-label="Seleccionar anuncio">
+            <div className="absolute bottom-3 left-0 right-0 z-[1] flex justify-center gap-2" role="tablist" aria-label="Seleccionar anuncio">
               {carouselSlides.map((item, index) => <button key={item.title} type="button" role="tab" aria-selected={index === activeSlide} aria-label={`Ir a ${item.title}`} onClick={() => showSlide(index)} className="min-h-11 min-w-11 p-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"><span className={`block h-2 w-2 rounded-full ${index === activeSlide ? 'bg-white' : 'bg-white/50'}`} /></button>)}
             </div>
         </div>
       </section>
 
-      <section className="mt-10" aria-labelledby="other-guides-title">
+      <section className="mt-6" aria-labelledby="other-guides-title">
         <h2 id="other-guides-title" className="font-[Merriweather,Georgia,serif] text-xl tracking-[-0.03em] sm:text-2xl">Guías de lectura</h2>
         <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
           {guides.map((guide) => {
