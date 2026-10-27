@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
-import { IconBell, IconChartBar, IconChevronDown, IconInfoCircle, IconLayoutDashboard, IconLogout, IconMenu2, IconSettings, IconTags, IconUsers, IconX } from '@tabler/icons-react'
+import { IconBell, IconChartBar, IconChevronDown, IconInfoCircle, IconLayoutDashboard, IconLogout, IconMenu2, IconSettings, IconTags, IconUsers, IconX, IconSpeakerphone } from '@tabler/icons-react'
 import logo from '@/assets/desafio-biblico-logo.webp'
 import { tv } from '@/app/shared/lib/tv'
 
@@ -38,6 +38,7 @@ const layoutStyles = tv({
 const links = [
   { to: '/admin', label: 'Dashboard', Icon: IconLayoutDashboard, end: true },
   { to: '/admin/segmentos', label: 'Segmentos', Icon: IconTags },
+  { to: '/admin/anuncios', label: 'Anuncios', Icon: IconSpeakerphone },
   { to: '/admin/usuarios', label: 'Usuarios', Icon: IconUsers },
   { to: '/admin/reportes', label: 'Reportes', Icon: IconChartBar },
   { to: '/admin/configuracion', label: 'Configuración', Icon: IconSettings },

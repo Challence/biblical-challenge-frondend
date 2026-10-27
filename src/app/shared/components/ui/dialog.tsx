@@ -8,7 +8,7 @@ export function Dialog({ open, onOpenChange, children }: { open: boolean; onOpen
   return <DialogContext.Provider value={{ open, onOpenChange }}>{children}</DialogContext.Provider>
 }
 
-export function DialogContent({ className, children, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+export function DialogContent({ className, variant = 'default', children, ...props }: React.HTMLAttributes<HTMLDivElement> & { variant?: 'default' | 'fullscreen' }) {
   const context = React.useContext(DialogContext)
   const ref = React.useRef<HTMLDivElement>(null)
   React.useEffect(() => {
@@ -28,8 +28,9 @@ export function DialogContent({ className, children, ...props }: React.HTMLAttri
     return () => { document.removeEventListener('keydown', onKeyDown); previous?.focus() }
   }, [context])
   if (!context?.open) return null
-  return <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 p-3 sm:items-center sm:p-4" role="presentation" onMouseDown={(e) => e.target === e.currentTarget && context.onOpenChange(false)}>
-    <div ref={ref} role="dialog" aria-modal="true" className={cn('relative w-full max-w-2xl rounded-lg border bg-background p-6 shadow-lg', className)} {...props}>{children}</div>
+  const fullscreen = variant === 'fullscreen'
+  return <div className={cn('fixed inset-0 z-50 flex pointer-events-auto items-end justify-center bg-black/50 p-3 sm:items-center sm:p-4', fullscreen && 'overflow-hidden p-0')} role="presentation" onMouseDown={(e) => e.target === e.currentTarget && context.onOpenChange(false)}>
+    <div ref={ref} role="dialog" aria-modal="true" onMouseDown={(e) => e.stopPropagation()} className={cn('relative z-10 w-full max-w-2xl rounded-lg border bg-background p-6 shadow-lg pointer-events-auto', fullscreen && 'h-[100dvh] max-h-[100dvh] w-[100vw] max-w-none rounded-none border-0 bg-black p-[env(safe-area-inset-top)_env(safe-area-inset-right)_env(safe-area-inset-bottom)_env(safe-area-inset-left)] shadow-none', className)} {...props}>{children}</div>
   </div>
 }
 export function DialogHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) { return <div className={cn('mb-5 space-y-1.5', className)} {...props} /> }

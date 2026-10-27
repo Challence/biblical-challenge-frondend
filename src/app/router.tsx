@@ -8,6 +8,7 @@ import { PlaceholderPage } from './features/placeholder/PlaceholderPage'
 import { GuidePage } from './features/guide/GuidePage'
 import { ReadingTodayPage } from './features/reading/ReadingTodayPage'
 import { SettingsPage } from './features/settings/SettingsPage'
+import { AnnouncementsPage } from './features/announcements/AnnouncementsPage'
 
 export const router = createBrowserRouter([
   {
@@ -25,6 +26,7 @@ export const router = createBrowserRouter([
       { path: '/admin', element: <DashboardPage /> },
       { path: '/admin/segmentos', element: <SegmentsPage /> },
       { path: '/admin/segmentos/nuevo', element: <NewSegmentPage /> },
+      { path: '/admin/anuncios', element: <AnnouncementsPage /> },
       { path: '/admin/usuarios', element: <PlaceholderPage segment="usuarios" /> },
       { path: '/admin/reportes', element: <PlaceholderPage segment="reportes" /> },
       { path: '/admin/configuracion', element: <PlaceholderPage segment="configuracion" /> },

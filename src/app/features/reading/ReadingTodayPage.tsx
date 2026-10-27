@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { IconArrowLeft, IconCheck, IconDots, IconPlayerPlay, IconShare, IconX } from '@tabler/icons-react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Button } from '@/app/shared/components/ui/button'
-import { Card } from '@/app/shared/components/ui/card'
+import { Dialog, DialogContent, DialogTitle } from '@/app/shared/components/ui/dialog'
 import { DEFAULT_SEGMENT_COVER, getActiveSegmentCover } from '@/app/features/segments/segmentStorage'
 import { getCompletedDays, saveCompletedDay } from './readingProgressStorage'
 
@@ -34,7 +34,7 @@ export function ReadingTodayPage() {
           <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">Guía de lectura</p>
           <div className="mt-1 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div><h1 id="reading-title" className="font-[Merriweather,Georgia,serif] text-[clamp(1.8rem,4vw,2.6rem)] font-bold leading-tight tracking-[-0.04em]">Caminando en fe</h1><p className="mt-1 text-sm text-muted-foreground">Mayo 9 · Día {selectedDay} de 17</p></div>
-            <Button type="button" onClick={() => setVideoOpen((open) => !open)} aria-expanded={videoOpen} className="w-full gap-2 bg-accent text-accent-foreground hover:bg-accent/90 sm:w-auto"><IconPlayerPlay size={18} fill="currentColor" aria-hidden="true" />{videoOpen ? 'Ocultar video' : 'Ver video'}</Button>
+            <Button type="button" onClick={() => setVideoOpen(true)} aria-expanded={videoOpen} className="w-full gap-2 bg-accent text-accent-foreground hover:bg-accent/90 sm:w-auto"><IconPlayerPlay size={18} fill="currentColor" aria-hidden="true" />Ver video</Button>
           </div>
         </div>
 
@@ -45,7 +45,18 @@ export function ReadingTodayPage() {
           <Button type="button" onClick={() => { saveCompletedDay(guide, selectedDay); setCompleted(true) }} disabled={completed} aria-live="polite" className="mt-5 min-h-11 w-full gap-2 rounded-xl bg-secondary text-accent hover:bg-secondary/90 disabled:opacity-100"><IconCheck size={20} className="rounded-full bg-accent p-0.5 text-secondary" aria-hidden="true" />{completed ? 'Lectura completada' : 'Marcar como completado'}</Button>
         </section>
       </article>
-      {videoOpen && <Card className="mx-auto mt-4 w-full max-w-5xl p-3 sm:p-5" aria-label="Video de la lectura"><div className="mb-3 flex items-center justify-between"><h2 className="font-[Merriweather,Georgia,serif] text-lg font-bold">Video de la lectura</h2><Button type="button" variant="ghost" size="icon" onClick={() => setVideoOpen(false)} aria-label="Cerrar video"><IconX size={20} aria-hidden="true" /></Button></div><div className="aspect-video overflow-hidden rounded-[var(--shape-12)] bg-black"><iframe className="h-full w-full" src="https://www.youtube.com/embed/MC8BqGu9B8A" title="Caminando en fe — video de la lectura" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen loading="lazy" /></div></Card>}
+      <Dialog open={videoOpen} onOpenChange={setVideoOpen}>
+         <DialogContent variant="fullscreen" aria-labelledby="reading-video-title" className="relative z-10 flex pointer-events-auto flex-col items-center justify-center gap-4">
+          <div className="flex w-full items-center justify-between text-white">
+            <DialogTitle id="reading-video-title" className="text-lg text-white">Video de la lectura</DialogTitle>
+            <Button type="button" variant="ghost" size="icon" data-autofocus onClick={() => setVideoOpen(false)} aria-label="Cerrar video" className="text-white hover:bg-white/15 hover:text-white"><IconX size={22} aria-hidden="true" /></Button>
+          </div>
+           <div className="relative z-10 aspect-video max-h-[calc(100dvh-8rem)] w-full max-w-5xl overflow-hidden rounded-[var(--shape-12)] bg-black pointer-events-auto">
+              {videoOpen && <iframe className="relative z-10 h-full w-full pointer-events-auto" src={`https://www.youtube.com/embed/MC8BqGu9B8A?playsinline=1&rel=0&origin=${encodeURIComponent(window.location.origin)}`} title="Caminando en fe — video de la lectura" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen referrerPolicy="strict-origin-when-cross-origin" />}
+           </div>
+           <a href="https://www.youtube.com/watch?v=MC8BqGu9B8A" target="_blank" rel="noopener noreferrer" className="text-sm text-white underline underline-offset-4">Ver en YouTube</a>
+         </DialogContent>
+      </Dialog>
 
     </>
   )

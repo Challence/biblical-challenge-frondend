@@ -227,3 +227,69 @@
   - Validación: revisión responsive, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
   - Responsable: Subagente Web; verificación final Orquestador.
   - Evidencia: `PublicLayout.tsx` muestra `Versión __APP_VERSION__` en el sidebar desktop y menú móvil; `BackofficeLayout.tsx` conserva la misma versión; `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 tests) y `pnpm build` exitosos.
+
+- [x] **WEB-043 — Evitar caché de version.json**
+  - Ámbito: Web
+  - Objetivo: impedir que navegador, CDN o service worker sirvan una versión cacheada de `version.json`.
+  - Alcance: `vite.config.ts`, configuración de headers de despliegue y monitor de versión.
+  - Fuera de alcance: otros assets, API y cambios del flujo de actualización.
+  - Dependencias: WEB-038.
+  - Criterios de aceptación: `version.json` no se precachea; la consulta usa `no-store` y cache busting; el despliegue declara `Cache-Control: no-store` para ese archivo.
+  - Validación: inspección del service worker, headers configurados, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Responsable: Subagente Web; verificación final Orquestador.
+  - Evidencia: `version.json` excluido del precache Workbox, monitor conserva `no-store` y cache busting, y `vercel.json` declara `Cache-Control: no-store, no-cache, must-revalidate, max-age=0`; `dist/sw.js` no contiene `version.json`; validaciones lint/typecheck/test/build exitosas.
+
+- [x] **WEB-044 — Video de lectura en modal fullscreen**
+  - Ámbito: Web
+  - Objetivo: mostrar el video del detalle de lectura dentro de un modal que ocupe toda la pantalla.
+  - Alcance: `src/app/features/reading/ReadingTodayPage.tsx`, `src/app/shared/components/ui/dialog.tsx`, pruebas específicas.
+  - Fuera de alcance: URL del video, contenido de lectura, API y navegación.
+  - Dependencias: componentes Dialog existentes.
+  - Criterios de aceptación: el video se abre en modal fullscreen responsive; conserva proporción; cierra con botón/Escape/backdrop; desmonta el iframe al cerrar y restaura foco al activador.
+  - Validación: teclado, foco, móvil/escritorio, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Responsable: Subagente Web; verificación final Orquestador.
+   - Evidencia: `Dialog` incorpora variante `fullscreen`; `ReadingTodayPage` abre el iframe en modal 100dvh/100vw con cierre accesible, desmontaje al cerrar y restauración de foco; validaciones lint/typecheck/test/build exitosas.
+
+- [x] **WEB-045 — Carrusel público de lectura y anuncios**
+  - Ámbito: Web
+  - Objetivo: convertir el banner de la guía en un carrusel con lectura de hoy y anuncios mock configurados por imagen, título, descripción y enlace.
+  - Alcance: `src/app/features/guide`, pruebas específicas y `todo.md`.
+  - Fuera de alcance: API, Supabase, persistencia y administración de anuncios.
+  - Dependencias: WEB-005.
+  - Criterios de aceptación: carrusel con avance manual y automático, pausa al interactuar, indicadores, navegación accesible, responsive y respeto de `prefers-reduced-motion`.
+  - Validación: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Responsable: Subagente Web; verificación final Orquestador.
+  - Evidencia: carrusel en `src/app/features/guide/GuidePage.tsx` con lectura de hoy, anuncios mock, autoavance pausado, flechas, indicadores, navegación accesible y `prefers-reduced-motion`; `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 tests) y `pnpm build` exitosos.
+
+- [x] **WEB-046 — Maquetación administrativa de anuncios**
+  - Ámbito: Web
+  - Objetivo: añadir una pantalla de backoffice con listado y formulario visual CRUD de anuncios mock.
+  - Alcance: `src/app/features/announcements`, `src/app/layouts/BackofficeLayout.tsx`, `src/app/router.tsx`, pruebas específicas y `todo.md`.
+  - Fuera de alcance: API, Supabase, persistencia, autenticación real y sincronización con el carrusel público.
+  - Dependencias: ninguna; puede ejecutarse en paralelo con WEB-045 por no compartir archivos de implementación.
+  - Criterios de aceptación: ruta `/admin/anuncios`, listado responsive y controles visuales para crear, editar, eliminar, activar/desactivar y ordenar; formulario con imagen, título, descripción y href obligatorios.
+  - Validación: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Responsable: Subagente Web; verificación final Orquestador.
+  - Evidencia: `src/app/features/announcements/AnnouncementsPage.tsx`, ruta `/admin/anuncios` y enlace en `BackofficeLayout.tsx`; CRUD y ordenamiento mock en memoria, formulario accesible y aviso de no persistencia; `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 tests) y `pnpm build` exitosos.
+
+- [x] **WEB-045 — Corregir reproducción del video embebido**
+  - Ámbito: Web
+  - Objetivo: evitar errores de reproducción del embed de YouTube y ofrecer una alternativa externa accesible.
+  - Alcance: `src/app/features/reading/ReadingTodayPage.tsx`, pruebas específicas y `todo.md`.
+  - Fuera de alcance: cambio de proveedor, video, API y rediseño del modal fullscreen.
+  - Dependencias: WEB-044.
+  - Criterios de aceptación: el iframe envía una política de referrer/origen compatible; usa parámetros inline; mantiene fullscreen; existe enlace “Ver en YouTube”; el modal conserva cierre y foco.
+  - Validación: Playwright con viewport móvil/escritorio y reproducción, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Responsable: Subagente Web; verificación final Orquestador.
+  - Evidencia: iframe configurado con `playsinline=1`, `rel=0`, `origin`, `referrerPolicy="strict-origin-when-cross-origin"` y enlace alternativo a YouTube; Playwright confirmó modal, iframe, parámetros y fallback sin errores de consola; `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 tests) y `pnpm build` exitosos.
+
+- [x] **WEB-046 — Habilitar clics en reproductor fullscreen**
+  - Ámbito: Web
+  - Objetivo: garantizar que los clics del usuario lleguen al iframe de YouTube dentro del modal fullscreen.
+  - Alcance: `src/app/features/reading/ReadingTodayPage.tsx`, `src/app/shared/components/ui/dialog.tsx`, `todo.md`.
+  - Fuera de alcance: cambio de proveedor, video, autenticación y API.
+  - Dependencias: WEB-045.
+  - Criterios de aceptación: iframe y contenedor permiten interacción de puntero; backdrop no intercepta eventos internos; el reproductor no usa lazy loading dentro del fullscreen; cierre sigue funcionando.
+  - Validación: Playwright con clic sobre el reproductor y fallback, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Responsable: Subagente Web; verificación final Orquestador.
+  - Evidencia: iframe, contenedor y Dialog fullscreen tienen interacción explícita de puntero; backdrop no captura eventos internos; se eliminó lazy loading; typecheck, tests y build exitosos. La validación Playwright del servidor se vio limitada por el proceso Vite de desarrollo que terminó por timeout del entorno.

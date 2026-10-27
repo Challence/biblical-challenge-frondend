@@ -1,10 +1,9 @@
-import { IconArrowRight, IconCheck, IconX } from '@tabler/icons-react'
-import { useState } from 'react'
+import { IconArrowRight, IconCheck, IconChevronLeft, IconChevronRight, IconX } from '@tabler/icons-react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/app/shared/components/ui/button'
 import { Card } from '@/app/shared/components/ui/card'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/app/shared/components/ui/dialog'
-import { SEGMENT_COVER_KEY } from '@/app/features/segments/segmentStorage'
 import guideCover from '@temp/image.png'
 import { getCompletedDays } from '@/app/features/reading/readingProgressStorage'
 
@@ -17,38 +16,88 @@ const guides = [
   { title: 'Lecturas de primavera', dates: '1 de abril — 30 de abril', progress: 0, total: 30, cover: readGuideCover('#526b3d', '#c7c56e') },
 ]
 
+const carouselSlides = [
+  {
+    bg: guideCover,
+    title: 'Lecturas de enero',
+    description: 'Continúa tu lectura diaria y vuelve a donde lo dejaste.',
+    href: '/lectura-hoy',
+    label: 'Guía actual',
+  },
+  {
+    bg: 'linear-gradient(120deg, #2f4858, #86bbbd)',
+    title: 'Una pausa para leer',
+    description: 'Encuentra un momento tranquilo para tu lectura de hoy.',
+    href: '/lectura-hoy',
+  },
+  {
+    bg: 'linear-gradient(120deg, #6c3f54, #d69b67)',
+    title: 'Tu lectura, a tu ritmo',
+    description: 'Cada día es una nueva oportunidad para volver al texto.',
+    href: '/lectura-hoy',
+  },
+] as const
+
 export function GuidePage() {
   const navigate = useNavigate()
   const [selectedGuide, setSelectedGuide] = useState<(typeof guides)[number] | null>(null)
+  const [activeSlide, setActiveSlide] = useState(0)
+  const [carouselPaused, setCarouselPaused] = useState(false)
   const [completedByGuide] = useState(() => Object.fromEntries(guides.map((guide) => [guide.title, getCompletedDays(guide.title, guide.progress)])))
-  const activeCover = typeof window !== 'undefined' ? window.localStorage.getItem(SEGMENT_COVER_KEY) || guideCover : guideCover
-  const goToReading = () => navigate('/lectura-hoy')
   const openGuide = (guide: (typeof guides)[number]) => setSelectedGuide(guide)
   const selectDay = (day: number) => {
     setSelectedGuide(null)
     navigate('/lectura-hoy', { state: { day, guide: selectedGuide?.title } })
   }
 
+  useEffect(() => {
+    if (carouselPaused || carouselSlides.length < 2 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined
+    const timer = window.setInterval(() => setActiveSlide((current) => (current + 1) % carouselSlides.length), 6000)
+    return () => window.clearInterval(timer)
+  }, [carouselPaused])
+
+  const slide = carouselSlides[activeSlide]
+  const showSlide = (index: number) => {
+    setActiveSlide(index)
+    setCarouselPaused(true)
+  }
+  const moveSlide = (direction: -1 | 1) => {
+    showSlide((activeSlide + direction + carouselSlides.length) % carouselSlides.length)
+  }
+
   return (
     <main className="mx-auto w-full max-w-6xl px-1 pb-6 sm:px-8 sm:pb-10" aria-labelledby="guide-title">
-      <section className="mx-auto max-w-5xl overflow-hidden rounded-[var(--shape-20)] border border-border shadow-[var(--elevation-card)]">
+      <section className="mx-auto max-w-5xl overflow-hidden rounded-[var(--shape-20)] border border-border shadow-[var(--elevation-card)]" aria-roledescription="carrusel" aria-label="Anuncios y lecturas destacadas">
         <div
-          role="img"
-          aria-label="Portada de la guía activa"
-            className="relative h-[180px] bg-cover bg-center sm:h-[195px]"
-          style={{ backgroundImage: `url(${activeCover})` }}
+          className="relative h-[220px] bg-cover bg-center sm:h-[240px]"
+          style={{ backgroundImage: slide.bg.startsWith('linear-gradient') ? slide.bg : `url(${slide.bg})` }}
+          onMouseEnter={() => setCarouselPaused(true)}
+          onMouseLeave={() => setCarouselPaused(false)}
+          onFocus={() => setCarouselPaused(true)}
+          onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node)) setCarouselPaused(false) }}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/30" aria-hidden="true" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/30" aria-hidden="true" />
+            <button type="button" onClick={() => moveSlide(-1)} className="absolute left-3 top-1/2 z-[1] grid size-10 -translate-y-1/2 place-items-center rounded-full bg-black/45 text-white transition-colors hover:bg-black/65 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white sm:left-4" aria-label="Anuncio anterior">
+              <IconChevronLeft size={20} aria-hidden="true" />
+            </button>
+            <button type="button" onClick={() => moveSlide(1)} className="absolute right-3 top-1/2 z-[1] grid size-10 -translate-y-1/2 place-items-center rounded-full bg-black/45 text-white transition-colors hover:bg-black/65 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white sm:right-4" aria-label="Siguiente anuncio">
+              <IconChevronRight size={20} aria-hidden="true" />
+            </button>
             <div className="flex h-full items-center justify-between gap-4 p-4 text-white sm:p-6">
               <div className="min-w-0 max-w-2xl">
-                <p className="mb-1 text-xs font-bold uppercase tracking-[0.14em] !text-white" style={{ color: '#fff' }}>Guía actual</p>
-                <h1 id="guide-title" className="font-[Merriweather,Georgia,serif] text-2xl tracking-[-0.04em] !text-white sm:text-4xl" style={{ color: '#fff' }}>Lecturas de enero</h1>
-                <p className="mt-1 text-sm !text-white" style={{ color: '#fff' }}>1 de enero — 31 de enero</p>
-             </div>
-             <Button onClick={goToReading} aria-label="Continuar lectura" className="size-11 shrink-0 rounded-full p-0 sm:size-12">
-                 <IconArrowRight size={18} aria-hidden="true" />
-               </Button>
-           </div>
+                <p className="mb-1 text-xs font-bold uppercase tracking-[0.14em] !text-white" style={{ color: '#fff' }}>{'label' in slide ? slide.label : 'Destacado'}</p>
+                <h1 id="guide-title" className="font-[Merriweather,Georgia,serif] text-2xl tracking-[-0.04em] !text-white sm:text-4xl" style={{ color: '#fff' }}>{slide.title}</h1>
+                <p className="mt-1 max-w-lg text-sm !text-white" style={{ color: '#fff' }}>{slide.description}</p>
+              </div>
+              <Button asChild className="size-11 shrink-0 rounded-full p-0 sm:size-12">
+                <a href={slide.href} aria-label={`Abrir: ${slide.title}`}>
+                  <IconArrowRight size={18} aria-hidden="true" />
+                </a>
+              </Button>
+            </div>
+            <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-2" role="tablist" aria-label="Seleccionar anuncio">
+              {carouselSlides.map((item, index) => <button key={item.title} type="button" role="tab" aria-selected={index === activeSlide} aria-label={`Ir a ${item.title}`} onClick={() => showSlide(index)} className="min-h-11 min-w-11 p-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"><span className={`block h-2 w-2 rounded-full ${index === activeSlide ? 'bg-white' : 'bg-white/50'}`} /></button>)}
+            </div>
         </div>
       </section>
 
