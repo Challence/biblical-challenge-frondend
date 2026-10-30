@@ -6,6 +6,7 @@ import { Input } from '@/app/shared/components/ui/input'
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/app/shared/components/ui/pagination'
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/app/shared/components/ui/table'
 import { tv } from '@/app/shared/lib/tv'
+import { AdminBreadcrumb } from '@/app/shared/components/navigation/AdminBreadcrumb'
 
 const styles = tv({
   slots: {
@@ -52,7 +53,7 @@ export function SegmentsPage() {
   const s = styles()
 
   return <section className={s.page()} aria-labelledby="segments-title">
-    <nav className={s.breadcrumb()} aria-label="Migas de pan"><span>Inicio</span><span aria-hidden="true">/</span><strong className="text-foreground">Segmentos</strong></nav>
+     <AdminBreadcrumb items={[{ label: 'Inicio', to: '/admin' }]} currentLabel="Segmentos" backTo="/admin" />
      <div className={s.heading()}><div><h1 className={s.title()} id="segments-title">Segmentos</h1><p className={s.subtitle()}>Organiza y consulta los segmentos de tu contenido.</p></div><Button onClick={() => navigate('/admin/segmentos/nuevo')}><IconPlus size={18} aria-hidden="true" />Crear segmento</Button></div>
     <div className={s.toolbar()}><label className={s.search()}><IconSearch size={19} aria-hidden="true" /><span className="sr-only">Buscar segmentos</span><Input className={s.input()} value={query} onChange={(event) => { setQuery(event.target.value); setPage(1) }} placeholder="Buscar segmentos..." type="search" /></label></div>
     <div className={s.tableWrap()}><Table><TableCaption className="sr-only">Lista de segmentos</TableCaption><TableHeader><TableRow><TableHead>Título</TableHead><TableHead>Mes</TableHead><TableHead>Días definidos</TableHead><TableHead>Estatus</TableHead><TableHead>Acciones</TableHead></TableRow></TableHeader><TableBody>{visible.map((segment) => <TableRow key={segment.title}><TableCell className="font-bold">{segment.title}</TableCell><TableCell>{segment.month}</TableCell><TableCell>{segment.days}</TableCell><TableCell><span className={s.status()}>{segment.status}</span></TableCell><TableCell><div className={s.actions()}><Button variant="ghost" size="icon" className={s.action()} aria-label={`Ver ${segment.title}`}><IconEye size={18} aria-hidden="true" /></Button><Button variant="ghost" size="icon" className={s.action()} aria-label={`Editar ${segment.title}`}><IconEdit size={18} aria-hidden="true" /></Button><Button variant="ghost" size="icon" className={`${s.action()} hover:text-destructive`} aria-label={`Eliminar ${segment.title}`}><IconTrash size={18} aria-hidden="true" /></Button></div></TableCell></TableRow>)}</TableBody></Table>{visible.length === 0 && <p className="p-8 text-center text-muted-foreground">No encontramos segmentos con esa búsqueda.</p>}</div>
