@@ -1,383 +1,263 @@
-- [x] **WEB-001 — Listado de segmentos funcional**
+- [x] **WEB-056 — Jerarquía de meses y recursos visuales**
   - Ámbito: Web
-  - Objetivo: reemplazar el placeholder de segmentos por una pantalla con breadcrumb, título, buscador, tabla, acciones, crear segmento y paginación.
-  - Alcance: `src/app/features/segments`, `src/app/router.tsx`, pruebas específicas.
-  - Fuera de alcance: API, persistencia real y formularios de creación/edición.
-  - Dependencias: ninguna; datos mock locales.
-  - Criterios de aceptación: la ruta `/segmentos` renderiza el listado; búsqueda, paginación y acciones funcionan; la tabla es usable en móvil y accesible.
-  - Validación: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
-  - Responsable: Orquestador / subagente Web.
-  - Evidencia: `src/app/features/segments/SegmentsPage.tsx`, ruta `/segmentos`; `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 tests), y `pnpm build` exitosos.
-
-- [x] **WEB-002 — Crear segmento con selección de días**
-  - Ámbito: Web
-  - Objetivo: agregar el formulario dividido de creación de segmento con información, calendario mensual y selección múltiple de días.
-  - Alcance: `src/app/features/segments`, componentes shadcn necesarios y `src/app/router.tsx`.
-  - Fuera de alcance: API, persistencia real y edición de segmentos existentes.
-  - Dependencias: WEB-001.
-  - Criterios de aceptación: `/segmentos/nuevo` renderiza el formulario; valida título, mes y días; permite navegar meses, seleccionar días, cancelar y guardar mock; funciona en escritorio y móvil.
-  - Validación: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
-  - Responsable: Orquestador / subagente Web.
-  - Evidencia: `src/app/features/segments/NewSegmentPage.tsx`, ruta `/segmentos/nuevo`, navegación desde el listado; `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 tests), y `pnpm build` exitosos.
-
-- [x] **WEB-003 — Configurar contenido por día**
-  - Ámbito: Web
-  - Objetivo: abrir un modal al seleccionar un día del calendario para configurar video y lectura.
-  - Alcance: `src/app/features/segments/NewSegmentPage.tsx`, componentes shadcn de diálogo y pruebas específicas si aplican.
-  - Fuera de alcance: API, editor rich-text externo y persistencia real.
-  - Dependencias: WEB-002.
-  - Criterios de aceptación: el día abre un modal accesible; permite editar video y lectura; cancelar descarta; guardar conserva estado local y marca el día configurado.
-  - Validación: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
-  - Responsable: Orquestador / subagente Web.
-  - Evidencia: modal integrado en `src/app/features/segments/NewSegmentPage.tsx` y `src/app/shared/components/ui/dialog.tsx`; `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 tests), y `pnpm build` exitosos.
-
-- [x] **WEB-004 — Portada de segmento y banner de guía activa**
-  - Ámbito: Web
-  - Objetivo: permitir cargar una portada al crear un segmento y mostrarla en el banner de la guía activa.
-  - Alcance: `src/app/features/segments`, `src/app/features/guide`, `src/app/router.tsx` y persistencia mock/local.
-  - Fuera de alcance: API, Storage real y sincronización multiusuario.
-  - Dependencias: WEB-002.
-  - Criterios de aceptación: el formulario permite seleccionar y previsualizar portada; la guía muestra la portada del segmento activo, progreso y navegación a `/lectura-hoy`.
-  - Validación: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
-  - Responsable: Orquestador / subagente Web.
-  - Evidencia: selector y preview en `NewSegmentPage.tsx`, almacenamiento local en `segmentStorage.ts`, banner en `GuidePage.tsx`; `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 tests), y `pnpm build` exitosos.
-
-- [x] **WEB-005 — Listado de guías de lectura**
-  - Ámbito: Web
-  - Objetivo: mostrar un banner principal y un listado responsive de guías con portada, fechas, progreso y navegación.
-  - Alcance: `src/app/features/guide/**` y datos mock locales.
-  - Fuera de alcance: API y persistencia real de guías.
-  - Dependencias: WEB-004.
-  - Criterios de aceptación: la guía activa aparece destacada; las demás se muestran en tarjetas; cada tarjeta tiene información y navegación; la portada cargada del segmento activo se conserva.
-  - Validación: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
-  - Responsable: Orquestador / subagente Web.
-  - Evidencia: banner y listado implementados en `src/app/features/guide/GuidePage.tsx`; `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 tests), y `pnpm build` exitosos.
-- [x] **WEB-025 — Configurar Husky para control de calidad Git**
-  - Ámbito: Web
-  - Objetivo: ejecutar validaciones automáticas mediante hooks de Git.
-  - Alcance: `package.json`, lockfile y `.husky/`.
-  - Fuera de alcance: cambios de UI, API, lógica de negocio y reescritura del historial.
-  - Dependencias: ninguna.
-  - Criterios de aceptación: Husky se instala reproduciblemente; `pre-commit` valida lint/typecheck; `pre-push` valida tests/build; hooks ejecutables y documentados por sus comandos.
-  - Validación: instalación, ejecución de hooks y `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
-  - Responsable: Subagente Tooling; verificación final Orquestador.
-  - Evidencia: Husky `9.1.7` instalado; hooks ejecutables `pre-commit` (lint/typecheck) y `pre-push` (test/build); validaciones completas exitosas.
-
-- [x] **WEB-026 — Detalle móvil de lectura de hoy para visitante**
-  - Ámbito: Web
-  - Objetivo: reemplazar el placeholder de `/lectura-hoy` por el detalle público del día, conservando la estructura desktop actual y aplicando en móvil el estilo de la referencia.
-  - Alcance: `src/app/features/reading`, `src/app/router.tsx`, `todo.md`.
-  - Fuera de alcance: API, autenticación real, persistencia de progreso y cambios en el shell desktop.
-  - Dependencias: WEB-004.
-  - Criterios de aceptación: muestra portada, metadatos, video, versículo, reflexión y acción de completar; en modo no autenticado la acción de completar solicita autenticación; no hay scroll horizontal y el contenido funciona en móvil y desktop.
-  - Validación: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
-  - Responsable: Orquestador.
-  - Evidencia: `src/app/features/reading/ReadingTodayPage.tsx`, ruta `/lectura-hoy`; `pnpm lint` (sin errores, warning preexistente en `ui/button.tsx`), `pnpm typecheck`, `pnpm test` (2 tests) y `pnpm build` exitosos.
-
-- [x] **WEB-027 — Appbar y menú móvil público**
-  - Ámbito: Web
-  - Objetivo: aplicar el color primary al appbar público móvil y permitir abrir/cerrar el sidebar desde un botón hamburguesa.
-  - Alcance: `src/app/layouts/PublicLayout.tsx`, `todo.md`.
-  - Fuera de alcance: estructura desktop, rutas, autenticación y navegación inferior.
-  - Dependencias: ninguna.
-  - Criterios de aceptación: el appbar móvil usa primary; el botón tiene nombre accesible, abre un panel con los enlaces actuales, permite cerrar con botón, Escape o backdrop y devuelve el foco al activador.
-  - Validación: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
-  - Responsable: Orquestador.
-  - Evidencia: `src/app/layouts/PublicLayout.tsx`; appbar móvil primary y menú lateral accesible con cierre por botón, Escape, backdrop y restauración de foco; `pnpm lint` (sin errores, warning preexistente en `ui/button.tsx`), `pnpm typecheck`, `pnpm test` (2 tests) y `pnpm build` exitosos.
-
-- [x] **WEB-028 — Guías en columna horizontal para desktop**
-  - Ámbito: Web
-  - Objetivo: mostrar las tres guías como tarjetas apiladas de ancho completo en desktop, siguiendo la referencia visual.
-  - Alcance: `src/app/features/guide/GuidePage.tsx`, `todo.md`.
-  - Fuera de alcance: banner activo, datos, rutas, shell público y API.
-  - Dependencias: WEB-005.
-  - Criterios de aceptación: cada tarjeta muestra portada, título, fechas, progreso y navegación; las tres aparecen en una sola columna; mantiene accesibilidad y adaptación móvil.
-  - Validación: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
-  - Responsable: Orquestador.
-  - Evidencia: `src/app/features/guide/GuidePage.tsx` ya muestra las tres tarjetas en una columna horizontal con portada, progreso y navegación; `pnpm lint` (sin errores, warning preexistente en `ui/button.tsx`), `pnpm typecheck`, `pnpm test` (2 tests) y `pnpm build` exitosos.
-
- - [x] **WEB-029 — Configuración pública y acceso visual**
-  - Ámbito: Web
-  - Objetivo: reemplazar el placeholder de `/configuracion` por las secciones Notificaciones y Administración, con switch visual y formulario de inicio de sesión en modal/bottom sheet.
-  - Alcance: `src/app/features/settings`, `src/app/router.tsx`, pruebas específicas y `todo.md`.
-  - Fuera de alcance: API, autenticación real, persistencia del switch y navegación tras iniciar sesión.
+  - Objetivo: modelar meses con título y descripción, y administrar recursos dentro de cada mes.
+  - Alcance: `src/app/features/resources`, rutas públicas y de admin, navegación y pruebas específicas.
+  - Fuera de alcance: API, Supabase, persistencia real y autenticación.
   - Dependencias: componentes UI existentes.
-  - Criterios de aceptación: ambas secciones son responsive y accesibles; el switch es solo visual; “Iniciar sesión” abre un diálogo centrado en escritorio y bottom sheet en móvil con validación local de correo y contraseña.
+  - Criterios de aceptación: admin permite crear meses con título/descripción y recursos hijos con título, descripción, tipo y archivo/URL; permite editar, eliminar y ordenar meses y recursos; `/recursos` muestra la jerarquía en acceso libre.
   - Validación: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
   - Responsable: Subagente Web; verificación final Orquestador.
-   - Evidencia: `src/app/features/settings/SettingsPage.tsx` y ruta `/configuracion`; switch visual no interactivo y diálogo responsive con validación local; `pnpm lint` (sin errores, warning preexistente en `ui/button.tsx`), `pnpm typecheck`, `pnpm test` (2 tests) y `pnpm build` exitosos.
+  - Evidencia: `resources.ts` modela `Month → Resource`; `ResourcesAdminPage.tsx` administra meses y recursos hijos con título, descripción, tipo, file picker o URL, edición, eliminación y ordenamiento; `ResourcesPage.tsx` muestra la jerarquía pública. `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 pruebas) y `pnpm build` exitosos.
 
-- [x] **WEB-030 — Base PWA instalable**
+- [x] **WEB-057 — Crear y editar meses mediante modal**
   - Ámbito: Web
-  - Objetivo: configurar manifest, iconos, metadatos móviles y service worker para instalar la plataforma como PWA standalone.
-  - Alcance: `vite.config.ts`, `index.html`, `public/`, `package.json`, lockfile y archivos PWA necesarios.
-  - Fuera de alcance: API, APK/IPA nativo y cambios visuales del backoffice.
+  - Objetivo: mover la creación y edición de meses a un modal accesible reutilizable.
+  - Alcance: `src/app/features/resources/ResourcesAdminPage.tsx`, pruebas específicas si aplican.
+  - Fuera de alcance: formulario y gestión de recursos, API y persistencia.
+  - Dependencias: WEB-056.
+  - Criterios de aceptación: Nuevo mes abre modal vacío; editar abre modal con datos; título y descripción se guardan; cancelar, Escape, backdrop y restauración de foco funcionan.
+  - Validación: revisión de teclado/foco, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Responsable: Subagente Web; verificación final Orquestador.
+  - Evidencia: `ResourcesAdminPage.tsx` usa un único `Dialog` para crear y editar meses, con título, descripción, cancelación y cierre accesible. `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 pruebas) y `pnpm build` exitosos.
+
+- [x] **WEB-058 — Desplegar recursos como hijos del mes**
+  - Ámbito: Web
+  - Objetivo: mostrar y ocultar los recursos de cada mes mediante un control desplegable accesible.
+  - Alcance: `src/app/features/resources/ResourcesAdminPage.tsx`, pruebas específicas si aplican.
+  - Fuera de alcance: modelo de datos, modal de meses, API y persistencia.
+  - Dependencias: WEB-057.
+  - Criterios de aceptación: cada mes tiene control con `aria-expanded` y `aria-controls`; al expandir muestra sus recursos indentados como hijos; permite contraer y conserva las acciones existentes.
+  - Validación: revisión responsive/accesible, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Responsable: Subagente Web; verificación final Orquestador.
+  - Evidencia: `ResourcesAdminPage.tsx` añade estado independiente por mes, chevrons Tabler, `aria-expanded`, `aria-controls`, recursos indentados como hijos y estado vacío. `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 pruebas) y `pnpm build` exitosos.
+
+- [x] **WEB-059 — Crear y editar recursos hijos mediante modal**
+  - Ámbito: Web
+  - Objetivo: mover el formulario de recursos a un modal reutilizable para crear y editar.
+  - Alcance: `src/app/features/resources/ResourcesAdminPage.tsx`, pruebas específicas si aplican.
+  - Fuera de alcance: modal de meses, modelo de datos, API y persistencia.
+  - Dependencias: WEB-058.
+  - Criterios de aceptación: agregar recurso abre modal vacío; editar abre modal con datos; título, descripción, tipo y file picker/URL se guardan; cancelar y cierre accesible funcionan; la lista de hijos permanece visible fuera del modal.
+  - Validación: revisión de teclado/foco, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Responsable: Subagente Web; verificación final Orquestador.
+  - Evidencia: `ResourcesAdminPage.tsx` usa un único `Dialog` para agregar y editar recursos, con título, descripción, tipo, file picker/preview o URL, validación y acciones de cancelación. `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 pruebas) y `pnpm build` exitosos.
+
+- [x] **WEB-056 — Retirar descripción del formulario de nuevo segmento**
+  - Ámbito: Web
+  - Objetivo: eliminar el campo y el estado de descripción del formulario de creación de segmentos.
+  - Alcance: `src/app/features/segments/NewSegmentPage.tsx`.
+  - Fuera de alcance: API, persistencia, calendario y demás campos del formulario.
   - Dependencias: ninguna.
-  - Criterios de aceptación: el build genera manifest y service worker válidos; la app declara nombre, colores, iconos y modo standalone; las rutas SPA tienen fallback.
-  - Validación: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build` e inspección de artefactos.
-  - Responsable: Subagente Web; verificación final Orquestador.
-  - Evidencia: `vite-plugin-pwa` en `vite.config.ts`, metadatos en `index.html`, iconos en `public/icons/`; build genera `dist/manifest.webmanifest`, `dist/sw.js` y fallback SPA; `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 tests) y `pnpm build` exitosos.
-
-- [x] **WEB-031 — Flujo público de instalación PWA**
-  - Ámbito: Web
-  - Objetivo: sugerir la instalación al abrir el área pública y ejecutar el prompt nativo en Android o instrucciones de Añadir a pantalla de inicio en iOS.
-  - Alcance: `src/app/shared/`, `src/app/layouts/PublicLayout.tsx`, pruebas específicas y `todo.md`.
-  - Fuera de alcance: backoffice, API y generación de aplicaciones nativas.
-  - Dependencias: WEB-030.
-  - Criterios de aceptación: el aviso no aparece en `/admin`; Android usa `beforeinstallprompt` tras acción explícita; iOS muestra instrucciones reales; standalone y descarte se reconocen; foco, Escape y accesibilidad funcionan.
-  - Validación: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build` y pruebas de estados Android/iOS/standalone.
-  - Responsable: Subagente Web; verificación final Orquestador.
-  - Evidencia: hook `usePwaInstall`, componente `PwaInstallPrompt` y montaje exclusivo en `PublicLayout`; soporte para `beforeinstallprompt`, `appinstalled`, standalone, iOS y descarte de 7 días; `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 tests) y `pnpm build` exitosos.
-
-- [x] **WEB-034 — Renombrar la aplicación a Desafío Bíblico**
-  - Ámbito: Web
-  - Objetivo: reemplazar el nombre Jacobito por Desafío Bíblico en la identidad visible y técnica del proyecto.
-  - Alcance: `package.json`, `index.html`, `vite.config.ts`, `README.md`, almacenamiento local y lockfile si aplica.
-  - Fuera de alcance: cambios de funcionalidades, API y diseño visual ajeno al nombre.
-  - Dependencias: ninguna.
-  - Criterios de aceptación: la identidad visible y técnica usa Desafío Bíblico/desafio-biblico; la referencia legacy de almacenamiento se conserva únicamente para migración y usuarios existentes mantienen sus portadas.
-  - Validación: búsqueda global, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
-  - Responsable: Subagente Web; verificación final Orquestador.
-  - Evidencia: nombre actualizado en `package.json`, `README.md`, `index.html` y `vite.config.ts`; migración de `jacobito:active-segment-cover` implementada en `segmentStorage.ts`; `supabase/config.toml` conserva el `project_id` técnico existente para no romper el proyecto Supabase; `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 tests) y `pnpm build` exitosos.
-
-- [x] **WEB-035 — Favicon y meta description**
-  - Ámbito: Web
-  - Objetivo: añadir favicon de marca y descripción SEO básica al documento HTML.
-  - Alcance: `public/`, `index.html`, `todo.md`.
-  - Fuera de alcance: cambios de contenido, rutas, API y rediseño de marca.
-  - Dependencias: ninguna.
-  - Criterios de aceptación: el favicon se sirve desde una ruta pública válida y `index.html` incluye una meta description descriptiva en español.
-  - Validación: inspección del asset, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
-  - Responsable: Subagente Web; verificación final Orquestador.
-  - Evidencia: favicon PNG 64×64 en `public/favicon.png`, enlace incorporado en `index.html` y meta description en español; `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 tests) y `pnpm build` exitosos.
-
-- [x] **WEB-036 — Acceso directo al administrador**
-  - Ámbito: Web
-  - Objetivo: redirigir a `/admin` al pulsar “Iniciar sesión” desde Configuración, sin solicitar ni validar credenciales.
-  - Alcance: `src/app/features/settings/SettingsPage.tsx`, pruebas específicas y `todo.md`.
-  - Fuera de alcance: autenticación real, API, permisos y cambios del backoffice.
-  - Dependencias: ninguna.
-  - Criterios de aceptación: el botón navega directamente a `/admin`; no se renderiza modal ni se validan correo/contraseña.
-  - Validación: prueba de navegación, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
-  - Responsable: Subagente Web; verificación final Orquestador.
-  - Evidencia: `SettingsPage.tsx` usa `useNavigate` para navegar directamente a `/admin`; se eliminaron modal, formulario, estados y validaciones; `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 tests) y `pnpm build` exitosos.
-
-- [x] **WEB-037 — Persistir seguimiento de lectura local**
-  - Ámbito: Web
-  - Objetivo: guardar localmente los días completados y restaurar el progreso al volver a la aplicación.
-  - Alcance: `src/app/features/reading`, `src/app/features/guide`, pruebas específicas y `todo.md`.
-  - Fuera de alcance: API, autenticación, sincronización entre dispositivos y cambios del backoffice.
-  - Dependencias: ninguna.
-  - Criterios de aceptación: completar una lectura guarda guía/día en localStorage; el progreso se restaura al recargar; la guía y su calendario reflejan días completados sin duplicarlos.
-  - Validación: pruebas de almacenamiento y flujo, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
-  - Responsable: Subagente Web; verificación final Orquestador.
-  - Evidencia: `readingProgressStorage.ts` persiste días por guía en `desafio-biblico:reading-progress`; `ReadingTodayPage` guarda y confirma la lectura; `GuidePage` restaura progreso y calendario; `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 tests) y `pnpm build` exitosos.
-
-- [x] **WEB-038 — Detectar y aplicar nuevas versiones**
-  - Ámbito: Web
-  - Objetivo: consultar la versión desplegada cada cinco minutos y recargar la aplicación después de advertir al usuario cuando exista una versión diferente.
-  - Alcance: `public/version.json`, configuración de versión del build, monitor global, diálogo de actualización, pruebas y `todo.md`.
-  - Fuera de alcance: API, despliegue automático, migraciones de datos y actualización de aplicaciones nativas.
-  - Dependencias: soporte PWA de WEB-030.
-  - Criterios de aceptación: `version.json` expone la versión de `package.json`; la aplicación consulta al iniciar y cada cinco minutos sin caché; una versión diferente muestra un diálogo no descartable con cuenta regresiva de cinco segundos; al terminar actualiza el service worker y recarga; un error de red no interrumpe la plataforma.
-  - Validación: pruebas de misma versión, versión diferente, error de red, cuenta regresiva y recarga; `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
-  - Responsable: Subagente Web; verificación final Orquestador.
-  - Evidencia: `public/version.json`, versión compilada inyectada desde `package.json`, `VersionMonitor` montado globalmente en `App.tsx`; consulta inicial y cada 5 minutos sin caché, diálogo no descartable con cuenta regresiva de 5 segundos, actualización segura del service worker y recarga; `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 tests) y `pnpm build` exitosos.
-
-- [x] **WEB-039 — Incrementar versión automáticamente en cada commit**
-  - Ámbito: Web
-  - Objetivo: hacer que Husky incremente la versión patch y sincronice `package.json` con `public/version.json` antes de cada commit.
-  - Alcance: `.husky/pre-commit`, `scripts/bump-version.mjs`, `package.json`, `public/version.json`, `todo.md`.
-  - Fuera de alcance: versionado major/minor, publicación automática y cambios de API.
-  - Dependencias: Husky WEB-025 y monitor de versiones WEB-038.
-  - Criterios de aceptación: el hook valida lint/typecheck, incrementa SemVer patch, actualiza ambos archivos y los agrega al commit; el script falla con versiones inválidas y no genera hooks recursivos.
-  - Validación: ejecución del script, prueba del hook con commit de validación, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
-  - Responsable: Subagente Tooling; verificación final Orquestador.
-  - Evidencia: `scripts/bump-version.mjs` incrementa patch y sincroniza `package.json`/`public/version.json`; `.husky/pre-commit` ejecuta validaciones antes del bump y agrega ambos archivos; `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build` y `pnpm version:bump` exitosos.
-
-- [x] **TRV-040 — Skill independiente de observación de versiones**
-  - Ámbito: Web/API
-  - Objetivo: documentar como skill reutilizable el versionado automático por commit y la detección de nuevas versiones sin depender de PWA.
-  - Alcance: `skills/version-observer/SKILL.md`, `AGENTS.md` y referencias locales estrictamente necesarias.
-  - Fuera de alcance: cambios de runtime, configuración PWA, API y nuevas dependencias.
-  - Dependencias: WEB-038 y WEB-039 como comportamiento de referencia.
-  - Criterios de aceptación: la skill tiene frontmatter válido, estructura LLM-first, triggers claros, decisiones web/service worker opcional y queda registrada en AGENTS; no prescribe `vite-plugin-pwa`.
-  - Validación: revisión de estructura, referencias locales y búsqueda de dependencias PWA obligatorias.
-  - Responsable: Subagente Tooling; verificación final Orquestador.
-  - Evidencia: `skills/version-observer/SKILL.md` creada con frontmatter y secciones LLM-first; registra versionado SemVer y monitor web agnóstico de PWA con service worker opcional; `AGENTS.md` actualizado; revisión textual y `git diff --check` exitosos.
-
-- [x] **WEB-041 — Mostrar versión en sidebar del backoffice**
-  - Ámbito: Web
-  - Objetivo: mostrar la versión compilada actual en la parte inferior del sidebar del backoffice.
-  - Alcance: `src/app/layouts/BackofficeLayout.tsx`, `todo.md` y pruebas específicas si aplican.
-  - Fuera de alcance: sidebar público, lógica de versionado, API y cambios de navegación.
-  - Dependencias: WEB-038 y WEB-039.
-  - Criterios de aceptación: el sidebar muestra `Versión <valor>` con la versión compilada; permanece visible en desktop y en el sidebar móvil; no genera overflow horizontal.
-  - Validación: revisión responsive, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
-  - Responsable: Subagente Web; verificación final Orquestador.
-  - Evidencia: `BackofficeLayout.tsx` muestra `Versión __APP_VERSION__` al pie del sidebar desktop y móvil, con `mt-auto`, ancho mínimo y salto de línea; `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 tests) y `pnpm build` exitosos.
-
-- [x] **WEB-042 — Mostrar versión en ambos sidebars**
-  - Ámbito: Web
-  - Objetivo: mostrar la versión compilada tanto en el sidebar público como en el sidebar del backoffice.
-  - Alcance: `src/app/layouts/PublicLayout.tsx`, `src/app/layouts/BackofficeLayout.tsx`, `todo.md`.
-  - Fuera de alcance: lógica de versionado, API, navegación y diseño de páginas.
-  - Dependencias: WEB-041.
-  - Criterios de aceptación: ambos sidebars muestran `Versión <valor>`; el valor proviene de `__APP_VERSION__`; desktop y móvil no presentan overflow.
-  - Validación: revisión responsive, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
-  - Responsable: Subagente Web; verificación final Orquestador.
-  - Evidencia: `PublicLayout.tsx` muestra `Versión __APP_VERSION__` en el sidebar desktop y menú móvil; `BackofficeLayout.tsx` conserva la misma versión; `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 tests) y `pnpm build` exitosos.
-
-- [x] **WEB-043 — Evitar caché de version.json**
-  - Ámbito: Web
-  - Objetivo: impedir que navegador, CDN o service worker sirvan una versión cacheada de `version.json`.
-  - Alcance: `vite.config.ts`, configuración de headers de despliegue y monitor de versión.
-  - Fuera de alcance: otros assets, API y cambios del flujo de actualización.
-  - Dependencias: WEB-038.
-  - Criterios de aceptación: `version.json` no se precachea; la consulta usa `no-store` y cache busting; el despliegue declara `Cache-Control: no-store` para ese archivo.
-  - Validación: inspección del service worker, headers configurados, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
-  - Responsable: Subagente Web; verificación final Orquestador.
-  - Evidencia: `version.json` excluido del precache Workbox, monitor conserva `no-store` y cache busting, y `vercel.json` declara `Cache-Control: no-store, no-cache, must-revalidate, max-age=0`; `dist/sw.js` no contiene `version.json`; validaciones lint/typecheck/test/build exitosas.
-
-- [x] **WEB-044 — Video de lectura en modal fullscreen**
-  - Ámbito: Web
-  - Objetivo: mostrar el video del detalle de lectura dentro de un modal que ocupe toda la pantalla.
-  - Alcance: `src/app/features/reading/ReadingTodayPage.tsx`, `src/app/shared/components/ui/dialog.tsx`, pruebas específicas.
-  - Fuera de alcance: URL del video, contenido de lectura, API y navegación.
-  - Dependencias: componentes Dialog existentes.
-  - Criterios de aceptación: el video se abre en modal fullscreen responsive; conserva proporción; cierra con botón/Escape/backdrop; desmonta el iframe al cerrar y restaura foco al activador.
-  - Validación: teclado, foco, móvil/escritorio, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
-  - Responsable: Subagente Web; verificación final Orquestador.
-   - Evidencia: `Dialog` incorpora variante `fullscreen`; `ReadingTodayPage` abre el iframe en modal 100dvh/100vw con cierre accesible, desmontaje al cerrar y restauración de foco; validaciones lint/typecheck/test/build exitosas.
-
-- [x] **WEB-045 — Carrusel público de lectura y anuncios**
-  - Ámbito: Web
-  - Objetivo: convertir el banner de la guía en un carrusel con lectura de hoy y anuncios mock configurados por imagen, título, descripción y enlace.
-  - Alcance: `src/app/features/guide`, pruebas específicas y `todo.md`.
-  - Fuera de alcance: API, Supabase, persistencia y administración de anuncios.
-  - Dependencias: WEB-005.
-  - Criterios de aceptación: carrusel con avance manual y automático, pausa al interactuar, indicadores, navegación accesible, responsive y respeto de `prefers-reduced-motion`.
+  - Criterios de aceptación: el formulario no muestra ni conserva un campo de descripción; el resto del flujo funciona igual.
   - Validación: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
   - Responsable: Subagente Web; verificación final Orquestador.
-  - Evidencia: carrusel en `src/app/features/guide/GuidePage.tsx` con lectura de hoy, anuncios mock, autoavance pausado, flechas, indicadores, navegación accesible y `prefers-reduced-motion`; `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 tests) y `pnpm build` exitosos.
+  - Evidencia: eliminado el campo y estado `description` en `NewSegmentPage.tsx`; `pnpm lint`, `pnpm typecheck`, `pnpm test` y `pnpm build` completados.
 
-- [x] **WEB-046 — Maquetación administrativa de anuncios**
+- [x] **WEB-057 — Detalle diario compuesto por bloques**
   - Ámbito: Web
-  - Objetivo: añadir una pantalla de backoffice con listado y formulario visual CRUD de anuncios mock.
-  - Alcance: `src/app/features/announcements`, `src/app/layouts/BackofficeLayout.tsx`, `src/app/router.tsx`, pruebas específicas y `todo.md`.
-  - Fuera de alcance: API, Supabase, persistencia, autenticación real y sincronización con el carrusel público.
-  - Dependencias: ninguna; puede ejecutarse en paralelo con WEB-045 por no compartir archivos de implementación.
-  - Criterios de aceptación: ruta `/admin/anuncios`, listado responsive y controles visuales para crear, editar, eliminar, activar/desactivar y ordenar; formulario con imagen, título, descripción y href obligatorios.
+  - Objetivo: permitir que el detalle de cada día se componga de múltiples bloques de texto, imagen o video en cualquier orden.
+  - Alcance: `src/app/features/segments/NewSegmentPage.tsx` y pruebas específicas del módulo.
+  - Fuera de alcance: API, persistencia remota y cambios globales de componentes.
+  - Dependencias: componentes UI existentes.
+  - Criterios de aceptación: se pueden agregar bloques repetidos, editar, eliminar y subir/bajar; imagen por archivo y video por URL; cancelar descarta cambios y guardar conserva el orden.
   - Validación: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
   - Responsable: Subagente Web; verificación final Orquestador.
-  - Evidencia: `src/app/features/announcements/AnnouncementsPage.tsx`, ruta `/admin/anuncios` y enlace en `BackofficeLayout.tsx`; CRUD y ordenamiento mock en memoria, formulario accesible y aviso de no persistencia; `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 tests) y `pnpm build` exitosos.
+  - Evidencia: `NewSegmentPage.tsx` permite bloques repetibles de texto, imagen y video, con edición, eliminación y reordenamiento; `pnpm lint`, `pnpm typecheck`, `pnpm test` y `pnpm build` completados.
 
-- [x] **WEB-045 — Corregir reproducción del video embebido**
+- [x] **WEB-058 — Mantener foco al escribir en diálogos**
   - Ámbito: Web
-  - Objetivo: evitar errores de reproducción del embed de YouTube y ofrecer una alternativa externa accesible.
-  - Alcance: `src/app/features/reading/ReadingTodayPage.tsx`, pruebas específicas y `todo.md`.
-  - Fuera de alcance: cambio de proveedor, video, API y rediseño del modal fullscreen.
-  - Dependencias: WEB-044.
-  - Criterios de aceptación: el iframe envía una política de referrer/origen compatible; usa parámetros inline; mantiene fullscreen; existe enlace “Ver en YouTube”; el modal conserva cierre y foco.
-  - Validación: Playwright con viewport móvil/escritorio y reproducción, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Objetivo: evitar que los campos de texto pierdan el foco al cambiar su valor dentro de un `Dialog`.
+  - Alcance: `src/app/shared/components/ui/dialog.tsx` y prueba de regresión aplicable.
+  - Fuera de alcance: cambios de negocio o rediseño de diálogos.
+  - Dependencias: editor de bloques del módulo de segmentos.
+  - Criterios de aceptación: escribir texto o URL mantiene el foco; Escape, trampa de Tab y restauración al cerrar continúan funcionando.
+  - Validación: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
   - Responsable: Subagente Web; verificación final Orquestador.
-  - Evidencia: iframe configurado con `playsinline=1`, `rel=0`, `origin`, `referrerPolicy="strict-origin-when-cross-origin"` y enlace alternativo a YouTube; Playwright confirmó modal, iframe, parámetros y fallback sin errores de consola; `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 tests) y `pnpm build` exitosos.
+  - Evidencia: `dialog.tsx` separa el callback del ciclo de foco y cancela el autofocus pendiente; `pnpm lint`, `pnpm typecheck`, `pnpm test` y `pnpm build` completados.
 
-- [x] **WEB-046 — Habilitar clics en reproductor fullscreen**
+- [ ] **WEB-060 — Mostrar Configuración debajo de Recursos**
   - Ámbito: Web
-  - Objetivo: garantizar que los clics del usuario lleguen al iframe de YouTube dentro del modal fullscreen.
-  - Alcance: `src/app/features/reading/ReadingTodayPage.tsx`, `src/app/shared/components/ui/dialog.tsx`, `todo.md`.
-  - Fuera de alcance: cambio de proveedor, video, autenticación y API.
-  - Dependencias: WEB-045.
-  - Criterios de aceptación: iframe y contenedor permiten interacción de puntero; backdrop no intercepta eventos internos; el reproductor no usa lazy loading dentro del fullscreen; cierre sigue funcionando.
-  - Validación: Playwright con clic sobre el reproductor y fallback, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Objetivo: ordenar la navegación pública para que Configuración aparezca inmediatamente después de Recursos.
+  - Alcance: arreglo de navegación en `src/app/layouts/PublicLayout.tsx`.
+  - Fuera de alcance: rutas, estilos, iconos, contenido de páginas, API y cambios en el backoffice.
+  - Dependencias: navegación pública existente y ruta pública de Recursos.
+  - Criterios de aceptación: escritorio, menú móvil y barra inferior muestran Guía de lectura, Lectura de hoy, Recursos y Configuración, en ese orden.
+  - Validación: revisión del arreglo compartido; `pnpm lint`; `pnpm typecheck`; `pnpm test`; `pnpm build`.
   - Responsable: Subagente Web; verificación final Orquestador.
-  - Evidencia: iframe, contenedor y Dialog fullscreen tienen interacción explícita de puntero; backdrop no captura eventos internos; se eliminó lazy loading; typecheck, tests y build exitosos. La validación Playwright del servidor se vio limitada por el proceso Vite de desarrollo que terminó por timeout del entorno.
+  - Evidencia: pendiente.
 
-- [x] **WEB-047 — Gesto de snap en carrusel público**
+- [ ] **WEB-061 — Administrar recursos únicamente dentro de cada mes**
   - Ámbito: Web
-  - Objetivo: permitir arrastrar horizontalmente el carrusel y ajustarlo a la diapositiva siguiente o anterior al finalizar el gesto.
-  - Alcance: `src/app/features/guide/GuidePage.tsx`, pruebas específicas y `todo.md`.
-  - Fuera de alcance: API, persistencia, nuevos componentes globales y dependencias.
-  - Dependencias: WEB-045.
-  - Criterios de aceptación: swipe horizontal con ratón/táctil/lápiz cambia una sola diapositiva; gesto corto o vertical conserva la actual; el enlace no se activa accidentalmente; se mantienen accesibilidad, controles, autoplay y responsive.
-  - Validación: prueba específica del gesto, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Objetivo: eliminar el panel independiente del mes seleccionado y mantener todas las acciones de recursos dentro del mes desplegado.
+  - Alcance: `src/app/features/resources/ResourcesAdminPage.tsx`.
+  - Fuera de alcance: modelo de datos, rutas, API, persistencia, estilos globales y administración de meses.
+  - Dependencias: WEB-058 y WEB-059.
+  - Criterios de aceptación: no se muestra la tarjeta separada “Recursos de …”; cada mes desplegado permite agregar, editar, eliminar y ordenar sus propios recursos; el diálogo guarda en el mes desde el que se abrió.
+  - Validación: revisión funcional del flujo por mes; `pnpm lint`; `pnpm typecheck`; `pnpm test`; `pnpm build`.
   - Responsable: Subagente Web; verificación final Orquestador.
-  - Evidencia: `GuidePage.tsx` incorpora pointer events, umbral horizontal de 48 px, `touchAction: pan-y`, pausa durante interacción y supresión del clic posterior al arrastre; `pnpm lint` (sin errores, warning preexistente en `ui/button.tsx`), `pnpm typecheck`, `pnpm test` (2 pruebas) y `pnpm build` exitosos. No se añadieron pruebas específicas porque la infraestructura actual no expone una prueba montable para `GuidePage`.
+  - Evidencia: pendiente.
 
-- [x] **WEB-048 — Ocultar controles laterales del carrusel en móvil**
+- [x] **WEB-062 — Permitir drag and drop de imágenes**
   - Ámbito: Web
-  - Objetivo: ocultar los botones anterior y siguiente en viewport móvil sin afectar el gesto, indicadores ni controles de escritorio.
-  - Alcance: `src/app/features/guide/GuidePage.tsx`, `todo.md`.
-  - Fuera de alcance: cambios en el gesto de snap, contenido, API y navegación.
-  - Dependencias: WEB-047.
-  - Criterios de aceptación: los botones laterales no se renderizan visualmente en móvil; aparecen desde `sm`; los indicadores y swipe siguen funcionando; no hay cambios en escritorio.
-  - Validación: revisión responsive, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Objetivo: permitir cargar imágenes de recursos mediante arrastrar y soltar, además de la selección tradicional.
+  - Alcance: selector de imagen en `src/app/features/resources/ResourcesAdminPage.tsx`.
+  - Fuera de alcance: API, persistencia, videos, modelo de recursos y cambios globales de componentes.
+  - Dependencias: WEB-059 y WEB-061.
+  - Criterios de aceptación: el área acepta imágenes soltadas, muestra estado visual durante el arrastre, conserva selección por clic, rechaza archivos no imagen y mantiene la vista previa.
+  - Validación: revisión de teclado/accesibilidad y flujo de carga; `pnpm lint`; `pnpm typecheck`; `pnpm test`; `pnpm build`.
   - Responsable: Subagente Web; verificación final Orquestador.
-  - Evidencia: botones anterior/siguiente usan `hidden sm:grid`, por lo que se ocultan en móvil y aparecen desde `sm`; gesto, indicadores y escritorio se conservan. `pnpm lint` (sin errores, warning preexistente en `ui/button.tsx`), `pnpm typecheck`, `pnpm test` (2 pruebas) y `pnpm build` exitosos.
+  - Evidencia: `ResourcesAdminPage.tsx` acepta imágenes por selección y drag and drop, muestra estado visual durante el arrastre, valida el tipo MIME y conserva la vista previa. `pnpm lint` (sin errores; warning preexistente), `pnpm typecheck`, `pnpm test` (2 pruebas) y `pnpm build` exitosos.
 
-- [x] **WEB-049 — Retirar gradiente superpuesto del carrusel**
+- [x] **WEB-063 — Crear módulo padre administrativo de Recursos**
   - Ámbito: Web
-  - Objetivo: eliminar la capa de gradiente que se muestra encima del carrusel.
-  - Alcance: `src/app/features/guide/GuidePage.tsx`, `todo.md`.
-  - Fuera de alcance: fondos de las diapositivas, texto, controles, gesto, indicadores y responsive.
-  - Dependencias: WEB-048.
-  - Criterios de aceptación: el carrusel ya no renderiza la capa de gradiente superpuesta; el resto de contenido e interacciones se conserva.
-  - Validación: revisión visual, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Objetivo: convertir `/admin/recursos` en un índice con cards hacia Recursos por mes y Guía de lectura.
+  - Alcance: `src/app/features/resources`, `src/app/router.tsx`, `src/app/layouts/BackofficeLayout.tsx`.
+  - Fuera de alcance: cambios al módulo Segmentos, ruta pública `/recursos`, API y persistencia.
+  - Dependencias: componentes Card existentes y `ResourcesAdminPage` actual.
+  - Criterios de aceptación: `/admin/recursos` muestra dos cards accesibles; Recursos por mes abre `/admin/recursos/por-mes`; Guía de lectura abre `/admin/recursos/guia-lectura`; Segmentos conserva sus rutas y enlace.
+  - Validación: navegación por teclado y responsive; `pnpm lint`; `pnpm typecheck`; `pnpm test`; `pnpm build`.
   - Responsable: Subagente Web; verificación final Orquestador.
-  - Evidencia: eliminada la capa `bg-gradient-to-r` del carrusel; se conservaron fondos, texto, controles, gesto, indicadores y responsive. `pnpm lint` (sin errores, warning preexistente en `ui/button.tsx`), `pnpm typecheck`, `pnpm test` (2 pruebas) y `pnpm build` exitosos.
+  - Evidencia: `ResourcesHubPage.tsx` muestra cards accesibles para Recursos por mes y Guía de lectura; `router.tsx` registra `/admin/recursos`, `/admin/recursos/por-mes` y `/admin/recursos/guia-lectura`; `BackofficeLayout.tsx` enlaza Recursos y conserva Segmentos sin cambios funcionales. `/recursos` público permanece intacto. `pnpm lint` (sin errores; warning preexistente), `pnpm typecheck`, `pnpm test` (2 pruebas) y `pnpm build` exitosos.
 
-- [x] **WEB-050 — Sustituir botón de acción del carrusel por enlace**
+- [x] **WEB-064 — Normalizar layout administrativo de Recursos y Configuración**
   - Ámbito: Web
-  - Objetivo: conservar el `href` de la acción del carrusel eliminando el componente `Button` que lo envuelve.
-  - Alcance: `src/app/features/guide/GuidePage.tsx`, `todo.md`.
-  - Fuera de alcance: ruta del enlace, contenido del carrusel, controles, gesto, indicadores y responsive.
-  - Dependencias: WEB-049.
-  - Criterios de aceptación: la acción renderiza directamente un enlace con el `href` existente; no queda un botón contenedor ni cambia la navegación.
-  - Validación: inspección del JSX, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Objetivo: aplicar a Recursos y Configuración el patrón de layout usado por Segmentos y Anuncios.
+  - Alcance: pantallas administrativas de `src/app/features/resources`, nueva pantalla administrativa de configuración y `src/app/router.tsx`.
+  - Fuera de alcance: módulo Segmentos, módulo Anuncios, API, rutas públicas y nuevas opciones funcionales de configuración.
+  - Dependencias: WEB-063 y componentes UI existentes.
+  - Criterios de aceptación: Recursos padre, Recursos por mes y Guía de lectura tienen contenedor, breadcrumb, encabezado, título responsive y espaciado consistentes; Configuración conserva estado informativo pero usa el mismo layout; no se modifican otros placeholders.
+  - Validación: revisión responsive/accesible; `pnpm lint`; `pnpm typecheck`; `pnpm test`; `pnpm build`.
   - Responsable: Subagente Web; verificación final Orquestador.
-  - Evidencia: la acción del carrusel conserva directamente el enlace `<a href={slide.href}>` y se eliminó su wrapper `Button`; navegación y etiqueta accesible conservadas. `pnpm lint` (sin errores, warning preexistente en `ui/button.tsx`), `pnpm typecheck`, `pnpm test` (2 pruebas) y `pnpm build` exitosos.
+  - Evidencia: Recursos usa contenedor `max-w-[76rem]`, breadcrumbs, encabezados responsive y espaciado consistente en sus tres pantallas; `SettingsAdminPage.tsx` aplica el mismo patrón y conserva el aviso informativo; `/admin/configuracion` apunta a la nueva pantalla sin alterar otros placeholders. `pnpm lint` (sin errores; warning preexistente), `pnpm typecheck`, `pnpm test` (2 pruebas) y `pnpm build` exitosos.
 
-- [x] **WEB-051 — Hacer clicable la tarjeta del carrusel**
+- [x] **WEB-065 — Compactar cards del módulo Anuncios**
   - Ámbito: Web
-  - Objetivo: navegar al `href` de la diapositiva actual al hacer clic en el área de la tarjeta del carrusel.
-  - Alcance: `src/app/features/guide/GuidePage.tsx`, `todo.md`.
-  - Fuera de alcance: cambiar hrefs, controles laterales, indicadores y gesto de snap.
-  - Dependencias: WEB-050.
-  - Criterios de aceptación: el área de contenido/fondo abre el href de la diapositiva actual; controles e indicadores siguen ejecutando sus acciones sin navegar; el enlace conserva nombre accesible y no hay enlaces anidados.
-  - Validación: inspección de interacción, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Objetivo: reducir aproximadamente a la mitad el ancho y alto visual de las cards de anuncios.
+  - Alcance: estilos locales de `src/app/features/announcements/AnnouncementsPage.tsx`.
+  - Fuera de alcance: datos, modales, acciones, API, componentes globales y otros módulos.
+  - Dependencias: layout actual de Anuncios y componentes Card existentes.
+  - Criterios de aceptación: escritorio muestra cuatro cards por fila, tablet dos y móvil una; imagen, padding y separación se compactan sin cortar contenido ni perder accesibilidad; editar, activar/desactivar, eliminar y ordenar siguen funcionando.
+  - Validación: revisión responsive en 375/768/1024/1440; `pnpm lint`; `pnpm typecheck`; `pnpm test`; `pnpm build`.
   - Responsable: Subagente Web; verificación final Orquestador.
-  - Evidencia: la diapositiva actual usa un enlace overlay con `href={slide.href}`; controles e indicadores quedan sobre él con `z-[1]`, sin enlaces anidados, y el gesto de snap se conserva. `pnpm lint` (sin errores, warning preexistente en `ui/button.tsx`), `pnpm typecheck`, `pnpm test` (2 pruebas) y `pnpm build` exitosos.
+  - Evidencia: `AnnouncementsPage.tsx` usa cuatro columnas desde 72rem, dos desde 42rem y una en móvil; redujo imagen, padding, gaps, tipografía y badges sin alterar las acciones. `pnpm lint` (sin errores; warning preexistente), `pnpm typecheck`, `pnpm test` (2 pruebas), `pnpm build` y `git diff --check` exitosos.
 
-- [x] **WEB-052 — Retirar icono de acción del carrusel**
+- [x] **WEB-066 — Reservar posición de iconos en cards de Anuncios**
   - Ámbito: Web
-  - Objetivo: eliminar el icono de flecha decorativo que aparece dentro de la tarjeta del carrusel.
-  - Alcance: `src/app/features/guide/GuidePage.tsx`, `todo.md`.
-  - Fuera de alcance: enlace de la tarjeta, controles de navegación, indicadores e iconos del listado de guías.
-  - Dependencias: WEB-051.
-  - Criterios de aceptación: el icono de flecha del carrusel deja de renderizarse; la tarjeta continúa navegando mediante su href y el resto de iconos permanece sin cambios.
-  - Validación: inspección visual/JSX, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Objetivo: mantener estables y alineados los controles de acción de cada card aunque el contenido tenga distinta longitud.
+  - Alcance: composición local de acciones en `src/app/features/announcements/AnnouncementsPage.tsx`.
+  - Fuera de alcance: lógica, datos, modal, otros módulos y componentes globales.
+  - Dependencias: WEB-065.
+  - Criterios de aceptación: editar/activar/eliminar permanecen en un bloque izquierdo; subir/bajar ocupan un bloque reservado y alineado; no hay saltos irregulares ni solapamientos en móvil, tablet o escritorio; foco y áreas táctiles se conservan.
+  - Validación: revisión responsive en 375/768/1024/1440; `pnpm lint`; `pnpm typecheck`; `pnpm test`; `pnpm build`.
   - Responsable: Subagente Web; verificación final Orquestador.
-  - Evidencia: eliminado el `IconArrowRight` decorativo del carrusel; se conservaron el enlace overlay, controles, indicadores y el icono de las tarjetas inferiores. `pnpm lint` (sin errores, warning preexistente en `ui/button.tsx`), `pnpm typecheck`, `pnpm test` (2 pruebas) y `pnpm build` exitosos.
+  - Evidencia: `AnnouncementsPage.tsx` separa las acciones principales y los controles de orden en columnas reservadas; los iconos permanecen alineados y no dependen del largo del contenido. `pnpm lint` (sin errores; warning preexistente), `pnpm typecheck`, `pnpm test` (2 pruebas), `pnpm build` y `git diff --check` exitosos.
 
-- [x] **WEB-053 — Reducir altura del anuncio del carrusel**
+- [x] **WEB-067 — Usar solo iconos en acciones de Anuncios**
   - Ámbito: Web
-  - Objetivo: reducir aproximadamente 10 px la altura visual del anuncio del carrusel.
-  - Alcance: `src/app/features/guide/GuidePage.tsx`, `todo.md`.
-  - Fuera de alcance: contenido, enlaces, controles, gesto, indicadores y demás secciones de la página.
-  - Dependencias: WEB-052.
-  - Criterios de aceptación: la altura pasa de 220 a 210 px en móvil y de 240 a 230 px desde `sm`, sin desbordes ni cambios funcionales.
-  - Validación: revisión responsive, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Objetivo: compactar las acciones de cada anuncio usando iconos y eliminar el badge de estado.
+  - Alcance: acciones y estado visual en `src/app/features/announcements/AnnouncementsPage.tsx`.
+  - Fuera de alcance: lógica de acciones, datos, modal, otros módulos y componentes globales.
+  - Dependencias: WEB-066.
+  - Criterios de aceptación: Editar, Activar/Desactivar y Eliminar muestran solo iconos; cada control conserva `aria-label`, `title`, foco y área táctil; desaparece el badge Activo/Inactivo; ordenar mantiene su espacio reservado.
+  - Validación: revisión responsive/accesible; `pnpm lint`; `pnpm typecheck`; `pnpm test`; `pnpm build`.
   - Responsable: Subagente Web; verificación final Orquestador.
-  - Evidencia: altura ajustada de `220px/240px` a `210px/230px` en móvil/escritorio; sin cambios funcionales ni desbordes detectados. `pnpm lint` (sin errores, warning preexistente en `ui/button.tsx`), `pnpm typecheck`, `pnpm test` (2 pruebas) y `pnpm build` exitosos.
+  - Evidencia: `AnnouncementsPage.tsx` eliminó el badge de estado y convirtió editar, activar/desactivar y eliminar en botones `size="icon"` con `aria-label` y `title` descriptivos; los controles de orden conservaron su bloque reservado. `pnpm lint` (sin errores; warning preexistente), `pnpm typecheck`, `pnpm test` (2 pruebas), `pnpm build` y `git diff --check` exitosos.
 
-- [x] **WEB-054 — Ajustar separación y ruta inicial pública**
+- [x] **WEB-068 — Crear FileField base con drag and drop**
   - Ámbito: Web
-  - Objetivo: reducir el espacio entre el carrusel y “Guías de lectura”, y hacer que la ruta raíz redirija a `/guia`.
-  - Alcance: `src/app/features/guide/GuidePage.tsx`, `src/app/router.tsx`, `todo.md`.
-  - Fuera de alcance: contenido del carrusel, autenticación real, rutas de administración y navegación interna.
-  - Dependencias: WEB-053.
-  - Criterios de aceptación: la separación visual usa un margen menor que el actual; `/` redirige a `/guia`; `/guia` renderiza la guía pública sin cambios funcionales.
-  - Validación: revisión responsive y de navegación, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Objetivo: crear un campo global reutilizable para subir archivos por clic, teclado y drag and drop.
+  - Alcance: `src/app/shared/components/fields/base/FileField.tsx`, prueba propia y catálogo.
+  - Fuera de alcance: integración con Anuncios, API, persistencia y adaptador RHF.
+  - Dependencias: componentes UI e iconos Tabler existentes.
+  - Criterios de aceptación: acepta archivo por selección y drop; expone label, accept, required, error, disabled y callbacks; muestra estado de arrastre y nombre; es accesible por teclado/foco.
+  - Validación: prueba de componente, catálogo, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
   - Responsable: Subagente Web; verificación final Orquestador.
-  - Evidencia: separación reducida de `mt-10` a `mt-6`; la ruta `/` redirige con `<Navigate replace />` a `/guia`, que conserva `GuidePage`. `pnpm lint` (sin errores, warning preexistente en `ui/button.tsx`), `pnpm typecheck`, `pnpm test` (2 pruebas) y `pnpm build` exitosos.
+  - Evidencia: `FileField.tsx` implementa selección por clic/teclado y drag and drop con `accept`, estado de arrastre, nombre de archivo, error, disabled y foco accesible; incluye prueba propia y `FileFieldCatalog.tsx` con estados normal, drag, error y disabled. `pnpm lint` (sin errores; warning preexistente), `pnpm typecheck`, `pnpm test` (5 pruebas) y `pnpm build` exitosos.
+
+- [x] **WEB-069 — Integrar FileField en Anuncios**
+  - Ámbito: Web
+  - Objetivo: reemplazar la URL de imagen del formulario de Anuncios por subida de archivo al final del formulario.
+  - Alcance: `src/app/features/announcements/AnnouncementsPage.tsx`.
+  - Fuera de alcance: API, persistencia real, otros formularios y cambios globales del FileField.
+  - Dependencias: WEB-068.
+  - Criterios de aceptación: desaparece “Imagen o fondo” como URL; FileField aparece después de Enlace; solo acepta imágenes, permite reemplazo y conserva vista previa/guardado local de la card.
+  - Validación: flujo crear/editar, revisión accesible, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Responsable: Subagente Web; verificación final Orquestador.
+  - Evidencia: `AnnouncementsPage.tsx` eliminó la URL de imagen y coloca `FileField` después de Enlace; acepta solo imágenes, crea vista previa local, requiere archivo al crear y conserva la imagen actual al editar si no se reemplaza. `pnpm lint` (sin errores; warning preexistente), `pnpm typecheck`, `pnpm test` (5 pruebas) y `pnpm build` exitosos.
+
+- [x] **WEB-070 — Reutilizar FileField en todos los uploads Web**
+  - Ámbito: Web
+  - Objetivo: reemplazar los selectores de archivo duplicados por el FileField base compartido.
+  - Alcance: `src/app/features/segments/NewSegmentPage.tsx` y `src/app/features/resources/ResourcesAdminPage.tsx`.
+  - Fuera de alcance: URLs de video, API, persistencia, cambios en FileField y lógica no relacionada.
+  - Dependencias: WEB-068 y WEB-069.
+  - Criterios de aceptación: no quedan inputs `type="file"` fuera de FileField; portada y bloques de Segmentos conservan validación de imagen/límite de 5 MB, errores y preview; Recursos conserva selección/drop, validación y preview; Anuncios continúa usando FileField.
+  - Validación: búsqueda global de uploads, flujos de selección/drop/preview, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Responsable: Subagente Web; verificación final Orquestador.
+  - Evidencia: `NewSegmentPage.tsx` usa FileField para portada y bloques de imagen, conservando validación, límite de 5 MB, errores y previews; `ResourcesAdminPage.tsx` usa FileField para imágenes y mantiene la preview; la única etiqueta `type="file"` queda dentro de `FileField.tsx`. `pnpm lint` (sin errores; warning preexistente), `pnpm typecheck`, `pnpm test` (5 pruebas), `pnpm build` y `git diff --check` exitosos.
+
+- [x] **WEB-071 — Alinear Nuevo mes con el encabezado**
+  - Ámbito: Web
+  - Objetivo: colocar el botón Nuevo mes a la derecha del título de Recursos por mes.
+  - Alcance: encabezado de `src/app/features/resources/ResourcesAdminPage.tsx`.
+  - Fuera de alcance: lógica del modal, listado de meses, rutas y otros módulos.
+  - Dependencias: layout administrativo de Recursos existente.
+  - Criterios de aceptación: en escritorio el botón queda alineado a la derecha del título/subtítulo; en móvil se acomoda debajo sin desbordamiento; desaparece el bloque independiente actual; foco y accesibilidad se conservan.
+  - Validación: revisión responsive 375/768/1024/1440; `pnpm lint`; `pnpm typecheck`; `pnpm test`; `pnpm build`.
+  - Responsable: Subagente Web; verificación final Orquestador.
+  - Evidencia: `ResourcesAdminPage.tsx` integra `Nuevo mes` en el encabezado con alineación derecha en escritorio y apilado responsive en móvil; se eliminó el bloque independiente. `pnpm lint` (sin errores; warning preexistente), `pnpm typecheck`, `pnpm test` (5 pruebas), `pnpm build` y `git diff --check` exitosos.
+
+- [ ] **WEB-072 — Hacer navegables los breadcrumbs administrativos**
+  - Ámbito: Web
+  - Objetivo: reutilizar un breadcrumb administrativo con flecha amarilla sin texto y niveles anteriores clicables.
+  - Alcance: componente global, prueba, catálogo y breadcrumbs de pantallas administrativas existentes.
+  - Fuera de alcance: breadcrumbs públicos, rutas nuevas, API y cambios de contenido.
+  - Dependencias: router y rutas administrativas actuales.
+  - Criterios de aceptación: la flecha tiene `aria-label`/`title`, foco y área táctil; navega al padre; niveles anteriores son enlaces; la página actual usa `aria-current="page"`; no quedan breadcrumbs administrativos estáticos duplicados.
+  - Validación: prueba del componente, catálogo, revisión de rutas, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Responsable: Subagente Web; verificación final Orquestador.
+  - Evidencia: pendiente.
+
+- [x] **WEB-073 — Resaltar flecha de retorno del breadcrumb**
+  - Ámbito: Web
+  - Objetivo: aplicar un fondo amarillo claro al botón de flecha del breadcrumb administrativo.
+  - Alcance: estilos locales de `src/app/shared/components/navigation/AdminBreadcrumb.tsx`.
+  - Fuera de alcance: navegación, API, breadcrumbs públicos y contenido de páginas.
+  - Dependencias: WEB-072.
+  - Criterios de aceptación: la flecha muestra fondo amarillo claro, hover más intenso, contraste suficiente, foco visible y conserva área táctil/nombre accesible.
+  - Validación: revisión visual y `pnpm lint`; `pnpm typecheck`; `pnpm test`; `pnpm build`.
+  - Responsable: Subagente Web; verificación final Orquestador.
+  - Evidencia: `AdminBreadcrumb.tsx` aplica `bg-accent/20` y `hover:bg-accent/40` al botón de flecha, conservando foco, área táctil, `aria-label`, `title` y navegación. `pnpm lint` (sin errores; warning preexistente), `pnpm typecheck`, `pnpm test` (6 pruebas), `pnpm build` y `git diff --check` exitosos.
+
+- [x] **WEB-074 — Crear SelectField base reutilizable**
+  - Ámbito: Web
+  - Objetivo: crear un campo select global accesible para formularios.
+  - Alcance: `src/app/shared/components/fields/base/SelectField.tsx`, prueba y catálogo.
+  - Fuera de alcance: integración de Guía de lectura, API y adaptador RHF.
+  - Dependencias: componentes UI existentes.
+  - Criterios de aceptación: label, opciones, value/onChange, required, disabled, error, helperText y foco accesible; estados documentados en catálogo.
+  - Validación: prueba propia, catálogo, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Responsable: Subagente Web; verificación final Orquestador.
+  - Evidencia: `SelectField.tsx` implementa select nativo accesible con opciones, placeholder, required, disabled, error y helper text; incluye prueba y catálogo con estados. `pnpm lint` (sin errores; warning preexistente), `pnpm typecheck`, `pnpm test` (8 pruebas) y `pnpm build` exitosos.
+
+- [x] **WEB-075 — Gestionar guías de lectura en cards**
+  - Ámbito: Web
+  - Objetivo: permitir crear, editar y eliminar una guía por mes mediante cards y diálogo.
+  - Alcance: `src/app/features/resources/ReadingGuideAdminPage.tsx`.
+  - Fuera de alcance: API, persistencia real, otros módulos y nuevos campos fuera de mes/imagen.
+  - Dependencias: WEB-068 FileField y WEB-074 SelectField.
+  - Criterios de aceptación: botón Agregar guía; formulario con SelectField de meses y FileField de imagen; un máximo de una guía por mes; grid responsive; preview; acciones editar/eliminar y estado vacío.
+  - Validación: flujos crear/editar/eliminar/duplicado, teclado/foco, responsive, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Responsable: Subagente Web; verificación final Orquestador.
+  - Evidencia: `ReadingGuideAdminPage.tsx` permite agregar, editar y eliminar guías en memoria; usa SelectField para mes único y FileField para imagen, muestra preview, cards responsive, estado vacío y confirmación accesible al eliminar. `pnpm lint` (sin errores; warning preexistente), `pnpm typecheck`, `pnpm test` (8 pruebas), `pnpm build` y `git diff --check` exitosos.
+
+- [x] **WEB-076 — Listar todos los meses sin año en Guía**
+  - Ámbito: Web
+  - Objetivo: mostrar Enero a Diciembre en el SelectField de Guía de lectura, sin incluir el año.
+  - Alcance: opciones y disponibilidad de meses en `src/app/features/resources/ReadingGuideAdminPage.tsx`.
+  - Fuera de alcance: cards, FileField, otros formularios, API y persistencia.
+  - Dependencias: WEB-074 y WEB-075.
+  - Criterios de aceptación: el selector lista los 12 meses en orden cronológico con nombres sin año; meses con guía permanecen deshabilitados; el formulario conserva creación y edición.
+  - Validación: revisión del selector, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+  - Responsable: Subagente Web; verificación final Orquestador.
+  - Evidencia: `ReadingGuideAdminPage.tsx` usa un catálogo cronológico de Enero a Diciembre sin año; los meses con guía siguen deshabilitados y el mes actual se mantiene disponible al editar. `pnpm lint` (sin errores; warning preexistente), `pnpm typecheck`, `pnpm test` (8 pruebas), `pnpm build` y `git diff --check` exitosos.

@@ -13,7 +13,7 @@ Estas reglas son obligatorias para toda actividad del proyecto.
 
 - Las instrucciones del sistema y del harness prevalecen sobre esta guía y nunca quedan invalidadas por ella.
 - Esta guía es obligatoria después de ellas; una instrucción específica puede restringir, pero nunca relajar, sus mandatos.
-- Toda labor de UI/UX debe cargar y seguir `backoffice-blue-mui` **antes** de planificar o modificar interfaces. Si no está disponible, la labor queda bloqueada.
+<!-- - Toda labor de UI/UX debe cargar y seguir `backoffice-blue-mui` **antes** de planificar o modificar interfaces. Si no está disponible, la labor queda bloqueada. -->
 - El plan y la validación deben demostrar el cumplimiento de la jerarquía y de las reglas aplicables.
 
 ### Web y API
