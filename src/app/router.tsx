@@ -4,11 +4,15 @@ import { PublicLayout } from './layouts/PublicLayout'
 import { DashboardPage } from './features/dashboard/DashboardPage'
 import { SegmentsPage } from './features/segments/SegmentsPage'
 import { NewSegmentPage } from './features/segments/NewSegmentPage'
-import { PlaceholderPage } from './features/placeholder/PlaceholderPage'
 import { GuidePage } from './features/guide/GuidePage'
 import { ReadingTodayPage } from './features/reading/ReadingTodayPage'
 import { SettingsPage } from './features/settings/SettingsPage'
 import { AnnouncementsPage } from './features/announcements/AnnouncementsPage'
+import { ResourcesPage } from './features/resources/ResourcesPage'
+import { ResourcesAdminPage } from './features/resources/ResourcesAdminPage'
+import { ResourcesHubPage } from './features/resources/ResourcesHubPage'
+import { ReadingGuideAdminPage } from './features/resources/ReadingGuideAdminPage'
+import { SettingsAdminPage } from './features/settings/SettingsAdminPage'
 
 export const router = createBrowserRouter([
   {
@@ -18,6 +22,7 @@ export const router = createBrowserRouter([
       { path: '/guia', element: <GuidePage /> },
       { path: '/lectura-hoy', element: <ReadingTodayPage /> },
       { path: '/configuracion', element: <SettingsPage /> },
+      { path: '/recursos', element: <ResourcesPage /> },
     ],
   },
   {
@@ -27,9 +32,10 @@ export const router = createBrowserRouter([
       { path: '/admin/segmentos', element: <SegmentsPage /> },
       { path: '/admin/segmentos/nuevo', element: <NewSegmentPage /> },
       { path: '/admin/anuncios', element: <AnnouncementsPage /> },
-      { path: '/admin/usuarios', element: <PlaceholderPage segment="usuarios" /> },
-      { path: '/admin/reportes', element: <PlaceholderPage segment="reportes" /> },
-      { path: '/admin/configuracion', element: <PlaceholderPage segment="configuracion" /> },
+      { path: '/admin/recursos', element: <ResourcesHubPage /> },
+      { path: '/admin/recursos/por-mes', element: <ResourcesAdminPage /> },
+      { path: '/admin/recursos/guia-lectura', element: <ReadingGuideAdminPage /> },
+      { path: '/admin/configuracion', element: <SettingsAdminPage /> },
     ],
   },
 ])

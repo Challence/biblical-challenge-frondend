@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { IconBook2, IconInfoCircle, IconMenu2, IconSettings, IconSun, IconX } from '@tabler/icons-react'
+import { IconBook2, IconInfoCircle, IconMenu2, IconPhoto, IconSettings, IconSun, IconX } from '@tabler/icons-react'
 import { NavLink, Outlet } from 'react-router-dom'
 import logo from '@/assets/desafio-biblico-logo.webp'
 import { tv } from '@/app/shared/lib/tv'
@@ -21,7 +21,7 @@ const styles = tv({
     content: 'flex h-full min-h-0 min-w-0 flex-col pb-4',
     main: 'min-h-0 flex-1 overflow-x-hidden overflow-y-auto px-3 pt-[clamp(1rem,2vw,1.5rem)] pb-[clamp(1.25rem,4vw,2.5rem)] sm:px-[clamp(1.25rem,4vw,2.5rem)] max-[48rem]:pb-24',
     footer: 'flex min-h-11 items-center gap-2 border-t border-[#e5d7bd] px-[clamp(1rem,3vw,2.5rem)] py-2 text-xs text-[#806b51]',
-    bottomNav: 'hidden max-[48rem]:grid min-h-14 grid-cols-3 overflow-x-hidden rounded-2xl border border-[#e5d7bd] bg-[#fffaf0] p-1 pb-[max(0.25rem,env(safe-area-inset-bottom))] shadow-lg',
+    bottomNav: 'hidden max-[48rem]:grid min-h-14 grid-cols-4 overflow-x-hidden rounded-2xl border border-[#e5d7bd] bg-[#fffaf0] p-1 pb-[max(0.25rem,env(safe-area-inset-bottom))] shadow-lg',
     bottomLink: 'flex min-h-11 min-w-0 items-center justify-center rounded-xl px-2 py-2 text-[#806b51] no-underline focus-visible:z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#d4a84f] aria-[current=page]:bg-primary aria-[current=page]:text-primary-foreground',
   },
 })
@@ -29,6 +29,7 @@ const styles = tv({
 const links = [
   { to: '/guia', label: 'Guía de lectura', Icon: IconBook2 },
   { to: '/lectura-hoy', label: 'Lectura de hoy', Icon: IconSun },
+  { to: '/recursos', label: 'Recursos', Icon: IconPhoto },
   { to: '/configuracion', label: 'Configuración', Icon: IconSettings },
 ]
 

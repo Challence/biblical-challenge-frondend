@@ -13,8 +13,6 @@ const placeholderStyles = tv({
 const pages = {
   dashboard: ['Resumen general', 'Consulta el estado de tu contenido y tus métricas principales.'],
   segmentos: ['Segmentos', 'Organiza y consulta los segmentos.'],
-  usuarios: ['Usuarios', 'Gestiona las personas que colaboran en tu espacio.'],
-  reportes: ['Reportes', 'Revisa los reportes y la actividad de tu organización.'],
   configuracion: ['Configuración', 'Ajusta las preferencias de tu espacio de trabajo.'],
   guia: ['Guía de lectura', 'Encuentra una guía sencilla para acercarte a la lectura diaria.'],
   lecturaHoy: ['Lectura de hoy', 'Tu lectura de hoy está lista para acompañarte en este momento.'],
