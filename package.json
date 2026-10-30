@@ -19,7 +19,9 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@hookform/resolvers": "^6.0.2",
     "@radix-ui/react-slot": "^1.5.0",
+    "@supabase/supabase-js": "2.76.1",
     "@tabler/icons-react": "^3.49.0",
     "@tanstack/react-query": "^5.105.0",
     "class-variance-authority": "^0.7.1",
@@ -30,6 +32,7 @@
     "react-router-dom": "^7.18.4",
     "tailwind-merge": "^3.7.0",
     "tailwind-variants": "3.2.2",
+    "zod": "^4.6.7",
     "zustand": "^5.0.16"
   },
   "devDependencies": {

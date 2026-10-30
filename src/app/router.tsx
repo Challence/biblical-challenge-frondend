@@ -13,6 +13,7 @@ import { ResourcesAdminPage } from './features/resources/ResourcesAdminPage'
 import { ResourcesHubPage } from './features/resources/ResourcesHubPage'
 import { ReadingGuideAdminPage } from './features/resources/ReadingGuideAdminPage'
 import { SettingsAdminPage } from './features/settings/SettingsAdminPage'
+import { AuthGate } from './shared/components/auth/AuthGate'
 
 export const router = createBrowserRouter([
   {
@@ -26,11 +27,12 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    element: <BackofficeLayout />,
+    element: <AuthGate><BackofficeLayout /></AuthGate>,
     children: [
       { path: '/admin', element: <DashboardPage /> },
       { path: '/admin/segmentos', element: <SegmentsPage /> },
       { path: '/admin/segmentos/nuevo', element: <NewSegmentPage /> },
+      { path: '/admin/segmentos/:id/editar', element: <NewSegmentPage /> },
       { path: '/admin/anuncios', element: <AnnouncementsPage /> },
       { path: '/admin/recursos', element: <ResourcesHubPage /> },
       { path: '/admin/recursos/por-mes', element: <ResourcesAdminPage /> },
