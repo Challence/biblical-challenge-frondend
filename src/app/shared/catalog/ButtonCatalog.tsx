@@ -19,20 +19,33 @@ export function ButtonCatalog() {
   return (
     <main aria-labelledby="button-catalog-title" className={styles.catalog()}>
       <header className={styles.header()}>
-        <h1 id="button-catalog-title" className={styles.title()}>Button</h1>
+        <h1 id="button-catalog-title" className={styles.title()}>
+          Button
+        </h1>
         <p>Acciones compactas con variantes consistentes y foco visible.</p>
       </header>
       <section aria-labelledby="button-variants-title" className={styles.section()}>
-        <h2 id="button-variants-title" className={styles.sectionTitle()}>Variantes</h2>
+        <h2 id="button-variants-title" className={styles.sectionTitle()}>
+          Variantes
+        </h2>
         <div className={styles.examples()}>
-          <Button>Default</Button><Button variant="secondary">Secondary</Button><Button variant="outline">Outline</Button>
-          <Button variant="ghost">Ghost</Button><Button variant="destructive">Destructive</Button><Button variant="link">Link</Button>
+          <Button>Default</Button>
+          <Button variant="secondary">Secondary</Button>
+          <Button variant="outline">Outline</Button>
+          <Button variant="ghost">Ghost</Button>
+          <Button variant="destructive">Destructive</Button>
+          <Button variant="link">Link</Button>
         </div>
       </section>
       <section aria-labelledby="button-states-title" className={styles.section()}>
-        <h2 id="button-states-title" className={styles.sectionTitle()}>Estados y tamaños</h2>
+        <h2 id="button-states-title" className={styles.sectionTitle()}>
+          Estados y tamaños
+        </h2>
         <div className={styles.stateExamples()}>
-          <Button size="small">Small</Button><Button size="medium">Normal</Button><Button size="large">Large</Button><Button disabled>Disabled</Button>
+          <Button size="small">Small</Button>
+          <Button size="medium">Normal</Button>
+          <Button size="large">Large</Button>
+          <Button disabled>Disabled</Button>
         </div>
       </section>
     </main>

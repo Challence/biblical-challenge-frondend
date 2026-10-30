@@ -1,10 +1,10 @@
 ---
 name: react-behavior-implementation
-description: "Trigger: React, componente React, hook, UI React, comportamiento React. Diseñar e implementar features React con comportamiento verificable, composición y calidad."
+description: 'Trigger: React, componente React, hook, UI React, comportamiento React. Diseñar e implementar features React con comportamiento verificable, composición y calidad.'
 license: Apache-2.0
 metadata:
-  author: "franchesca-project"
-  version: "1.0"
+  author: 'franchesca-project'
+  version: '1.0'
 ---
 
 ## Activation Contract
@@ -23,13 +23,13 @@ Activa esta skill al crear, modificar, revisar o depurar componentes, hooks, pá
 
 ## Decision Gates
 
-| Necesidad | Decisión |
-|---|---|
-| UI repetida | Reutiliza componente existente; luego compón o adapta; crea solo si no resuelve. |
-| Lógica repetida | Extrae un Hook solo con comportamiento compartido real. |
-| Datos remotos | Mantén estados de carga, error, vacío y cancelación según la infraestructura existente. |
-| Estado compartido | Elige el propietario más cercano que cubra todos los consumidores. |
-| Efecto | Comprueba primero si puede resolverse durante render o en un handler. |
+| Necesidad         | Decisión                                                                                |
+| ----------------- | --------------------------------------------------------------------------------------- |
+| UI repetida       | Reutiliza componente existente; luego compón o adapta; crea solo si no resuelve.        |
+| Lógica repetida   | Extrae un Hook solo con comportamiento compartido real.                                 |
+| Datos remotos     | Mantén estados de carga, error, vacío y cancelación según la infraestructura existente. |
+| Estado compartido | Elige el propietario más cercano que cubra todos los consumidores.                      |
+| Efecto            | Comprueba primero si puede resolverse durante render o en un handler.                   |
 
 ## Execution Steps
 

@@ -11,14 +11,13 @@
 
 ### Jerarquía y densidad
 
-| Elemento | Regla |
-|---|---|
-| Título de página | 30–34px, 700, navy |
-| Título de sección | 17–20px, 700 |
-| Valor KPI | 28–32px, 700 |
-| Texto habitual | 14–15px |
-| Labels/metadatos | 12–14px, nunca ilegibles |
-| Separación entre módulos | 16–20px |
-| Padding interior de card | 20–24px |
-| Inputs y botones | ~44px alto mínimo interactivo |
-
+| Elemento                 | Regla                         |
+| ------------------------ | ----------------------------- |
+| Título de página         | 30–34px, 700, navy            |
+| Título de sección        | 17–20px, 700                  |
+| Valor KPI                | 28–32px, 700                  |
+| Texto habitual           | 14–15px                       |
+| Labels/metadatos         | 12–14px, nunca ilegibles      |
+| Separación entre módulos | 16–20px                       |
+| Padding interior de card | 20–24px                       |
+| Inputs y botones         | ~44px alto mínimo interactivo |

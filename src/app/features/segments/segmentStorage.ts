@@ -12,4 +12,6 @@ export function getActiveSegmentCover() {
   }
   return DEFAULT_SEGMENT_COVER
 }
-export function saveActiveSegmentCover(cover: string) { window.localStorage.setItem(SEGMENT_COVER_KEY, cover) }
+export function saveActiveSegmentCover(cover: string) {
+  window.localStorage.setItem(SEGMENT_COVER_KEY, cover)
+}

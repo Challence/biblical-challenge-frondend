@@ -14,7 +14,10 @@ export function AdminBreadcrumb({ items, currentLabel, backTo }: AdminBreadcrumb
   const navigate = useNavigate()
 
   return (
-    <nav className="mb-3 flex min-w-0 flex-wrap items-center gap-2 text-sm text-muted-foreground" aria-label="Migas de pan">
+    <nav
+      className="mb-3 flex min-w-0 flex-wrap items-center gap-2 text-sm text-muted-foreground"
+      aria-label="Migas de pan"
+    >
       <Button
         type="button"
         variant="ghost"
@@ -27,8 +30,20 @@ export function AdminBreadcrumb({ items, currentLabel, backTo }: AdminBreadcrumb
         <IconArrowLeft aria-hidden="true" />
       </Button>
       <ol className="flex min-w-0 flex-wrap items-center gap-2">
-        {items.map((item) => <li key={item.to} className="flex min-w-0 items-center gap-2"><Link className="truncate underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2" to={item.to}>{item.label}</Link><span aria-hidden="true">/</span></li>)}
-        <li className="truncate font-medium text-foreground" aria-current="page">{currentLabel}</li>
+        {items.map((item) => (
+          <li key={item.to} className="flex min-w-0 items-center gap-2">
+            <Link
+              className="truncate underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              to={item.to}
+            >
+              {item.label}
+            </Link>
+            <span aria-hidden="true">/</span>
+          </li>
+        ))}
+        <li className="truncate font-medium text-foreground" aria-current="page">
+          {currentLabel}
+        </li>
       </ol>
     </nav>
   )

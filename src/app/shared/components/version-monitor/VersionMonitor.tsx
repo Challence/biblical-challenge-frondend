@@ -1,6 +1,12 @@
 import { useEffect, useState } from 'react'
 import { Button } from '@/app/shared/components/ui/button'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/app/shared/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/app/shared/components/ui/dialog'
 
 declare const __APP_VERSION__: string
 

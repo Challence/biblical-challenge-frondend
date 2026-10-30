@@ -1,4 +1,5 @@
 pnpm lint
 pnpm typecheck
+pnpm format:check
 pnpm version:bump
 git add package.json public/version.json

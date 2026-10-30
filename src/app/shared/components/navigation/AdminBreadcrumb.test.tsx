@@ -6,7 +6,15 @@ import { AdminBreadcrumb } from './AdminBreadcrumb'
 
 describe('AdminBreadcrumb', () => {
   it('renders navigable ancestors, current page and accessible back action', () => {
-    render(<MemoryRouter><AdminBreadcrumb items={[{ label: 'Inicio', to: '/admin' }]} currentLabel="Segmentos" backTo="/admin" /></MemoryRouter>)
+    render(
+      <MemoryRouter>
+        <AdminBreadcrumb
+          items={[{ label: 'Inicio', to: '/admin' }]}
+          currentLabel="Segmentos"
+          backTo="/admin"
+        />
+      </MemoryRouter>,
+    )
     expect(screen.getByRole('button', { name: 'Volver' })).toHaveAttribute('title', 'Volver')
     expect(screen.getByRole('link', { name: 'Inicio' })).toHaveAttribute('href', '/admin')
     expect(screen.getByText('Segmentos')).toHaveAttribute('aria-current', 'page')

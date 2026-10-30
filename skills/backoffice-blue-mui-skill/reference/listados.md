@@ -30,18 +30,18 @@
 
 ### 9.2. Layout y distancias
 
-| Zona | Especificación desktop |
-|---|---|
-| Sidebar | `264px`; degradado azul existente; ítem activo translúcido, radio `10–12px` |
-| Topbar | `78px`; buscador global a la izquierda; notificaciones y usuario a la derecha |
-| Lienzo principal | Gradiente azul muy pálido, padding horizontal `28–32px` |
-| Breadcrumb | Sobre el título; tipografía de `13–14px`; separación inferior `8–12px` |
-| Encabezado de página | H1 **Proyectos** `32–34px/700` navy; subtítulo `15–16px` azul grisáceo |
-| CTA «Nuevo Proyecto» | Alineado a la derecha del encabezado, azul primario, alto `44–48px`, ícono `+` |
-| Separación entre secciones | `16–20px` (encabezado → filtros → tabla) |
-| Banda de filtros | Sin `Card`/`Paper` envolvente; grilla responsive con separación del layout |
-| Card de tabla | Blanca, mismo radio/sombra; toolbar interior; contenedor de tabla y pie de paginación |
-| Controles | Alto objetivo `42–44px`, radios `10–12px`; labels de filtros visibles |
+| Zona                       | Especificación desktop                                                                |
+| -------------------------- | ------------------------------------------------------------------------------------- |
+| Sidebar                    | `264px`; degradado azul existente; ítem activo translúcido, radio `10–12px`           |
+| Topbar                     | `78px`; buscador global a la izquierda; notificaciones y usuario a la derecha         |
+| Lienzo principal           | Gradiente azul muy pálido, padding horizontal `28–32px`                               |
+| Breadcrumb                 | Sobre el título; tipografía de `13–14px`; separación inferior `8–12px`                |
+| Encabezado de página       | H1 **Proyectos** `32–34px/700` navy; subtítulo `15–16px` azul grisáceo                |
+| CTA «Nuevo Proyecto»       | Alineado a la derecha del encabezado, azul primario, alto `44–48px`, ícono `+`        |
+| Separación entre secciones | `16–20px` (encabezado → filtros → tabla)                                              |
+| Banda de filtros           | Sin `Card`/`Paper` envolvente; grilla responsive con separación del layout            |
+| Card de tabla              | Blanca, mismo radio/sombra; toolbar interior; contenedor de tabla y pie de paginación |
+| Controles                  | Alto objetivo `42–44px`, radios `10–12px`; labels de filtros visibles                 |
 
 ### 9.3. Banda superior de filtros
 
@@ -90,17 +90,17 @@
 
 ### 9.6. Mapeo a MUI y tema global
 
-| Fragmento visual | MUI preferido |
-|---|---|
-| Shell | `Drawer`, `AppBar`, `Toolbar`, `Box` |
-| Breadcrumb y header | `Breadcrumbs`, `Typography`, `Stack`, `Button` |
-| Filtros | `Box`/grilla, `TextField`, `FormControl`, `Select`, `Autocomplete`, `Button` |
-| Tabla | `Paper`, `TableContainer`, `Table`, `TableHead`, `TableBody`, `TableRow`, `TableCell` |
-| Orden y selección | `TableSortLabel`, `Checkbox` |
-| Contenido de filas | `Avatar`, `AvatarGroup`, `Chip`, `LinearProgress`, `Typography` |
-| Acciones | `IconButton`, `Menu`, `MenuItem` |
-| Paginación | `Pagination` o `TablePagination` |
-| Estados | `Skeleton`, `Alert`, `Typography`, `Button` |
+| Fragmento visual    | MUI preferido                                                                         |
+| ------------------- | ------------------------------------------------------------------------------------- |
+| Shell               | `Drawer`, `AppBar`, `Toolbar`, `Box`                                                  |
+| Breadcrumb y header | `Breadcrumbs`, `Typography`, `Stack`, `Button`                                        |
+| Filtros             | `Box`/grilla, `TextField`, `FormControl`, `Select`, `Autocomplete`, `Button`          |
+| Tabla               | `Paper`, `TableContainer`, `Table`, `TableHead`, `TableBody`, `TableRow`, `TableCell` |
+| Orden y selección   | `TableSortLabel`, `Checkbox`                                                          |
+| Contenido de filas  | `Avatar`, `AvatarGroup`, `Chip`, `LinearProgress`, `Typography`                       |
+| Acciones            | `IconButton`, `Menu`, `MenuItem`                                                      |
+| Paginación          | `Pagination` o `TablePagination`                                                      |
+| Estados             | `Skeleton`, `Alert`, `Typography`, `Button`                                           |
 
 **Principio obligatorio:** editar el `theme.ts` / tokens para aspecto repetido de tablas, inputs, chips, botones y cards; usar `sx` solo para la ubicación, anchura y responsividad específica. No aplicar estilos generales con selectores frágiles ni crear un nuevo design system.
 

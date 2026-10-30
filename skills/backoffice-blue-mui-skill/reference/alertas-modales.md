@@ -4,16 +4,16 @@
 
 **Priorizar `Dialog` interactivo para errores y advertencias de alcance global que bloquean o requieren una decisión o acción explícita del usuario.** No usar un toast temporal como única explicación de un fallo bloqueante. Evitar sobreutilizar modales ante errores de validación local o notificaciones no críticas.
 
-| Evento | Patrón MUI | Comportamiento esperado |
-|---|---|---|
-| Éxito de una operación | `Snackbar` + `Alert` | Breve, no bloquea, autoocultar cuando sea apropiado |
-| Información no crítica | `Alert` inline o `Snackbar` | Contextual y discreta |
-| Error de un campo | `TextField` `error` + `helperText` | Junto al campo, conservar valores y foco |
-| Advertencia bloqueante / datos faltantes de varios campos | `Dialog` warning | Explicación clara, lista concreta y botón «Revisar» |
-| Fallo global de guardado, carga o servidor que exige intervención | `Dialog` error | «Cerrar» y «Reintentar» cuando exista una acción segura |
-| Eliminación o cambio irreversible | `Dialog` confirmación | Consecuencias claras, «Cancelar» y acción destructiva |
-| Formulario extenso | `Dialog` formulario (si el flujo existente lo admite) | Campos con validación inline y footer fijo si hay scroll |
-| Detalles de un registro | `Dialog` grande (si no corresponde navegación a página) | Tabs/secciones, máximo ancho, scroll interior |
+| Evento                                                            | Patrón MUI                                              | Comportamiento esperado                                  |
+| ----------------------------------------------------------------- | ------------------------------------------------------- | -------------------------------------------------------- |
+| Éxito de una operación                                            | `Snackbar` + `Alert`                                    | Breve, no bloquea, autoocultar cuando sea apropiado      |
+| Información no crítica                                            | `Alert` inline o `Snackbar`                             | Contextual y discreta                                    |
+| Error de un campo                                                 | `TextField` `error` + `helperText`                      | Junto al campo, conservar valores y foco                 |
+| Advertencia bloqueante / datos faltantes de varios campos         | `Dialog` warning                                        | Explicación clara, lista concreta y botón «Revisar»      |
+| Fallo global de guardado, carga o servidor que exige intervención | `Dialog` error                                          | «Cerrar» y «Reintentar» cuando exista una acción segura  |
+| Eliminación o cambio irreversible                                 | `Dialog` confirmación                                   | Consecuencias claras, «Cancelar» y acción destructiva    |
+| Formulario extenso                                                | `Dialog` formulario (si el flujo existente lo admite)   | Campos con validación inline y footer fijo si hay scroll |
+| Detalles de un registro                                           | `Dialog` grande (si no corresponde navegación a página) | Tabs/secciones, máximo ancho, scroll interior            |
 
 ## Estructura visual del Dialog
 

@@ -261,3 +261,14 @@
   - Validación: revisión del selector, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
   - Responsable: Subagente Web; verificación final Orquestador.
   - Evidencia: `ReadingGuideAdminPage.tsx` usa un catálogo cronológico de Enero a Diciembre sin año; los meses con guía siguen deshabilitados y el mes actual se mantiene disponible al editar. `pnpm lint` (sin errores; warning preexistente), `pnpm typecheck`, `pnpm test` (8 pruebas), `pnpm build` y `git diff --check` exitosos.
+
+- [x] **TRV-077 — Configurar herramientas base de React y formato**
+  - Ámbito: Web/API
+  - Objetivo: incorporar Prettier, Zustand, TanStack Query y React Hook Form con configuración base segura.
+  - Alcance: `package.json`, lockfile, configuración/scripts de Prettier, pre-commit, proveedor global de Query y formateo inicial del repositorio.
+  - Fuera de alcance: stores de negocio, queries/endpoints, formularios funcionales nuevos y migraciones de componentes existentes.
+  - Dependencias: toolchain pnpm/Husky existente.
+  - Criterios de aceptación: `format` y `format:check` funcionan; pre-commit ejecuta `format:check`; QueryClientProvider se monta globalmente con instancia estable; dependencias disponibles; no se inventan consumidores.
+  - Validación: `pnpm format:check`; `pnpm lint`; `pnpm typecheck`; `pnpm test`; `pnpm build`.
+  - Responsable: Subagente Tooling; verificación final Orquestador.
+  - Evidencia: Prettier configurado en `.prettierrc.json`/`.prettierignore`, scripts `format` y `format:check`, pre-commit con verificación de formato, dependencias `zustand`, `@tanstack/react-query`, `react-hook-form` y `prettier` instaladas, y `QueryProvider` global con `QueryClient` estable. Se formateó el repositorio completo. `pnpm format:check`, `pnpm lint` (sin errores; warning preexistente), `pnpm typecheck`, `pnpm test` (8 pruebas) y `pnpm build` exitosos.

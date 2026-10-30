@@ -22,5 +22,14 @@ const pages = {
 export function PlaceholderPage({ segment }: { segment: keyof typeof pages }) {
   const [title, description] = pages[segment]
   const styles = placeholderStyles()
-  return <section className={styles.page()} aria-labelledby="page-title"><p className={styles.eyebrow()}>Palabra</p><h1 className={styles.title()} id="page-title">{title}</h1><p className={styles.description()}>{description}</p><div className={styles.notice()}>Este espacio estará disponible próximamente.</div></section>
+  return (
+    <section className={styles.page()} aria-labelledby="page-title">
+      <p className={styles.eyebrow()}>Palabra</p>
+      <h1 className={styles.title()} id="page-title">
+        {title}
+      </h1>
+      <p className={styles.description()}>{description}</p>
+      <div className={styles.notice()}>Este espacio estará disponible próximamente.</div>
+    </section>
+  )
 }

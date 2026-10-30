@@ -1,5 +1,12 @@
 import { IconFile, IconUpload } from '@tabler/icons-react'
-import { useId, useRef, useState, type ChangeEvent, type DragEvent, type KeyboardEvent } from 'react'
+import {
+  useId,
+  useRef,
+  useState,
+  type ChangeEvent,
+  type DragEvent,
+  type KeyboardEvent,
+} from 'react'
 import { cn } from '@/app/shared/lib/utils'
 import { Label } from '@/app/shared/components/ui/label'
 
@@ -26,7 +33,17 @@ function matchesAccept(file: File, accept?: string) {
   })
 }
 
-export function FileField({ id, label, accept, required, disabled, error, helperText, value, onFileChange }: FileFieldProps) {
+export function FileField({
+  id,
+  label,
+  accept,
+  required,
+  disabled,
+  error,
+  helperText,
+  value,
+  onFileChange,
+}: FileFieldProps) {
   const inputRef = useRef<HTMLInputElement>(null)
   const [isDragging, setIsDragging] = useState(false)
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
@@ -58,7 +75,10 @@ export function FileField({ id, label, accept, required, disabled, error, helper
 
   return (
     <div className="space-y-2">
-      <Label htmlFor={id}>{label}{required ? ' *' : ''}</Label>
+      <Label htmlFor={id}>
+        {label}
+        {required ? ' *' : ''}
+      </Label>
       <div
         role="button"
         tabIndex={disabled ? -1 : 0}
@@ -67,22 +87,58 @@ export function FileField({ id, label, accept, required, disabled, error, helper
         aria-invalid={Boolean(error)}
         onClick={() => !disabled && inputRef.current?.click()}
         onKeyDown={onKeyDown}
-        onDragEnter={(event) => { event.preventDefault(); if (!disabled) setIsDragging(true) }}
-        onDragOver={(event) => { event.preventDefault() }}
-        onDragLeave={(event) => { if (event.currentTarget === event.target) setIsDragging(false) }}
+        onDragEnter={(event) => {
+          event.preventDefault()
+          if (!disabled) setIsDragging(true)
+        }}
+        onDragOver={(event) => {
+          event.preventDefault()
+        }}
+        onDragLeave={(event) => {
+          if (event.currentTarget === event.target) setIsDragging(false)
+        }}
         onDrop={onDrop}
         className={cn(
           'flex min-h-32 cursor-pointer flex-col items-center justify-center gap-2 rounded-md border-2 border-dashed p-4 text-center transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
-          isDragging ? 'border-primary bg-accent/30' : 'border-input bg-background hover:border-primary',
-          error ? 'border-destructive' : '', disabled ? 'cursor-not-allowed opacity-50' : '',
+          isDragging
+            ? 'border-primary bg-accent/30'
+            : 'border-input bg-background hover:border-primary',
+          error ? 'border-destructive' : '',
+          disabled ? 'cursor-not-allowed opacity-50' : '',
         )}
       >
-        <input ref={inputRef} id={id} type="file" accept={accept} required={required} disabled={disabled} onChange={onInputChange} className="sr-only" aria-hidden="true" />
-        {file ? <IconFile aria-hidden="true" size={28} /> : <IconUpload aria-hidden="true" size={28} />}
-        <span className="font-medium">{file ? file.name : 'Selecciona un archivo o arrástralo aquí'}</span>
-        {!file && <span className="text-sm text-muted-foreground">Haz clic o pulsa Enter para buscar</span>}
+        <input
+          ref={inputRef}
+          id={id}
+          type="file"
+          accept={accept}
+          required={required}
+          disabled={disabled}
+          onChange={onInputChange}
+          className="sr-only"
+          aria-hidden="true"
+        />
+        {file ? (
+          <IconFile aria-hidden="true" size={28} />
+        ) : (
+          <IconUpload aria-hidden="true" size={28} />
+        )}
+        <span className="font-medium">
+          {file ? file.name : 'Selecciona un archivo o arrástralo aquí'}
+        </span>
+        {!file && (
+          <span className="text-sm text-muted-foreground">Haz clic o pulsa Enter para buscar</span>
+        )}
       </div>
-      {errorMessage ? <p id={`${id}-error`} className="text-sm text-destructive" role="alert">{errorMessage}</p> : helperText ? <p id={descriptionId} className="text-sm text-muted-foreground">{helperText}</p> : null}
+      {errorMessage ? (
+        <p id={`${id}-error`} className="text-sm text-destructive" role="alert">
+          {errorMessage}
+        </p>
+      ) : helperText ? (
+        <p id={descriptionId} className="text-sm text-muted-foreground">
+          {helperText}
+        </p>
+      ) : null}
     </div>
   )
 }

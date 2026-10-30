@@ -122,17 +122,17 @@ Confirmar contraseña *
 
 ## 6. Comportamientos y estados transversales
 
-| Estado | Tratamiento |
-|---|---|
-| Default | Card y campos con jerarquía común |
-| Focus | Borde/foco azul visible y tabulación correcta |
-| Validación de campo | Error de borde + helper text inline con `aria-describedby` |
-| Loading | CTA con progreso accesible; evitar múltiples envíos |
-| Error global accionable | `Dialog` interactivo cuando exija decisión, alternativa o recuperación; ver `alertas-modales.md` |
-| Fallo simple de credenciales / formato | Mensaje persistente contextual, sin modal intrusivo |
-| Success | Estado de confirmación en card o Snackbar según redirección; nunca afirmar éxito antes de respuesta del servidor |
-| Token inválido/expirado | Card de estado con salida clara a recuperación |
-| Disabled | Contraste suficiente y razón explícita cuando resulte útil |
+| Estado                                 | Tratamiento                                                                                                      |
+| -------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| Default                                | Card y campos con jerarquía común                                                                                |
+| Focus                                  | Borde/foco azul visible y tabulación correcta                                                                    |
+| Validación de campo                    | Error de borde + helper text inline con `aria-describedby`                                                       |
+| Loading                                | CTA con progreso accesible; evitar múltiples envíos                                                              |
+| Error global accionable                | `Dialog` interactivo cuando exija decisión, alternativa o recuperación; ver `alertas-modales.md`                 |
+| Fallo simple de credenciales / formato | Mensaje persistente contextual, sin modal intrusivo                                                              |
+| Success                                | Estado de confirmación en card o Snackbar según redirección; nunca afirmar éxito antes de respuesta del servidor |
+| Token inválido/expirado                | Card de estado con salida clara a recuperación                                                                   |
+| Disabled                               | Contraste suficiente y razón explícita cuando resulte útil                                                       |
 
 ## 7. MUI y composición responsive
 

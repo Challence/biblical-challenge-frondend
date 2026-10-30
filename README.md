@@ -34,12 +34,12 @@ pnpm supabase:status
 
 URLs y puertos locales:
 
-| Servicio | URL/puerto |
-| --- | --- |
+| Servicio        | URL/puerto             |
+| --------------- | ---------------------- |
 | API de Supabase | http://127.0.0.1:54321 |
-| Postgres | `127.0.0.1:54322` |
-| Studio | http://127.0.0.1:54323 |
-| Mailpit | http://127.0.0.1:54324 |
+| Postgres        | `127.0.0.1:54322`      |
+| Studio          | http://127.0.0.1:54323 |
+| Mailpit         | http://127.0.0.1:54324 |
 
 ### Detener el stack
 
@@ -50,4 +50,5 @@ pnpm supabase:stop
 ### Seguridad
 
 No expongas `SECRET_KEY` ni `SERVICE_ROLE_KEY` al frontend. Estas claves son secretas y deben permanecer exclusivamente en servicios de servidor o en entornos seguros.
+
 # biblical-challenge-frondend

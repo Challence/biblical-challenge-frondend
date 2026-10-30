@@ -25,17 +25,17 @@ FormControl (fullWidth, minWidth: 0)
 
 ## 2. Inventario de campos que deben estar cubiertos
 
-| Tipo canónico | Composición visual requerida | Control MUI / dependencia |
-|---|---|---|
-| **Text field** (`field`) | Label + input de texto + placeholder/helper | `TextField` o `FormControl` + `OutlinedInput` |
-| **Password field** | Label + input oculto + acción mostrar/ocultar a la derecha | `TextField` + `InputAdornment` + `IconButton`; `type=password/text` |
-| **Phone field** | Label + selector país/código + bandera opcional + número, validación de formato | composición `FormControl` + `Select`/autocomplete país + `TextField`; no asumir máscara o lib preinstalada |
-| **Select field box** | Label + select con flecha + opción seleccionada + placeholder | `Select` + `MenuItem` o `TextField select`; `Autocomplete` para searchable/multiple |
-| **Date field** | Label + fecha + icono de calendario + picker | `DatePicker` de MUI X **solo si está instalado**; `TextField` nativo `type=date` como alternativa |
-| **Time field** | Label + hora + icono de reloj + picker | MUI X `TimePicker` **si está instalado**, o `type=time` |
-| **Range fields** | Dos campos con labels `Desde` / `Hasta`; rango numérico o de fechas | `Grid`/`Stack` + 2 `TextField`/`DatePicker`; `DateRangePicker` solo si existe/licencia disponible |
-| **Map field** (`map`) | Label `Ubicación` + buscador/dirección + icono pin y acción limpiar + **vista previa del mapa** | input MUI + adaptador del mapa **existente**; no suponer API, key o servicio |
-| **Map group** | Bloque cohesivo: Dirección, Ciudad, Estado/Provincia, Código postal y **mapa vinculado** | `Grid` + campos MUI + mapa existente; sincronización geocodificación solo con servicio disponible |
+| Tipo canónico            | Composición visual requerida                                                                    | Control MUI / dependencia                                                                                  |
+| ------------------------ | ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| **Text field** (`field`) | Label + input de texto + placeholder/helper                                                     | `TextField` o `FormControl` + `OutlinedInput`                                                              |
+| **Password field**       | Label + input oculto + acción mostrar/ocultar a la derecha                                      | `TextField` + `InputAdornment` + `IconButton`; `type=password/text`                                        |
+| **Phone field**          | Label + selector país/código + bandera opcional + número, validación de formato                 | composición `FormControl` + `Select`/autocomplete país + `TextField`; no asumir máscara o lib preinstalada |
+| **Select field box**     | Label + select con flecha + opción seleccionada + placeholder                                   | `Select` + `MenuItem` o `TextField select`; `Autocomplete` para searchable/multiple                        |
+| **Date field**           | Label + fecha + icono de calendario + picker                                                    | `DatePicker` de MUI X **solo si está instalado**; `TextField` nativo `type=date` como alternativa          |
+| **Time field**           | Label + hora + icono de reloj + picker                                                          | MUI X `TimePicker` **si está instalado**, o `type=time`                                                    |
+| **Range fields**         | Dos campos con labels `Desde` / `Hasta`; rango numérico o de fechas                             | `Grid`/`Stack` + 2 `TextField`/`DatePicker`; `DateRangePicker` solo si existe/licencia disponible          |
+| **Map field** (`map`)    | Label `Ubicación` + buscador/dirección + icono pin y acción limpiar + **vista previa del mapa** | input MUI + adaptador del mapa **existente**; no suponer API, key o servicio                               |
+| **Map group**            | Bloque cohesivo: Dirección, Ciudad, Estado/Provincia, Código postal y **mapa vinculado**        | `Grid` + campos MUI + mapa existente; sincronización geocodificación solo con servicio disponible          |
 
 **Nombres:** en la guía usar `map` para campo único de ubicación y `map group` para conjunto de dirección. No confundir con `Map` de JavaScript. Los controles numéricos del rango deben admitir `min/max`, unidades y decimales según necesidad real.
 

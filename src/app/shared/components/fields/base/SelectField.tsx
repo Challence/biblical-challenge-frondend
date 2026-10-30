@@ -21,7 +21,18 @@ export interface SelectFieldProps {
   placeholder?: string
 }
 
-export function SelectField({ id, label, options, value, onChange, required, disabled, error, helperText, placeholder }: SelectFieldProps) {
+export function SelectField({
+  id,
+  label,
+  options,
+  value,
+  onChange,
+  required,
+  disabled,
+  error,
+  helperText,
+  placeholder,
+}: SelectFieldProps) {
   const descriptionId = useId()
   const errorMessage = typeof error === 'string' ? error : undefined
   const describedBy = errorMessage ? `${id}-error` : helperText ? descriptionId : undefined
@@ -30,7 +41,10 @@ export function SelectField({ id, label, options, value, onChange, required, dis
 
   return (
     <div className="space-y-2">
-      <Label htmlFor={id}>{label}{required ? ' *' : ''}</Label>
+      <Label htmlFor={id}>
+        {label}
+        {required ? ' *' : ''}
+      </Label>
       <select
         id={id}
         value={value}
@@ -44,10 +58,26 @@ export function SelectField({ id, label, options, value, onChange, required, dis
           error ? 'border-destructive' : '',
         )}
       >
-        {placeholder ? <option value="" disabled>{placeholder}</option> : null}
-        {options.map((option) => <option key={option.value} value={option.value} disabled={option.disabled}>{option.label}</option>)}
+        {placeholder ? (
+          <option value="" disabled>
+            {placeholder}
+          </option>
+        ) : null}
+        {options.map((option) => (
+          <option key={option.value} value={option.value} disabled={option.disabled}>
+            {option.label}
+          </option>
+        ))}
       </select>
-      {errorMessage ? <p id={`${id}-error`} className="text-sm text-destructive" role="alert">{errorMessage}</p> : helperText ? <p id={descriptionId} className="text-sm text-muted-foreground">{helperText}</p> : null}
+      {errorMessage ? (
+        <p id={`${id}-error`} className="text-sm text-destructive" role="alert">
+          {errorMessage}
+        </p>
+      ) : helperText ? (
+        <p id={descriptionId} className="text-sm text-muted-foreground">
+          {helperText}
+        </p>
+      ) : null}
     </div>
   )
 }

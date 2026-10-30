@@ -7,10 +7,14 @@ const readProgress = (): ProgressByGuide => {
   try {
     const value: unknown = JSON.parse(window.localStorage.getItem(READING_PROGRESS_KEY) ?? '{}')
     if (!value || typeof value !== 'object' || Array.isArray(value)) return {}
-    return Object.fromEntries(Object.entries(value).map(([guide, days]) => [
-      guide,
-      Array.isArray(days) ? days.filter((day): day is number => Number.isInteger(day) && day > 0) : [],
-    ]))
+    return Object.fromEntries(
+      Object.entries(value).map(([guide, days]) => [
+        guide,
+        Array.isArray(days)
+          ? days.filter((day): day is number => Number.isInteger(day) && day > 0)
+          : [],
+      ]),
+    )
   } catch {
     return {}
   }

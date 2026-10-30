@@ -9,13 +9,17 @@ type InstallPromptEvent = Event & {
 }
 
 function isIos() {
-  return /iphone|ipad|ipod/i.test(navigator.userAgent) ||
+  return (
+    /iphone|ipad|ipod/i.test(navigator.userAgent) ||
     (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+  )
 }
 
 function isStandalone() {
-  return window.matchMedia('(display-mode: standalone)').matches ||
+  return (
+    window.matchMedia('(display-mode: standalone)').matches ||
     (navigator as Navigator & { standalone?: boolean }).standalone === true
+  )
 }
 
 function wasDismissedRecently() {
@@ -26,8 +30,12 @@ function wasDismissedRecently() {
 export function usePwaInstall() {
   const [promptEvent, setPromptEvent] = useState<InstallPromptEvent | null>(null)
   const [isIosDevice] = useState(() => typeof window !== 'undefined' && isIos())
-  const [isStandaloneMode, setIsStandaloneMode] = useState(() => typeof window === 'undefined' || isStandalone())
-  const [dismissed, setDismissed] = useState(() => typeof window === 'undefined' || wasDismissedRecently())
+  const [isStandaloneMode, setIsStandaloneMode] = useState(
+    () => typeof window === 'undefined' || isStandalone(),
+  )
+  const [dismissed, setDismissed] = useState(
+    () => typeof window === 'undefined' || wasDismissedRecently(),
+  )
 
   useEffect(() => {
     const updateDisplayMode = () => setIsStandaloneMode(isStandalone())
@@ -66,5 +74,10 @@ export function usePwaInstall() {
   }
 
   const canInstall = Boolean(promptEvent) || isIosDevice
-  return { canInstall: canInstall && !isStandaloneMode && !dismissed, isIos: isIosDevice, install, dismiss }
+  return {
+    canInstall: canInstall && !isStandaloneMode && !dismissed,
+    isIos: isIosDevice,
+    install,
+    dismiss,
+  }
 }

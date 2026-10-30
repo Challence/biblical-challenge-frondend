@@ -1,10 +1,10 @@
 ---
 name: version-observer
-description: "Trigger: versionado por commit, version.json, versión desplegada, actualización de versión, service worker opcional. Automatiza SemVer patch y observa despliegues sin interrumpir la app."
+description: 'Trigger: versionado por commit, version.json, versión desplegada, actualización de versión, service worker opcional. Automatiza SemVer patch y observa despliegues sin interrumpir la app.'
 license: Apache-2.0
 metadata:
-  author: "franchesca-project"
-  version: "1.0"
+  author: 'franchesca-project'
+  version: '1.0'
 ---
 
 ## Activation Contract
@@ -22,12 +22,12 @@ Activa esta skill al diseñar, implementar o revisar versionado automático por 
 
 ## Decision Gates
 
-| Condición | Decisión |
-|---|---|
-| Existe hook de commits | Compónlo sin duplicar incrementos; si no existe, crea el hook mínimo permitido. |
-| Hay versión remota distinta | Notifica y programa una única recarga; marca la transición para impedir repeticiones. |
-| Red, respuesta o JSON fallan | Registra/ignora el fallo y conserva la app; no recargues ni bloquees. |
-| Se propone service worker | Trátalo como mejora independiente y opcional; el monitor debe funcionar sin él. |
+| Condición                    | Decisión                                                                              |
+| ---------------------------- | ------------------------------------------------------------------------------------- |
+| Existe hook de commits       | Compónlo sin duplicar incrementos; si no existe, crea el hook mínimo permitido.       |
+| Hay versión remota distinta  | Notifica y programa una única recarga; marca la transición para impedir repeticiones. |
+| Red, respuesta o JSON fallan | Registra/ignora el fallo y conserva la app; no recargues ni bloquees.                 |
+| Se propone service worker    | Trátalo como mejora independiente y opcional; el monitor debe funcionar sin él.       |
 
 ## Execution Steps
 

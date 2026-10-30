@@ -16,18 +16,18 @@ Usar esta referencia al **consultar, visualizar o editar el detalle de una entid
 
 ## 2. Inventario de bloques referenciales
 
-| Bloque | Cuándo usarlo | Contenido y composición | MUI sugerido |
-|---|---|---|---|
-| Información general | Datos descriptivos del registro | Título, pares label/valor agrupados, estado, responsables, fechas | `Card`, `CardContent`, `Typography`, `Stack`, `Grid`, `Divider`, `Chip` |
-| Descripción | Texto largo o notas | Párrafos y saltos legibles, acciones si proceden | `Card`, `Typography` |
-| Indicadores de resumen | Métricas útiles | Valor prioritario, etiqueta, icono y unidad; sin inventar cálculos | `Card`, `Stack`, `LinearProgress` |
-| Estado y progreso | Entidades con flujo/avance | Estado, porcentaje, hitos y fechas; semántica real | `Chip`, `LinearProgress`, `Stepper` o timeline implementado con MUI disponible |
-| Relaciones y participantes | Usuarios, equipo, cliente o entidades relacionadas | Avatares, nombre, rol, enlace según permisos | `Avatar`, `AvatarGroup`, `List`, `Link` |
-| Documentos y adjuntos | Hay archivos reales | Nombre, tipo, fecha, tamaño disponible, acciones autorizadas | `List`, `ListItem`, `IconButton`, `Menu` |
-| Actividad e historial | Existe trazabilidad | Evento, fecha, autor y cambios, orden cronológico | `List`, `Divider` o timeline si está instalado |
-| Etiquetas y clasificación | Existen categorías/etiquetas | Valores agrupados sin exceso visual | `Chip`, `Stack` |
-| Información geográfica | La entidad tiene dirección | Dirección legible, datos estructurados y mapa solo con integración real | `Card`, `Stack`; mapa según `form-fields.md` |
-| Datos extensos | Muchos campos, tablas o relaciones | Secciones expandibles o tablas solo cuando aportan escaneo | `Accordion`, `Table`/`DataGrid` si existe |
+| Bloque                     | Cuándo usarlo                                      | Contenido y composición                                                 | MUI sugerido                                                                   |
+| -------------------------- | -------------------------------------------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| Información general        | Datos descriptivos del registro                    | Título, pares label/valor agrupados, estado, responsables, fechas       | `Card`, `CardContent`, `Typography`, `Stack`, `Grid`, `Divider`, `Chip`        |
+| Descripción                | Texto largo o notas                                | Párrafos y saltos legibles, acciones si proceden                        | `Card`, `Typography`                                                           |
+| Indicadores de resumen     | Métricas útiles                                    | Valor prioritario, etiqueta, icono y unidad; sin inventar cálculos      | `Card`, `Stack`, `LinearProgress`                                              |
+| Estado y progreso          | Entidades con flujo/avance                         | Estado, porcentaje, hitos y fechas; semántica real                      | `Chip`, `LinearProgress`, `Stepper` o timeline implementado con MUI disponible |
+| Relaciones y participantes | Usuarios, equipo, cliente o entidades relacionadas | Avatares, nombre, rol, enlace según permisos                            | `Avatar`, `AvatarGroup`, `List`, `Link`                                        |
+| Documentos y adjuntos      | Hay archivos reales                                | Nombre, tipo, fecha, tamaño disponible, acciones autorizadas            | `List`, `ListItem`, `IconButton`, `Menu`                                       |
+| Actividad e historial      | Existe trazabilidad                                | Evento, fecha, autor y cambios, orden cronológico                       | `List`, `Divider` o timeline si está instalado                                 |
+| Etiquetas y clasificación  | Existen categorías/etiquetas                       | Valores agrupados sin exceso visual                                     | `Chip`, `Stack`                                                                |
+| Información geográfica     | La entidad tiene dirección                         | Dirección legible, datos estructurados y mapa solo con integración real | `Card`, `Stack`; mapa según `form-fields.md`                                   |
+| Datos extensos             | Muchos campos, tablas o relaciones                 | Secciones expandibles o tablas solo cuando aportan escaneo              | `Accordion`, `Table`/`DataGrid` si existe                                      |
 
 **Selección de bloques:** mantener únicamente los que correspondan al caso y sustituir o agregar otros cuando el dominio lo requiera. No presentar cada bloque como obligatorio.
 

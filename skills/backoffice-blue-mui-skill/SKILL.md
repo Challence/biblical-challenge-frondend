@@ -34,18 +34,18 @@ En el backoffice, el shell debe ocupar el viewport sin generar scroll global:
 
 ## Enrutamiento de referencias: leer solo lo necesario
 
-| Tarea detectada | Referencia mínima |
-|---|---|
-| Cambiar paleta, tipografía, gradientes, cards u overrides MUI | [`reference/theme-mui.md`](reference/theme-mui.md) |
-| Ajustar sidebar, topbar y shell | [`reference/layout-shell.md`](reference/layout-shell.md) |
-| Crear o ajustar Dashboard/KPI/gráficos | [`reference/dashboard.md`](reference/dashboard.md) + layout-shell si cambia el shell |
-| Crear o ajustar listados, filtros, tablas y paginación | [`reference/listados.md`](reference/listados.md) |
-| Crear o ajustar pantallas de detalle, fichas de registros, vista de entidad, descripción e historial | [`reference/detail-pages.md`](reference/detail-pages.md) |
-| Crear o modificar Login, Register, Forgot Password o Reset Password | [`reference/authentication.md`](reference/authentication.md) |
-| Diseñar o ajustar formularios, inputs, select, password, teléfono, fechas, rangos y mapas | [`reference/form-fields.md`](reference/form-fields.md) |
-| Implementar warnings, errores, confirmaciones, toast o modal | [`reference/alertas-modales.md`](reference/alertas-modales.md) |
-| Resolver responsive, estados y accesibilidad | [`reference/responsive-accesibilidad.md`](reference/responsive-accesibilidad.md) |
-| Revisar entrega y pruebas | [`reference/validacion.md`](reference/validacion.md) |
+| Tarea detectada                                                                                      | Referencia mínima                                                                    |
+| ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| Cambiar paleta, tipografía, gradientes, cards u overrides MUI                                        | [`reference/theme-mui.md`](reference/theme-mui.md)                                   |
+| Ajustar sidebar, topbar y shell                                                                      | [`reference/layout-shell.md`](reference/layout-shell.md)                             |
+| Crear o ajustar Dashboard/KPI/gráficos                                                               | [`reference/dashboard.md`](reference/dashboard.md) + layout-shell si cambia el shell |
+| Crear o ajustar listados, filtros, tablas y paginación                                               | [`reference/listados.md`](reference/listados.md)                                     |
+| Crear o ajustar pantallas de detalle, fichas de registros, vista de entidad, descripción e historial | [`reference/detail-pages.md`](reference/detail-pages.md)                             |
+| Crear o modificar Login, Register, Forgot Password o Reset Password                                  | [`reference/authentication.md`](reference/authentication.md)                         |
+| Diseñar o ajustar formularios, inputs, select, password, teléfono, fechas, rangos y mapas            | [`reference/form-fields.md`](reference/form-fields.md)                               |
+| Implementar warnings, errores, confirmaciones, toast o modal                                         | [`reference/alertas-modales.md`](reference/alertas-modales.md)                       |
+| Resolver responsive, estados y accesibilidad                                                         | [`reference/responsive-accesibilidad.md`](reference/responsive-accesibilidad.md)     |
+| Revisar entrega y pruebas                                                                            | [`reference/validacion.md`](reference/validacion.md)                                 |
 
 En autenticación, cargar `authentication.md` y complementar con `form-fields.md` o `alertas-modales.md` solo para cambios que lo requieran. El AuthShell es independiente del shell administrativo. En detalles, cargar `detail-pages.md` y otras referencias solo para funciones implicadas. En formularios, cargar `form-fields.md`; añadir `alertas-modales.md` solo si existen diálogos o validaciones globales accionables. Si hay un problema de color **más** un listado, leer `theme-mui.md` y `listados.md`; no cargar las otras guías salvo que intervengan. Si la tarea involucra más contextos, añadir **solo** sus referencias.
 
