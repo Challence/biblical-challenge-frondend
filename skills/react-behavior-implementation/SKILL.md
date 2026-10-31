@@ -32,17 +32,17 @@ Antes de diseñar componentes, carga `../component-composition/SKILL.md` y `../a
 
 ## Decision Gates
 
-| Necesidad             | Decisión                                                                                          |
-| --------------------- | ------------------------------------------------------------------------------------------------- |
-| Sección compleja      | Divide por responsabilidad y dominio solo si cada sección queda individual, testeable y autosuficiente. |
-| UI repetida           | Reutiliza componente existente; luego compón o adapta; crea solo si no resuelve.                  |
-| Lógica repetida       | Extrae un Hook solo con comportamiento compartido real.                                           |
+| Necesidad             | Decisión                                                                                                        |
+| --------------------- | --------------------------------------------------------------------------------------------------------------- |
+| Sección compleja      | Divide por responsabilidad y dominio solo si cada sección queda individual, testeable y autosuficiente.         |
+| UI repetida           | Reutiliza componente existente; luego compón o adapta; crea solo si no resuelve.                                |
+| Lógica repetida       | Extrae un Hook solo con comportamiento compartido real.                                                         |
 | Prop drilling         | Evalúa composición o props primero; usa Context solo para varios consumidores cercanos y ubícalo junto a ellos. |
-| Estado de un elemento | Usa estado local si afecta un solo componente.                                                     |
-| Estado de feature     | Usa estado de feature/módulo si afecta varias páginas o componentes de ese módulo.                 |
-| Estado transversal    | Usa estado global únicamente si los consumidores cruzan módulos.                                  |
-| Datos remotos         | Mantén estados de carga, error, vacío y cancelación según la infraestructura existente.            |
-| Efecto                | Comprueba primero si puede resolverse durante render o en un handler.                              |
+| Estado de un elemento | Usa estado local si afecta un solo componente.                                                                  |
+| Estado de feature     | Usa estado de feature/módulo si afecta varias páginas o componentes de ese módulo.                              |
+| Estado transversal    | Usa estado global únicamente si los consumidores cruzan módulos.                                                |
+| Datos remotos         | Mantén estados de carga, error, vacío y cancelación según la infraestructura existente.                         |
+| Efecto                | Comprueba primero si puede resolverse durante render o en un handler.                                           |
 
 ## Execution Steps
 

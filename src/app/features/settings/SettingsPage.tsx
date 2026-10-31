@@ -6,7 +6,13 @@ import { Card } from '@/app/shared/components/ui/card'
 import { Input } from '@/app/shared/components/ui/input'
 import { Label } from '@/app/shared/components/ui/label'
 import { supabase } from '@/app/shared/lib/supabase'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/app/shared/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/app/shared/components/ui/dialog'
 
 export function SettingsPage() {
   const navigate = useNavigate()
@@ -17,7 +23,10 @@ export function SettingsPage() {
   const [error, setError] = useState('')
   const signIn = async (event: FormEvent) => {
     event.preventDefault()
-    if (!supabase) { setError('Configura Supabase para iniciar sesión.'); return }
+    if (!supabase) {
+      setError('Configura Supabase para iniciar sesión.')
+      return
+    }
     const result = await supabase.auth.signInWithPassword({ email, password })
     if (result.error) setError('Correo o contraseña incorrectos.')
     else navigate('/admin')
@@ -80,7 +89,52 @@ export function SettingsPage() {
             Iniciar sesión
           </Button>
         </Card>
-        <Dialog open={open} onOpenChange={setOpen}><DialogContent aria-labelledby="settings-login-title"><DialogHeader><DialogTitle id="settings-login-title">Iniciar sesión</DialogTitle><DialogDescription>Accede para administrar el contenido.</DialogDescription></DialogHeader><form onSubmit={signIn} className="space-y-4" aria-label="Formulario de inicio de sesión"><div className="space-y-2"><Label htmlFor="settings-email">Correo</Label><Input id="settings-email" data-autofocus type="email" required value={email} onChange={(event) => setEmail(event.target.value)} /></div><div className="space-y-2"><Label htmlFor="settings-password">Contraseña</Label><Input id="settings-password" type="password" required value={password} onChange={(event) => setPassword(event.target.value)} /></div>{error && <p role="alert" className="text-sm text-destructive">{error}</p>}<div className="flex justify-end gap-2"><Button type="button" variant="outline" onClick={() => setOpen(false)}>Cancelar</Button><Button type="submit">Continuar</Button></div></form></DialogContent></Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
+          <DialogContent aria-labelledby="settings-login-title">
+            <DialogHeader>
+              <DialogTitle id="settings-login-title">Iniciar sesión</DialogTitle>
+              <DialogDescription>Accede para administrar el contenido.</DialogDescription>
+            </DialogHeader>
+            <form
+              onSubmit={signIn}
+              className="space-y-4"
+              aria-label="Formulario de inicio de sesión"
+            >
+              <div className="space-y-2">
+                <Label htmlFor="settings-email">Correo</Label>
+                <Input
+                  id="settings-email"
+                  data-autofocus
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="settings-password">Contraseña</Label>
+                <Input
+                  id="settings-password"
+                  type="password"
+                  required
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                />
+              </div>
+              {error && (
+                <p role="alert" className="text-sm text-destructive">
+                  {error}
+                </p>
+              )}
+              <div className="flex justify-end gap-2">
+                <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+                  Cancelar
+                </Button>
+                <Button type="submit">Continuar</Button>
+              </div>
+            </form>
+          </DialogContent>
+        </Dialog>
       </section>
     </div>
   )

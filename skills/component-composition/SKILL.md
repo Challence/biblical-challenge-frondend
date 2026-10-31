@@ -23,13 +23,13 @@ Activa esta skill al diseñar, implementar o revisar componentes reutilizables, 
 
 ## Decision Gates
 
-| Condición | Decisión |
-| --- | --- |
-| Existe un componente con la misma responsabilidad | Reutilízalo o compónlo; no crees otro equivalente. |
-| Solo cambia presentación o configuración | Usa una variante explícita mediante props, tema o composición. |
-| Cambia comportamiento y reglas del caso | Crea `specialized` sobre una base o `composed` existente. |
-| Se necesitan muchos flags o excepciones | Divide responsabilidades y revisa la frontera entre capas. |
-| No hay consumidor concreto | No crees la abstracción todavía. |
+| Condición                                         | Decisión                                                       |
+| ------------------------------------------------- | -------------------------------------------------------------- |
+| Existe un componente con la misma responsabilidad | Reutilízalo o compónlo; no crees otro equivalente.             |
+| Solo cambia presentación o configuración          | Usa una variante explícita mediante props, tema o composición. |
+| Cambia comportamiento y reglas del caso           | Crea `specialized` sobre una base o `composed` existente.      |
+| Se necesitan muchos flags o excepciones           | Divide responsabilidades y revisa la frontera entre capas.     |
+| No hay consumidor concreto                        | No crees la abstracción todavía.                               |
 
 ## Execution Steps
 

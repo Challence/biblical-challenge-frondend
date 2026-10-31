@@ -23,12 +23,12 @@ Activa esta skill al diseñar, implementar o revisar campos, formularios o adapt
 
 ## Decision Gates
 
-| Condición | Decisión |
-| --- | --- |
-| Existe `base`, `composed` o `specialized` visual compatible | Compónlo desde `rhf`; no crees otro campo visual. |
-| Falta una capacidad visual reutilizable | Revisa las skills de composición y crea/adapta la capa mínima antes del adaptador. |
-| El campo necesita validación | Declárala en un schema Zod externo y conecta `zodResolver`; nunca uses `rules`. |
-| No existe `FormProvider` o `useFormContext` | Detén la implementación y corrige el contexto del formulario. |
+| Condición                                                   | Decisión                                                                           |
+| ----------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| Existe `base`, `composed` o `specialized` visual compatible | Compónlo desde `rhf`; no crees otro campo visual.                                  |
+| Falta una capacidad visual reutilizable                     | Revisa las skills de composición y crea/adapta la capa mínima antes del adaptador. |
+| El campo necesita validación                                | Declárala en un schema Zod externo y conecta `zodResolver`; nunca uses `rules`.    |
+| No existe `FormProvider` o `useFormContext`                 | Detén la implementación y corrige el contexto del formulario.                      |
 
 ## Execution Steps
 

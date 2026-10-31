@@ -23,14 +23,14 @@ Activa esta skill al planificar, implementar o revisar una interfaz organizada c
 
 ## Decision Gates
 
-| Condición | Ubicación técnica |
-| --- | --- |
-| Capacidad visual/interactiva mínima reutilizable | `base` |
-| Combinación estable de bases | `composed` |
-| Regla o contexto concreto de módulo/flujo | `specialized` |
-| Estructura compartida entre páginas | `layouts` |
-| Orquestación de una ruta o pantalla | `pages` |
-| Solo cambia apariencia/configuración | Variante explícita de la capa existente |
+| Condición                                        | Ubicación técnica                       |
+| ------------------------------------------------ | --------------------------------------- |
+| Capacidad visual/interactiva mínima reutilizable | `base`                                  |
+| Combinación estable de bases                     | `composed`                              |
+| Regla o contexto concreto de módulo/flujo        | `specialized`                           |
+| Estructura compartida entre páginas              | `layouts`                               |
+| Orquestación de una ruta o pantalla              | `pages`                                 |
+| Solo cambia apariencia/configuración             | Variante explícita de la capa existente |
 
 ## Execution Steps
 

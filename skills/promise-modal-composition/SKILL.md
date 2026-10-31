@@ -1,10 +1,10 @@
 ---
 name: promise-modal-composition
-description: "Trigger: promise modal, promise dialog, modal composition, confirm dialog. Define a typed, library-agnostic promise-based modal contract and safe composition rules."
+description: 'Trigger: promise modal, promise dialog, modal composition, confirm dialog. Define a typed, library-agnostic promise-based modal contract and safe composition rules.'
 license: Apache-2.0
 metadata:
-  author: "jacobito"
-  version: "1.0"
+  author: 'jacobito'
+  version: '1.0'
 ---
 
 ## Activation Contract
@@ -21,12 +21,12 @@ Use when designing or reviewing a modal/dialog opened imperatively and awaited b
 
 ## Decision Gates
 
-| Need | Choose |
-|---|---|
-| Shared shell/lifecycle | Base modal composed by a template |
-| Domain-specific content/rules | Specialized template or caller-owned service |
-| Concurrent opens | Queue (or explicitly reject); never silently overwrite |
-| Non-modal flow | Use a regular component instead |
+| Need                          | Choose                                                 |
+| ----------------------------- | ------------------------------------------------------ |
+| Shared shell/lifecycle        | Base modal composed by a template                      |
+| Domain-specific content/rules | Specialized template or caller-owned service           |
+| Concurrent opens              | Queue (or explicitly reject); never silently overwrite |
+| Non-modal flow                | Use a regular component instead                        |
 
 ## Execution Steps
 

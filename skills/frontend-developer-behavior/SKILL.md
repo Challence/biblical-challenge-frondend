@@ -26,12 +26,12 @@ Activa esta skill al crear, mover o revisar constantes de dominio, catálogos o 
 
 ## Decision Gates
 
-| Tipo de valor | Ubicación |
-| --- | --- |
-| Dominio, catálogo o configuración usada por varios módulos | `app/shared/models` |
-| Dominio, catálogo o configuración de un solo módulo | `features/<module>/models` |
-| Valor exclusivo de una operación y no de dominio | Junto a la operación |
-| Estilo local, ID temporal o valor solo de render | Mantener junto a su consumidor |
+| Tipo de valor                                              | Ubicación                      |
+| ---------------------------------------------------------- | ------------------------------ |
+| Dominio, catálogo o configuración usada por varios módulos | `app/shared/models`            |
+| Dominio, catálogo o configuración de un solo módulo        | `features/<module>/models`     |
+| Valor exclusivo de una operación y no de dominio           | Junto a la operación           |
+| Estilo local, ID temporal o valor solo de render           | Mantener junto a su consumidor |
 
 ## Execution Steps
 
