@@ -10,3 +10,6 @@ dist/
 *.key
 *.pem
 *.secret
+
+# Generated skill registry
+.atl/
