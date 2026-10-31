@@ -41,9 +41,7 @@ export function SegmentMonthCoordinator() {
     setPendingMonth(nextMonth)
   }
 
-  const pendingMonthIndex = SEGMENT_MONTHS.indexOf(
-    pendingMonth as (typeof SEGMENT_MONTHS)[number],
-  )
+  const pendingMonthIndex = SEGMENT_MONTHS.indexOf(pendingMonth as (typeof SEGMENT_MONTHS)[number])
   const maximumPendingDay =
     pendingMonthIndex >= 0 ? new Date(year, pendingMonthIndex + 1, 0).getDate() : 31
   const removedDays = days.filter(({ day }) => day > maximumPendingDay).map(({ day }) => day)

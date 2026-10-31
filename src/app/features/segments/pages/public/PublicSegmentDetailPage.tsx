@@ -15,7 +15,7 @@ export function PublicSegmentDetailPage() {
     )
   return (
     <main className="mx-auto w-full max-w-5xl px-4 py-6">
-      <Link to="/segmentos" className="text-sm underline">
+      <Link to="/guia" className="text-sm underline">
         ← Todos los segmentos
       </Link>
       <Card className="mt-4 overflow-hidden">

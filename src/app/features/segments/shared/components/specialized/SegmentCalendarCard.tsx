@@ -49,9 +49,7 @@ export function SegmentCalendarCard({ onMonthChange }: SegmentCalendarCardProps)
   const [editingBlock, setEditingBlock] = useState<Block | null>(null)
   const [imageError, setImageError] = useState('')
   const year = new Date().getFullYear()
-  const selectedMonth = SEGMENT_MONTHS.indexOf(
-    monthValue as (typeof SEGMENT_MONTHS)[number],
-  )
+  const selectedMonth = SEGMENT_MONTHS.indexOf(monthValue as (typeof SEGMENT_MONTHS)[number])
   const calendarMonth = selectedMonth >= 0 ? selectedMonth : new Date().getMonth()
   const changeMonth = (offset: number) =>
     onMonthChange(SEGMENT_MONTHS[(calendarMonth + offset + 12) % 12])

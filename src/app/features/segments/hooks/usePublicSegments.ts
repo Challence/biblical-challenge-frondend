@@ -6,5 +6,9 @@ export function usePublicSegments() {
 }
 
 export function usePublicSegment(id: string | undefined) {
-  return useQuery({ queryKey: ['public-segment', id], queryFn: () => getPublicSegment(id as string), enabled: Boolean(id) })
+  return useQuery({
+    queryKey: ['public-segment', id],
+    queryFn: () => getPublicSegment(id as string),
+    enabled: Boolean(id),
+  })
 }
