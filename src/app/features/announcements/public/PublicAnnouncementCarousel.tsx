@@ -72,7 +72,7 @@ export function PublicAnnouncementCarousel() {
       aria-label="Anuncios y lecturas destacadas"
     >
       <div
-        className="relative h-[210px] bg-cover bg-center sm:h-[230px]"
+        className="relative aspect-[4/1] bg-muted"
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
         onFocus={() => setPaused(true)}
@@ -86,7 +86,6 @@ export function PublicAnnouncementCarousel() {
             startY: event.clientY,
             dragging: false,
           }
-          event.currentTarget.setPointerCapture(event.pointerId)
           setPaused(true)
         }}
         onPointerMove={(event) => {
@@ -94,8 +93,10 @@ export function PublicAnnouncementCarousel() {
           if (!current || current.pointerId !== event.pointerId) return
           const x = event.clientX - current.startX
           const y = event.clientY - current.startY
-          if (!current.dragging && Math.abs(x) > 12 && Math.abs(x) > Math.abs(y))
+          if (!current.dragging && Math.abs(x) > 12 && Math.abs(x) > Math.abs(y)) {
             current.dragging = true
+            event.currentTarget.setPointerCapture(event.pointerId)
+          }
           if (current.dragging) event.preventDefault()
         }}
         onPointerUp={end}
@@ -112,7 +113,7 @@ export function PublicAnnouncementCarousel() {
           <picture className="absolute inset-0">
             {slide.mobileImage && <source media="(max-width: 639px)" srcSet={slide.mobileImage} />}
             {slide.tabletImage && <source media="(max-width: 1023px)" srcSet={slide.tabletImage} />}
-            <img src={slide.desktopImage} alt="" className="size-full object-cover" />
+            <img src={slide.desktopImage} alt="" className="size-full object-contain" />
           </picture>
         )}
         {slides.length > 1 && (
@@ -140,25 +141,11 @@ export function PublicAnnouncementCarousel() {
           target={isExternal ? '_blank' : undefined}
           rel={isExternal ? 'noopener noreferrer' : undefined}
           onClick={openSlide}
-          aria-label={`Abrir: ${slide.title}`}
+          aria-label="Abrir anuncio"
           className="absolute inset-0 z-0 rounded-[inherit] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
         >
-          <span className="sr-only">Abrir: {slide.title}</span>
+          <span className="sr-only">Abrir anuncio</span>
         </a>
-        <div className="pointer-events-none relative z-0 flex h-full items-center justify-between gap-4 p-4 text-white sm:p-6">
-          <div className="min-w-0 max-w-2xl">
-            <p className="mb-1 text-xs font-bold uppercase tracking-[0.14em] !text-white">
-              Anuncio
-            </p>
-            <h1
-              id="guide-title"
-              className="font-[Merriweather,Georgia,serif] text-2xl tracking-[-0.04em] !text-white sm:text-4xl"
-            >
-              {slide.title}
-            </h1>
-            <p className="mt-1 max-w-lg text-sm !text-white">{slide.description}</p>
-          </div>
-        </div>
         {slides.length > 1 && (
           <div
             className="absolute bottom-3 left-0 right-0 z-[1] flex justify-center gap-2"
@@ -167,11 +154,11 @@ export function PublicAnnouncementCarousel() {
           >
             {slides.map((item, index) => (
               <button
-                key={item.title}
+                key={item.id}
                 type="button"
                 role="tab"
                 aria-selected={index === currentSlide}
-                aria-label={`Ir a ${item.title}`}
+                aria-label={`Ir al anuncio ${index + 1}`}
                 onClick={() => show(index)}
                 className="min-h-11 min-w-11 p-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
               >

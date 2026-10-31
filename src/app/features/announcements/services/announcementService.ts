@@ -10,8 +10,6 @@ import type {
 function mapAnnouncement(row: AnnouncementRemoteRow): Announcement {
   return {
     id: row.id,
-    title: row.title,
-    description: row.description,
     imagePath: row.image_path,
     imageDesktopPath: row.image_desktop_path,
     imageTabletPath: row.image_tablet_path,

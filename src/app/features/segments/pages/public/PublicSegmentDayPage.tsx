@@ -1,6 +1,13 @@
-import { Link, useParams } from 'react-router-dom'
+import { useState } from 'react'
+import { useParams } from 'react-router-dom'
 import { usePublicSegment } from '../../hooks/usePublicSegments'
-import { SegmentBlockRenderer } from '../../shared/components/specialized/SegmentBlockRenderer'
+import { DEFAULT_SEGMENT_COVER } from '../../segmentStorage'
+import {
+  getCompletedDays,
+  getProgressKey,
+  saveCompletedDay,
+} from '../../../reading/readingProgressStorage'
+import { PublicSegmentDayTemplate } from '../../shared/components/specialized/PublicSegmentDayTemplate'
 export function PublicSegmentDayPage() {
   const { id, day: dayParam } = useParams()
   const { data, isLoading, isError } = usePublicSegment(id)
@@ -12,21 +19,34 @@ export function PublicSegmentDayPage() {
         Lectura no disponible.
       </main>
     )
+  return <PublicSegmentDayContent data={data} day={day} />
+}
+
+function PublicSegmentDayContent({
+  data,
+  day,
+}: {
+  data: NonNullable<ReturnType<typeof usePublicSegment>['data']>
+  day: NonNullable<NonNullable<ReturnType<typeof usePublicSegment>['data']>['days'][number]>
+}) {
+  const key = getProgressKey(data.id, data.title)
+  const [marked, setMarked] = useState(false)
+  const completed =
+    marked ||
+    getCompletedDays(key, getCompletedDays(data.title).includes(day.day) ? day.day : 0).includes(
+      day.day,
+    )
   return (
-    <main className="mx-auto w-full max-w-3xl px-4 py-6">
-      <Link to="/guia" className="text-sm underline">
-        ← Volver al segmento
-      </Link>
-      <h1 className="mt-4 font-[Merriweather,Georgia,serif] text-3xl font-bold">
-        {data.title} · Día {day.day}
-      </h1>
-      <section className="mt-6 space-y-5">
-        {day.blocks.map((block) => (
-          <article key={block.id}>
-            <SegmentBlockRenderer block={block} />
-          </article>
-        ))}
-      </section>
-    </main>
+    <PublicSegmentDayTemplate
+      segment={data}
+      day={day}
+      cover={data.coverPath || DEFAULT_SEGMENT_COVER}
+      completed={completed}
+      onComplete={() => {
+        saveCompletedDay(key, day.day)
+        saveCompletedDay(data.title, day.day)
+        setMarked(true)
+      }}
+    />
   )
 }

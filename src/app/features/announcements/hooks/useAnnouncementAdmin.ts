@@ -36,13 +36,20 @@ export function useAnnouncementAdmin(page: number, search: string, onError: (e: 
       if (selectedFile) {
         const variants = await processAnnouncementImage(selectedFile)
         const id = announcement?.id ?? crypto.randomUUID()
+        const version = crypto.randomUUID()
         imageDesktopPath = await service.uploadAnnouncementImage(
           variants.desktop,
-          `${id}/desktop.jpg`,
+          `${id}/${version}/desktop.webp`,
         )
-        imageTabletPath = await service.uploadAnnouncementImage(variants.tablet, `${id}/tablet.jpg`)
-        imageMobilePath = await service.uploadAnnouncementImage(variants.mobile, `${id}/mobile.jpg`)
-        imagePath = old ?? imageDesktopPath
+        imageTabletPath = await service.uploadAnnouncementImage(
+          variants.tablet,
+          `${id}/${version}/tablet.webp`,
+        )
+        imageMobilePath = await service.uploadAnnouncementImage(
+          variants.mobile,
+          `${id}/${version}/mobile.webp`,
+        )
+        imagePath = imageDesktopPath
       }
       const result = announcement
         ? await service.updateAnnouncement(announcement.id, {

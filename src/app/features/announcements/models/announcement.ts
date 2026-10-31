@@ -1,6 +1,4 @@
 export type AnnouncementInput = {
-  title: string
-  description: string
   imagePath?: string | null
   imageDesktopPath?: string | null
   imageTabletPath?: string | null
@@ -28,8 +26,6 @@ export type Paginated<T> = {
 
 export type AnnouncementRemoteRow = {
   id: string
-  title: string
-  description: string
   image_path: string | null
   image_desktop_path: string | null
   image_tablet_path: string | null

@@ -11,7 +11,12 @@ export type SegmentInput = {
   coverPath?: string
   days: SegmentDayInput[]
 }
-export type Segment = SegmentInput & { id: string; createdAt: string; updatedAt: string }
+export type Segment = SegmentInput & {
+  id: string
+  position: number
+  createdAt: string
+  updatedAt: string
+}
 export type Paginated<T> = {
   items: T[]
   page: number

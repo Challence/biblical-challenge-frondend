@@ -25,6 +25,9 @@ export const getCompletedDays = (guide: string, mockProgress = 0): number[] => {
   return stored[guide] ?? Array.from({ length: mockProgress }, (_, index) => index + 1)
 }
 
+export const getProgressKey = (segmentId: string, guide?: string) =>
+  `segment:${segmentId}:${guide ?? ''}`
+
 export const saveCompletedDay = (guide: string, day: number) => {
   if (typeof window === 'undefined' || !Number.isInteger(day) || day < 1) return
   const progress = readProgress()

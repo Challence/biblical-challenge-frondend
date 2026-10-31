@@ -10,11 +10,11 @@ export async function listSegmentRows(page: number, pageSize: number, search: st
   const from = (page - 1) * pageSize
   let query = client()
     .from('segments')
-    .select('id,title,month,year,status,created_at,updated_at,segment_days(count)', {
+    .select('id,title,month,year,position,status,created_at,updated_at,segment_days(count)', {
       count: 'exact',
     })
-    .order('year', { ascending: false })
-    .order('month', { ascending: false })
+    .order('position', { ascending: true })
+    .order('id', { ascending: true })
     .range(from, from + pageSize - 1)
   if (search.trim()) query = query.ilike('title', `%${search.trim()}%`)
   const { data, error, count } = await query
@@ -75,7 +75,7 @@ export async function getSegmentRow(id: string) {
   const { data, error } = await client()
     .from('segments')
     .select(
-      'id,title,month,year,status,cover_path,segment_days(day,segment_blocks(type,content,file_name,position))',
+      'id,title,month,year,position,status,cover_path,segment_days(day,segment_blocks(type,content,file_name,position))',
     )
     .eq('id', id)
     .single()
@@ -123,10 +123,10 @@ export async function updateSegmentRow(id: string, input: SegmentInput) {
 export async function listPublicSegmentRows() {
   const { data, error } = await client()
     .from('segments')
-    .select('id,title,month,year,cover_path,segment_days(count)')
+    .select('id,title,month,year,position,cover_path,segment_days(count)')
     .eq('status', 'active')
-    .order('year', { ascending: false })
-    .order('month', { ascending: false })
+    .order('position', { ascending: true })
+    .order('id', { ascending: true })
   if (error) throw error
   return data ?? []
 }
@@ -135,11 +135,26 @@ export async function getPublicSegmentRow(id: string) {
   const { data, error } = await client()
     .from('segments')
     .select(
-      'id,title,month,year,cover_path,segment_days(id,day,segment_blocks(id,type,content,file_name,position))',
+      'id,title,month,year,position,cover_path,segment_days(id,day,segment_blocks(id,type,content,file_name,position))',
     )
     .eq('id', id)
     .eq('status', 'active')
     .single()
   if (error) throw error
   return data
+}
+
+export async function reorderSegmentRows(
+  firstId: string,
+  firstPosition: number,
+  secondId: string,
+  secondPosition: number,
+) {
+  const { error } = await client().rpc('reorder_segments', {
+    first_id: firstId,
+    first_position: firstPosition,
+    second_id: secondId,
+    second_position: secondPosition,
+  })
+  if (error) throw error
 }

@@ -4,8 +4,6 @@ import type { AnnouncementInput, AnnouncementRemoteRow } from '../models/announc
 import { ANNOUNCEMENT_BUCKET } from '../models/announcementCatalog'
 
 type AnnouncementWriteRow = {
-  title: string
-  description: string
   image_path: string | null
   image_desktop_path: string | null
   image_tablet_path: string | null
@@ -42,8 +40,6 @@ async function userId(): Promise<string> {
 
 function writeRow(input: AnnouncementInput): AnnouncementWriteRow {
   return {
-    title: input.title.trim(),
-    description: input.description,
     image_path: input.imagePath ?? null,
     image_desktop_path: input.imageDesktopPath ?? null,
     image_tablet_path: input.imageTabletPath ?? null,
@@ -67,7 +63,7 @@ export async function listAnnouncementRows(
     .order('created_at', { ascending: false })
     .range(from, from + pageSize - 1)
 
-  if (search.trim()) query = query.ilike('title', `%${search.trim()}%`)
+  if (search.trim()) query = query.ilike('href', `%${search.trim()}%`)
 
   const { data, error, count } = await query
   if (error) throw error

@@ -3,7 +3,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { IconX } from '@tabler/icons-react'
 import { Button } from '@/app/shared/components/ui/button'
 import { RhfTextField } from '@/app/shared/components/fields/rhf/RhfTextField'
-import { RhfTextareaField } from '@/app/shared/components/fields/rhf/RhfTextareaField'
 import { RhfFileField } from '@/app/shared/components/fields/rhf/RhfFileField'
 import type { ModalTemplateProps } from '@/app/shared/models/modal'
 import type { Announcement } from '../../../models/announcement'
@@ -30,8 +29,6 @@ export function AnnouncementFormModalTemplate({
     ),
     defaultValues: data.announcement
       ? {
-          title: data.announcement.title,
-          description: data.announcement.description,
           href: data.announcement.href ?? '',
           image: null,
         }
@@ -50,13 +47,6 @@ export function AnnouncementFormModalTemplate({
   return (
     <FormProvider {...form}>
       <form className="grid gap-4" onSubmit={submit}>
-        <RhfTextField name="title" id="announcement-title" label="Título" required />
-        <RhfTextareaField
-          name="description"
-          id="announcement-description"
-          label="Descripción"
-          required
-        />
         <RhfTextField
           name="href"
           id="announcement-href"
@@ -69,6 +59,7 @@ export function AnnouncementFormModalTemplate({
           id="announcement-image"
           label="Imagen"
           accept="image/*"
+          helperText="Usa una imagen de 1600 × 400 px. Esta medida genera las versiones tablet y móvil."
           required={!data.announcement}
         />
         {form.formState.errors.root && <p role="alert">{form.formState.errors.root.message}</p>}

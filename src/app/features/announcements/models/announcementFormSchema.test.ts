@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { announcementCreateFormSchema, announcementFormSchema } from './announcementFormSchema'
 
-const fields = { title: 'Título', description: 'Descripción', href: '/hoy' }
+const fields = { href: '/hoy' }
 
 describe('announcement form schema', () => {
   it('requires an image when creating an announcement', () => {

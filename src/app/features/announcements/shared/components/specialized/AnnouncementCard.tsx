@@ -31,31 +31,29 @@ export function AnnouncementCard({
     <Card className="overflow-hidden">
       <img className="aspect-[16/7] w-full object-cover" src={imageUrl} alt="" />
       <CardContent className="grid gap-2 p-3">
-        <h2 className="break-words font-bold">{item.title}</h2>
         <p className="text-xs text-muted-foreground">{item.href}</p>
-        <p className="text-sm text-muted-foreground">{item.description}</p>
         <div className="flex flex-wrap justify-between gap-1 border-t pt-2">
           <div className="flex gap-1">
-            <Button
-              variant="outline"
-              size="icon"
-              disabled={disabled}
-              aria-label={`Editar ${item.title}`}
-              onClick={onEdit}
-            >
-              <IconEdit aria-hidden="true" />
-            </Button>
             <AnnouncementStatusSwitch
-              title={item.title}
+              title="anuncio"
               active={Boolean(item.active)}
               disabled={disabled}
               onToggle={onToggle}
             />
             <Button
+              variant="outline"
+              size="icon"
+              disabled={disabled}
+              aria-label="Editar anuncio"
+              onClick={onEdit}
+            >
+              <IconEdit aria-hidden="true" />
+            </Button>
+            <Button
               variant="ghost"
               size="icon"
               disabled={disabled}
-              aria-label={`Eliminar ${item.title}`}
+              aria-label="Eliminar anuncio"
               onClick={onRemove}
             >
               <IconTrash aria-hidden="true" />

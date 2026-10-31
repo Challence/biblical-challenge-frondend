@@ -1,6 +1,13 @@
 import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { IconEdit, IconPlus, IconSearch, IconTrash } from '@tabler/icons-react'
+import {
+  IconArrowDown,
+  IconArrowUp,
+  IconEdit,
+  IconPlus,
+  IconSearch,
+  IconTrash,
+} from '@tabler/icons-react'
 import { Button } from '@/app/shared/components/ui/button'
 import { Input } from '@/app/shared/components/ui/input'
 import { DataPagination } from '@/app/shared/components/pagination/DataPagination'
@@ -8,7 +15,12 @@ import { DataTable } from '@/app/shared/components/table/DataTable'
 import { tv } from '@/app/shared/lib/tv'
 import { AdminPageHeader } from '@/app/shared/components/navigation/AdminPageHeader'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { deleteSegment, listSegments, updateSegmentStatus } from '../../services/segmentService'
+import {
+  deleteSegment,
+  listSegments,
+  reorderSegments,
+  updateSegmentStatus,
+} from '../../services/segmentService'
 import { SEGMENT_LIST_PAGE_SIZE, SEGMENT_MONTHS } from '../../models/segmentCatalog'
 import { SegmentStatusSwitch } from '../../shared/components/specialized/SegmentStatusSwitch'
 import { useModalAlert } from '@/app/shared/hooks/useModalAlert'
@@ -36,6 +48,8 @@ export function SegmentsPage() {
   const [query, setQuery] = useState('')
   const [page, setPage] = useState(1)
   const [pendingStatusIds, setPendingStatusIds] = useState<Set<string>>(() => new Set())
+  const [isReordering, setIsReordering] = useState(false)
+  const isReorderingRef = useRef(false)
   const pendingStatusIdsRef = useRef(new Set<string>())
   const queryClient = useQueryClient()
   const { warning } = useModalAlert()
@@ -64,6 +78,23 @@ export function SegmentsPage() {
     } finally {
       pendingStatusIdsRef.current.delete(id)
       setPendingStatusIds(new Set(pendingStatusIdsRef.current))
+    }
+  }
+  const move = async (index: number, direction: -1 | 1) => {
+    if (isReorderingRef.current) return
+    const otherIndex = index + direction
+    const other = visible[otherIndex]
+    const current = visible[index]
+    if (!current || !other) return
+
+    isReorderingRef.current = true
+    setIsReordering(true)
+    try {
+      await reorderSegments(current.id, current.position, other.id, other.position)
+      await queryClient.invalidateQueries({ queryKey: ['segments'] })
+    } finally {
+      isReorderingRef.current = false
+      setIsReordering(false)
     }
   }
   const totalPages = data?.totalPages ?? 1
@@ -115,6 +146,37 @@ export function SegmentsPage() {
               cell: (segment) => `${SEGMENT_MONTHS[segment.month - 1]} ${segment.year}`,
             },
             { key: 'days', header: 'Días definidos', cell: (segment) => segment.days },
+            {
+              key: 'position',
+              header: 'Orden',
+              cell: (segment) => {
+                const index = visible.findIndex((item) => item.id === segment.id)
+                return (
+                  <div className={s.actions()}>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className={s.action()}
+                      aria-label={`Subir ${segment.title}`}
+                      disabled={isReordering || index <= 0}
+                      onClick={() => void move(index, -1)}
+                    >
+                      <IconArrowUp size={18} aria-hidden="true" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className={s.action()}
+                      aria-label={`Bajar ${segment.title}`}
+                      disabled={isReordering || index === visible.length - 1}
+                      onClick={() => void move(index, 1)}
+                    >
+                      <IconArrowDown size={18} aria-hidden="true" />
+                    </Button>
+                  </div>
+                )
+              },
+            },
             {
               key: 'status',
               header: 'Estatus',

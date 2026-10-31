@@ -1,4 +1,4 @@
-import { IconPower } from '@tabler/icons-react'
+import { IconPlayerPause, IconPlayerPlay } from '@tabler/icons-react'
 import { Button } from '@/app/shared/components/ui/button'
 
 type Props = { title: string; active: boolean; disabled?: boolean; onToggle: () => void }
@@ -12,7 +12,7 @@ export function AnnouncementStatusSwitch({ title, active, disabled, onToggle }: 
       aria-label={active ? `Desactivar ${title}` : `Activar ${title}`}
       onClick={onToggle}
     >
-      <IconPower aria-hidden="true" />
+      {active ? <IconPlayerPause aria-hidden="true" /> : <IconPlayerPlay aria-hidden="true" />}
     </Button>
   )
 }

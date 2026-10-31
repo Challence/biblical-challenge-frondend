@@ -4,20 +4,20 @@ import { describe, expect, it, vi } from 'vitest'
 import { SegmentStatusSwitch } from './SegmentStatusSwitch'
 
 describe('SegmentStatusSwitch', () => {
-  it('shows ON and exposes the active state and contextual action', () => {
+  it('shows pause and exposes the active contextual action', () => {
     render(<SegmentStatusSwitch title="Adviento" status="active" onToggle={vi.fn()} />)
 
-    const control = screen.getByRole('switch', { name: 'Desactivar Adviento' })
-    expect(control).toHaveAttribute('aria-checked', 'true')
-    expect(control).toHaveTextContent('ON')
+    const control = screen.getByRole('button', { name: 'Pausar Adviento' })
+    expect(control.querySelector('svg')).toBeInTheDocument()
+    expect(control).not.toHaveTextContent('ON')
   })
 
-  it('shows OFF and exposes the draft state and contextual action', () => {
+  it('shows play and exposes the draft contextual action', () => {
     render(<SegmentStatusSwitch title="Cuaresma" status="draft" onToggle={vi.fn()} />)
 
-    const control = screen.getByRole('switch', { name: 'Activar Cuaresma' })
-    expect(control).toHaveAttribute('aria-checked', 'false')
-    expect(control).toHaveTextContent('OFF')
+    const control = screen.getByRole('button', { name: 'Activar Cuaresma' })
+    expect(control.querySelector('svg')).toBeInTheDocument()
+    expect(control).not.toHaveTextContent('OFF')
   })
 
   it('calls the callback when enabled and blocks it when disabled', () => {
@@ -26,11 +26,11 @@ describe('SegmentStatusSwitch', () => {
       <SegmentStatusSwitch title="Pascua" status="draft" onToggle={onToggle} />,
     )
 
-    fireEvent.click(screen.getByRole('switch', { name: 'Activar Pascua' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Activar Pascua' }))
     expect(onToggle).toHaveBeenCalledOnce()
 
     rerender(<SegmentStatusSwitch title="Pascua" status="draft" disabled onToggle={onToggle} />)
-    const disabledControl = screen.getByRole('switch', { name: 'Activar Pascua' })
+    const disabledControl = screen.getByRole('button', { name: 'Activar Pascua' })
     expect(disabledControl).toBeDisabled()
 
     fireEvent.click(disabledControl)

@@ -35,7 +35,7 @@ export function AnnouncementListPage() {
       (
         await warning({
           title: 'Eliminar anuncio',
-          message: `¿Eliminar “${i.title}”?`,
+          message: '¿Eliminar este anuncio?',
           confirmLabel: 'Eliminar',
         })
       ).action === 'confirm'
@@ -79,7 +79,7 @@ export function AnnouncementListPage() {
               item={i}
               index={n}
               total={items.length}
-              imageUrl={service.resolveAnnouncementImageUrl(i.imagePath)}
+              imageUrl={service.resolveAnnouncementImageUrl(i.imageDesktopPath ?? i.imagePath)}
               disabled={admin.isMutating}
               onEdit={() => void openEditor(i)}
               onToggle={() => toggle.mutate(i)}

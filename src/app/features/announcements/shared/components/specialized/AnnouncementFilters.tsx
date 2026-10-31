@@ -13,7 +13,7 @@ export function AnnouncementFilters({ value, onChange }: Props) {
           className="min-w-0 border-0"
           value={value}
           onChange={(event) => onChange(event.target.value)}
-          placeholder="Buscar anuncios..."
+          placeholder="Buscar por enlace..."
           type="search"
         />
       </label>

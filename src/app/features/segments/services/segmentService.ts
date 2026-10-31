@@ -5,6 +5,7 @@ import {
   getSegmentRow,
   listPublicSegmentRows,
   listSegmentRows,
+  reorderSegmentRows,
   setSegmentStatus,
   updateSegmentRow,
 } from '../requests/segmentRequests'
@@ -15,6 +16,7 @@ type SegmentListItem = {
   title: string
   month: number
   year: number
+  position: number
   status: SegmentStatus
   days: number
   createdAt: string
@@ -40,6 +42,7 @@ function mapRow(row: {
   title: string
   month: number
   year: number
+  position: number
   status: SegmentStatus
   created_at: string
   updated_at: string
@@ -50,6 +53,7 @@ function mapRow(row: {
     title: row.title,
     month: row.month,
     year: row.year,
+    position: row.position,
     status: row.status,
     days: row.segment_days?.[0]?.count ?? 0,
     createdAt: row.created_at,
@@ -62,6 +66,7 @@ export const updateSegmentStatus = (id: string, status: SegmentStatus) =>
   setSegmentStatus(id, status)
 export const getSegment = (id: string) => getSegmentRow(id)
 export const updateSegment = (id: string, input: SegmentInput) => updateSegmentRow(id, input)
+export const reorderSegments = reorderSegmentRows
 
 export async function listPublicSegments() {
   const rows = await listPublicSegmentRows()
@@ -70,6 +75,7 @@ export async function listPublicSegments() {
     title: row.title,
     month: row.month,
     year: row.year,
+    position: row.position,
     coverPath: row.cover_path,
     days: row.segment_days?.[0]?.count ?? 0,
   }))
