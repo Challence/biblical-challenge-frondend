@@ -34,4 +34,17 @@ describe('FileField', () => {
     expect(input).toBeDisabled()
     expect(onFileChange).not.toHaveBeenCalled()
   })
+
+  it('communicates required accessibly without native file input validation', () => {
+    render(
+      <FileField id="required-file" label="Archivo requerido" required onFileChange={vi.fn()} />,
+    )
+
+    const dropzone = screen.getByRole('button')
+    const input = document.getElementById('required-file')
+
+    expect(dropzone).toHaveAttribute('aria-required', 'true')
+    expect(input).toBeInTheDocument()
+    expect(input).not.toHaveAttribute('required')
+  })
 })

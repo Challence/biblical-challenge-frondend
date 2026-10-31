@@ -83,6 +83,7 @@ export function FileField({
         role="button"
         tabIndex={disabled ? -1 : 0}
         aria-disabled={disabled || undefined}
+        aria-required={required || undefined}
         aria-describedby={describedBy}
         aria-invalid={Boolean(error)}
         onClick={() => !disabled && inputRef.current?.click()}
@@ -112,7 +113,6 @@ export function FileField({
           id={id}
           type="file"
           accept={accept}
-          required={required}
           disabled={disabled}
           onChange={onInputChange}
           className="sr-only"

@@ -1,10 +1,10 @@
 ---
 name: frontend-base-components
-description: "Trigger: frontend base component, reusable field, dialog, table, pagination, component catalog. Decide when and how to create tested, accessible frontend primitives."
+description: 'Trigger: frontend base component, reusable field, dialog, table, pagination, component catalog. Decide when and how to create tested, accessible frontend primitives.'
 license: Apache-2.0
 metadata:
-  author: "jacobito"
-  version: "1.0"
+  author: 'jacobito'
+  version: '1.0'
 ---
 
 ## Activation Contract
@@ -19,15 +19,16 @@ Use when creating or reviewing reusable frontend components such as fields, dial
 - Put integration in separate adapters (for example RHF), without duplicating base markup, styling, or behavior.
 - Cover accessible names, labels, keyboard/focus behavior, and relevant loading, empty, error, disabled, and permission states. Test behavior, not implementation.
 - Add shared components to the development catalog with variants, states, and usage examples.
+- For file fields controlled by or adapted to RHF, do not combine the native `required` attribute with clearing the file input after selection. Validate requiredness in the schema/adapter and communicate it through `aria-required` and the visual error state.
 
 ## Decision Gates
 
-| Evidence | Action |
-|---|---|
-| Existing component fits | Reuse or compose it |
-| One module owns the behavior | Keep it in that module |
-| Multiple real consumers share stable behavior | Create or adapt a base |
-| Only data/business differs | Use props, composition, or a specialized wrapper |
+| Evidence                                      | Action                                           |
+| --------------------------------------------- | ------------------------------------------------ |
+| Existing component fits                       | Reuse or compose it                              |
+| One module owns the behavior                  | Keep it in that module                           |
+| Multiple real consumers share stable behavior | Create or adapt a base                           |
+| Only data/business differs                    | Use props, composition, or a specialized wrapper |
 
 ## Execution Steps
 
