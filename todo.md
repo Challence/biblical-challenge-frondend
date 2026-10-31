@@ -1,80 +1,3 @@
-- [x] **WEB-056 — Jerarquía de meses y recursos visuales**
-  - Ámbito: Web
-  - Objetivo: modelar meses con título y descripción, y administrar recursos dentro de cada mes.
-  - Alcance: `src/app/features/resources`, rutas públicas y de admin, navegación y pruebas específicas.
-  - Fuera de alcance: API, Supabase, persistencia real y autenticación.
-  - Dependencias: componentes UI existentes.
-  - Criterios de aceptación: admin permite crear meses con título/descripción y recursos hijos con título, descripción, tipo y archivo/URL; permite editar, eliminar y ordenar meses y recursos; `/recursos` muestra la jerarquía en acceso libre.
-  - Validación: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
-  - Responsable: Subagente Web; verificación final Orquestador.
-  - Evidencia: `resources.ts` modela `Month → Resource`; `ResourcesAdminPage.tsx` administra meses y recursos hijos con título, descripción, tipo, file picker o URL, edición, eliminación y ordenamiento; `ResourcesPage.tsx` muestra la jerarquía pública. `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 pruebas) y `pnpm build` exitosos.
-
-- [x] **WEB-057 — Crear y editar meses mediante modal**
-  - Ámbito: Web
-  - Objetivo: mover la creación y edición de meses a un modal accesible reutilizable.
-  - Alcance: `src/app/features/resources/ResourcesAdminPage.tsx`, pruebas específicas si aplican.
-  - Fuera de alcance: formulario y gestión de recursos, API y persistencia.
-  - Dependencias: WEB-056.
-  - Criterios de aceptación: Nuevo mes abre modal vacío; editar abre modal con datos; título y descripción se guardan; cancelar, Escape, backdrop y restauración de foco funcionan.
-  - Validación: revisión de teclado/foco, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
-  - Responsable: Subagente Web; verificación final Orquestador.
-  - Evidencia: `ResourcesAdminPage.tsx` usa un único `Dialog` para crear y editar meses, con título, descripción, cancelación y cierre accesible. `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 pruebas) y `pnpm build` exitosos.
-
-- [x] **WEB-058 — Desplegar recursos como hijos del mes**
-  - Ámbito: Web
-  - Objetivo: mostrar y ocultar los recursos de cada mes mediante un control desplegable accesible.
-  - Alcance: `src/app/features/resources/ResourcesAdminPage.tsx`, pruebas específicas si aplican.
-  - Fuera de alcance: modelo de datos, modal de meses, API y persistencia.
-  - Dependencias: WEB-057.
-  - Criterios de aceptación: cada mes tiene control con `aria-expanded` y `aria-controls`; al expandir muestra sus recursos indentados como hijos; permite contraer y conserva las acciones existentes.
-  - Validación: revisión responsive/accesible, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
-  - Responsable: Subagente Web; verificación final Orquestador.
-  - Evidencia: `ResourcesAdminPage.tsx` añade estado independiente por mes, chevrons Tabler, `aria-expanded`, `aria-controls`, recursos indentados como hijos y estado vacío. `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 pruebas) y `pnpm build` exitosos.
-
-- [x] **WEB-059 — Crear y editar recursos hijos mediante modal**
-  - Ámbito: Web
-  - Objetivo: mover el formulario de recursos a un modal reutilizable para crear y editar.
-  - Alcance: `src/app/features/resources/ResourcesAdminPage.tsx`, pruebas específicas si aplican.
-  - Fuera de alcance: modal de meses, modelo de datos, API y persistencia.
-  - Dependencias: WEB-058.
-  - Criterios de aceptación: agregar recurso abre modal vacío; editar abre modal con datos; título, descripción, tipo y file picker/URL se guardan; cancelar y cierre accesible funcionan; la lista de hijos permanece visible fuera del modal.
-  - Validación: revisión de teclado/foco, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
-  - Responsable: Subagente Web; verificación final Orquestador.
-  - Evidencia: `ResourcesAdminPage.tsx` usa un único `Dialog` para agregar y editar recursos, con título, descripción, tipo, file picker/preview o URL, validación y acciones de cancelación. `pnpm lint`, `pnpm typecheck`, `pnpm test` (2 pruebas) y `pnpm build` exitosos.
-
-- [x] **WEB-056 — Retirar descripción del formulario de nuevo segmento**
-  - Ámbito: Web
-  - Objetivo: eliminar el campo y el estado de descripción del formulario de creación de segmentos.
-  - Alcance: `src/app/features/segments/NewSegmentPage.tsx`.
-  - Fuera de alcance: API, persistencia, calendario y demás campos del formulario.
-  - Dependencias: ninguna.
-  - Criterios de aceptación: el formulario no muestra ni conserva un campo de descripción; el resto del flujo funciona igual.
-  - Validación: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
-  - Responsable: Subagente Web; verificación final Orquestador.
-  - Evidencia: eliminado el campo y estado `description` en `NewSegmentPage.tsx`; `pnpm lint`, `pnpm typecheck`, `pnpm test` y `pnpm build` completados.
-
-- [x] **WEB-057 — Detalle diario compuesto por bloques**
-  - Ámbito: Web
-  - Objetivo: permitir que el detalle de cada día se componga de múltiples bloques de texto, imagen o video en cualquier orden.
-  - Alcance: `src/app/features/segments/NewSegmentPage.tsx` y pruebas específicas del módulo.
-  - Fuera de alcance: API, persistencia remota y cambios globales de componentes.
-  - Dependencias: componentes UI existentes.
-  - Criterios de aceptación: se pueden agregar bloques repetidos, editar, eliminar y subir/bajar; imagen por archivo y video por URL; cancelar descarta cambios y guardar conserva el orden.
-  - Validación: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
-  - Responsable: Subagente Web; verificación final Orquestador.
-  - Evidencia: `NewSegmentPage.tsx` permite bloques repetibles de texto, imagen y video, con edición, eliminación y reordenamiento; `pnpm lint`, `pnpm typecheck`, `pnpm test` y `pnpm build` completados.
-
-- [x] **WEB-058 — Mantener foco al escribir en diálogos**
-  - Ámbito: Web
-  - Objetivo: evitar que los campos de texto pierdan el foco al cambiar su valor dentro de un `Dialog`.
-  - Alcance: `src/app/shared/components/ui/dialog.tsx` y prueba de regresión aplicable.
-  - Fuera de alcance: cambios de negocio o rediseño de diálogos.
-  - Dependencias: editor de bloques del módulo de segmentos.
-  - Criterios de aceptación: escribir texto o URL mantiene el foco; Escape, trampa de Tab y restauración al cerrar continúan funcionando.
-  - Validación: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
-  - Responsable: Subagente Web; verificación final Orquestador.
-  - Evidencia: `dialog.tsx` separa el callback del ciclo de foco y cancela el autofocus pendiente; `pnpm lint`, `pnpm typecheck`, `pnpm test` y `pnpm build` completados.
-
 - [ ] **WEB-060 — Mostrar Configuración debajo de Recursos**
   - Ámbito: Web
   - Objetivo: ordenar la navegación pública para que Configuración aparezca inmediatamente después de Recursos.
@@ -85,6 +8,7 @@
   - Validación: revisión del arreglo compartido; `pnpm lint`; `pnpm typecheck`; `pnpm test`; `pnpm build`.
   - Responsable: Subagente Web; verificación final Orquestador.
   - Evidencia: pendiente.
+
 
 - [ ] **WEB-061 — Administrar recursos únicamente dentro de cada mes**
   - Ámbito: Web
@@ -97,115 +21,6 @@
   - Responsable: Subagente Web; verificación final Orquestador.
   - Evidencia: pendiente.
 
-- [x] **WEB-062 — Permitir drag and drop de imágenes**
-  - Ámbito: Web
-  - Objetivo: permitir cargar imágenes de recursos mediante arrastrar y soltar, además de la selección tradicional.
-  - Alcance: selector de imagen en `src/app/features/resources/ResourcesAdminPage.tsx`.
-  - Fuera de alcance: API, persistencia, videos, modelo de recursos y cambios globales de componentes.
-  - Dependencias: WEB-059 y WEB-061.
-  - Criterios de aceptación: el área acepta imágenes soltadas, muestra estado visual durante el arrastre, conserva selección por clic, rechaza archivos no imagen y mantiene la vista previa.
-  - Validación: revisión de teclado/accesibilidad y flujo de carga; `pnpm lint`; `pnpm typecheck`; `pnpm test`; `pnpm build`.
-  - Responsable: Subagente Web; verificación final Orquestador.
-  - Evidencia: `ResourcesAdminPage.tsx` acepta imágenes por selección y drag and drop, muestra estado visual durante el arrastre, valida el tipo MIME y conserva la vista previa. `pnpm lint` (sin errores; warning preexistente), `pnpm typecheck`, `pnpm test` (2 pruebas) y `pnpm build` exitosos.
-
-- [x] **WEB-063 — Crear módulo padre administrativo de Recursos**
-  - Ámbito: Web
-  - Objetivo: convertir `/admin/recursos` en un índice con cards hacia Recursos por mes y Guía de lectura.
-  - Alcance: `src/app/features/resources`, `src/app/router.tsx`, `src/app/layouts/BackofficeLayout.tsx`.
-  - Fuera de alcance: cambios al módulo Segmentos, ruta pública `/recursos`, API y persistencia.
-  - Dependencias: componentes Card existentes y `ResourcesAdminPage` actual.
-  - Criterios de aceptación: `/admin/recursos` muestra dos cards accesibles; Recursos por mes abre `/admin/recursos/por-mes`; Guía de lectura abre `/admin/recursos/guia-lectura`; Segmentos conserva sus rutas y enlace.
-  - Validación: navegación por teclado y responsive; `pnpm lint`; `pnpm typecheck`; `pnpm test`; `pnpm build`.
-  - Responsable: Subagente Web; verificación final Orquestador.
-  - Evidencia: `ResourcesHubPage.tsx` muestra cards accesibles para Recursos por mes y Guía de lectura; `router.tsx` registra `/admin/recursos`, `/admin/recursos/por-mes` y `/admin/recursos/guia-lectura`; `BackofficeLayout.tsx` enlaza Recursos y conserva Segmentos sin cambios funcionales. `/recursos` público permanece intacto. `pnpm lint` (sin errores; warning preexistente), `pnpm typecheck`, `pnpm test` (2 pruebas) y `pnpm build` exitosos.
-
-- [x] **WEB-064 — Normalizar layout administrativo de Recursos y Configuración**
-  - Ámbito: Web
-  - Objetivo: aplicar a Recursos y Configuración el patrón de layout usado por Segmentos y Anuncios.
-  - Alcance: pantallas administrativas de `src/app/features/resources`, nueva pantalla administrativa de configuración y `src/app/router.tsx`.
-  - Fuera de alcance: módulo Segmentos, módulo Anuncios, API, rutas públicas y nuevas opciones funcionales de configuración.
-  - Dependencias: WEB-063 y componentes UI existentes.
-  - Criterios de aceptación: Recursos padre, Recursos por mes y Guía de lectura tienen contenedor, breadcrumb, encabezado, título responsive y espaciado consistentes; Configuración conserva estado informativo pero usa el mismo layout; no se modifican otros placeholders.
-  - Validación: revisión responsive/accesible; `pnpm lint`; `pnpm typecheck`; `pnpm test`; `pnpm build`.
-  - Responsable: Subagente Web; verificación final Orquestador.
-  - Evidencia: Recursos usa contenedor `max-w-[76rem]`, breadcrumbs, encabezados responsive y espaciado consistente en sus tres pantallas; `SettingsAdminPage.tsx` aplica el mismo patrón y conserva el aviso informativo; `/admin/configuracion` apunta a la nueva pantalla sin alterar otros placeholders. `pnpm lint` (sin errores; warning preexistente), `pnpm typecheck`, `pnpm test` (2 pruebas) y `pnpm build` exitosos.
-
-- [x] **WEB-065 — Compactar cards del módulo Anuncios**
-  - Ámbito: Web
-  - Objetivo: reducir aproximadamente a la mitad el ancho y alto visual de las cards de anuncios.
-  - Alcance: estilos locales de `src/app/features/announcements/AnnouncementsPage.tsx`.
-  - Fuera de alcance: datos, modales, acciones, API, componentes globales y otros módulos.
-  - Dependencias: layout actual de Anuncios y componentes Card existentes.
-  - Criterios de aceptación: escritorio muestra cuatro cards por fila, tablet dos y móvil una; imagen, padding y separación se compactan sin cortar contenido ni perder accesibilidad; editar, activar/desactivar, eliminar y ordenar siguen funcionando.
-  - Validación: revisión responsive en 375/768/1024/1440; `pnpm lint`; `pnpm typecheck`; `pnpm test`; `pnpm build`.
-  - Responsable: Subagente Web; verificación final Orquestador.
-  - Evidencia: `AnnouncementsPage.tsx` usa cuatro columnas desde 72rem, dos desde 42rem y una en móvil; redujo imagen, padding, gaps, tipografía y badges sin alterar las acciones. `pnpm lint` (sin errores; warning preexistente), `pnpm typecheck`, `pnpm test` (2 pruebas), `pnpm build` y `git diff --check` exitosos.
-
-- [x] **WEB-066 — Reservar posición de iconos en cards de Anuncios**
-  - Ámbito: Web
-  - Objetivo: mantener estables y alineados los controles de acción de cada card aunque el contenido tenga distinta longitud.
-  - Alcance: composición local de acciones en `src/app/features/announcements/AnnouncementsPage.tsx`.
-  - Fuera de alcance: lógica, datos, modal, otros módulos y componentes globales.
-  - Dependencias: WEB-065.
-  - Criterios de aceptación: editar/activar/eliminar permanecen en un bloque izquierdo; subir/bajar ocupan un bloque reservado y alineado; no hay saltos irregulares ni solapamientos en móvil, tablet o escritorio; foco y áreas táctiles se conservan.
-  - Validación: revisión responsive en 375/768/1024/1440; `pnpm lint`; `pnpm typecheck`; `pnpm test`; `pnpm build`.
-  - Responsable: Subagente Web; verificación final Orquestador.
-  - Evidencia: `AnnouncementsPage.tsx` separa las acciones principales y los controles de orden en columnas reservadas; los iconos permanecen alineados y no dependen del largo del contenido. `pnpm lint` (sin errores; warning preexistente), `pnpm typecheck`, `pnpm test` (2 pruebas), `pnpm build` y `git diff --check` exitosos.
-
-- [x] **WEB-067 — Usar solo iconos en acciones de Anuncios**
-  - Ámbito: Web
-  - Objetivo: compactar las acciones de cada anuncio usando iconos y eliminar el badge de estado.
-  - Alcance: acciones y estado visual en `src/app/features/announcements/AnnouncementsPage.tsx`.
-  - Fuera de alcance: lógica de acciones, datos, modal, otros módulos y componentes globales.
-  - Dependencias: WEB-066.
-  - Criterios de aceptación: Editar, Activar/Desactivar y Eliminar muestran solo iconos; cada control conserva `aria-label`, `title`, foco y área táctil; desaparece el badge Activo/Inactivo; ordenar mantiene su espacio reservado.
-  - Validación: revisión responsive/accesible; `pnpm lint`; `pnpm typecheck`; `pnpm test`; `pnpm build`.
-  - Responsable: Subagente Web; verificación final Orquestador.
-  - Evidencia: `AnnouncementsPage.tsx` eliminó el badge de estado y convirtió editar, activar/desactivar y eliminar en botones `size="icon"` con `aria-label` y `title` descriptivos; los controles de orden conservaron su bloque reservado. `pnpm lint` (sin errores; warning preexistente), `pnpm typecheck`, `pnpm test` (2 pruebas), `pnpm build` y `git diff --check` exitosos.
-
-- [x] **WEB-068 — Crear FileField base con drag and drop**
-  - Ámbito: Web
-  - Objetivo: crear un campo global reutilizable para subir archivos por clic, teclado y drag and drop.
-  - Alcance: `src/app/shared/components/fields/base/FileField.tsx`, prueba propia y catálogo.
-  - Fuera de alcance: integración con Anuncios, API, persistencia y adaptador RHF.
-  - Dependencias: componentes UI e iconos Tabler existentes.
-  - Criterios de aceptación: acepta archivo por selección y drop; expone label, accept, required, error, disabled y callbacks; muestra estado de arrastre y nombre; es accesible por teclado/foco.
-  - Validación: prueba de componente, catálogo, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
-  - Responsable: Subagente Web; verificación final Orquestador.
-  - Evidencia: `FileField.tsx` implementa selección por clic/teclado y drag and drop con `accept`, estado de arrastre, nombre de archivo, error, disabled y foco accesible; incluye prueba propia y `FileFieldCatalog.tsx` con estados normal, drag, error y disabled. `pnpm lint` (sin errores; warning preexistente), `pnpm typecheck`, `pnpm test` (5 pruebas) y `pnpm build` exitosos.
-
-- [x] **WEB-069 — Integrar FileField en Anuncios**
-  - Ámbito: Web
-  - Objetivo: reemplazar la URL de imagen del formulario de Anuncios por subida de archivo al final del formulario.
-  - Alcance: `src/app/features/announcements/AnnouncementsPage.tsx`.
-  - Fuera de alcance: API, persistencia real, otros formularios y cambios globales del FileField.
-  - Dependencias: WEB-068.
-  - Criterios de aceptación: desaparece “Imagen o fondo” como URL; FileField aparece después de Enlace; solo acepta imágenes, permite reemplazo y conserva vista previa/guardado local de la card.
-  - Validación: flujo crear/editar, revisión accesible, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
-  - Responsable: Subagente Web; verificación final Orquestador.
-  - Evidencia: `AnnouncementsPage.tsx` eliminó la URL de imagen y coloca `FileField` después de Enlace; acepta solo imágenes, crea vista previa local, requiere archivo al crear y conserva la imagen actual al editar si no se reemplaza. `pnpm lint` (sin errores; warning preexistente), `pnpm typecheck`, `pnpm test` (5 pruebas) y `pnpm build` exitosos.
-
-- [x] **WEB-070 — Reutilizar FileField en todos los uploads Web**
-  - Ámbito: Web
-  - Objetivo: reemplazar los selectores de archivo duplicados por el FileField base compartido.
-  - Alcance: `src/app/features/segments/NewSegmentPage.tsx` y `src/app/features/resources/ResourcesAdminPage.tsx`.
-  - Fuera de alcance: URLs de video, API, persistencia, cambios en FileField y lógica no relacionada.
-  - Dependencias: WEB-068 y WEB-069.
-  - Criterios de aceptación: no quedan inputs `type="file"` fuera de FileField; portada y bloques de Segmentos conservan validación de imagen/límite de 5 MB, errores y preview; Recursos conserva selección/drop, validación y preview; Anuncios continúa usando FileField.
-  - Validación: búsqueda global de uploads, flujos de selección/drop/preview, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
-  - Responsable: Subagente Web; verificación final Orquestador.
-  - Evidencia: `NewSegmentPage.tsx` usa FileField para portada y bloques de imagen, conservando validación, límite de 5 MB, errores y previews; `ResourcesAdminPage.tsx` usa FileField para imágenes y mantiene la preview; la única etiqueta `type="file"` queda dentro de `FileField.tsx`. `pnpm lint` (sin errores; warning preexistente), `pnpm typecheck`, `pnpm test` (5 pruebas), `pnpm build` y `git diff --check` exitosos.
-
-- [x] **WEB-071 — Alinear Nuevo mes con el encabezado**
-  - Ámbito: Web
-  - Objetivo: colocar el botón Nuevo mes a la derecha del título de Recursos por mes.
-  - Alcance: encabezado de `src/app/features/resources/ResourcesAdminPage.tsx`.
-  - Fuera de alcance: lógica del modal, listado de meses, rutas y otros módulos.
-  - Dependencias: layout administrativo de Recursos existente.
-  - Criterios de aceptación: en escritorio el botón queda alineado a la derecha del título/subtítulo; en móvil se acomoda debajo sin desbordamiento; desaparece el bloque independiente actual; foco y accesibilidad se conservan.
-  - Validación: revisión responsive 375/768/1024/1440; `pnpm lint`; `pnpm typecheck`; `pnpm test`; `pnpm build`.
-  - Responsable: Subagente Web; verificación final Orquestador.
-  - Evidencia: `ResourcesAdminPage.tsx` integra `Nuevo mes` en el encabezado con alineación derecha en escritorio y apilado responsive en móvil; se eliminó el bloque independiente. `pnpm lint` (sin errores; warning preexistente), `pnpm typecheck`, `pnpm test` (5 pruebas), `pnpm build` y `git diff --check` exitosos.
 
 - [ ] **WEB-072 — Hacer navegables los breadcrumbs administrativos**
   - Ámbito: Web
@@ -218,57 +33,123 @@
   - Responsable: Subagente Web; verificación final Orquestador.
   - Evidencia: pendiente.
 
-- [x] **WEB-073 — Resaltar flecha de retorno del breadcrumb**
-  - Ámbito: Web
-  - Objetivo: aplicar un fondo amarillo claro al botón de flecha del breadcrumb administrativo.
-  - Alcance: estilos locales de `src/app/shared/components/navigation/AdminBreadcrumb.tsx`.
-  - Fuera de alcance: navegación, API, breadcrumbs públicos y contenido de páginas.
-  - Dependencias: WEB-072.
-  - Criterios de aceptación: la flecha muestra fondo amarillo claro, hover más intenso, contraste suficiente, foco visible y conserva área táctil/nombre accesible.
-  - Validación: revisión visual y `pnpm lint`; `pnpm typecheck`; `pnpm test`; `pnpm build`.
-  - Responsable: Subagente Web; verificación final Orquestador.
-  - Evidencia: `AdminBreadcrumb.tsx` aplica `bg-accent/20` y `hover:bg-accent/40` al botón de flecha, conservando foco, área táctil, `aria-label`, `title` y navegación. `pnpm lint` (sin errores; warning preexistente), `pnpm typecheck`, `pnpm test` (6 pruebas), `pnpm build` y `git diff --check` exitosos.
-
-- [x] **WEB-074 — Crear SelectField base reutilizable**
-  - Ámbito: Web
-  - Objetivo: crear un campo select global accesible para formularios.
-  - Alcance: `src/app/shared/components/fields/base/SelectField.tsx`, prueba y catálogo.
-  - Fuera de alcance: integración de Guía de lectura, API y adaptador RHF.
-  - Dependencias: componentes UI existentes.
-  - Criterios de aceptación: label, opciones, value/onChange, required, disabled, error, helperText y foco accesible; estados documentados en catálogo.
-  - Validación: prueba propia, catálogo, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
-  - Responsable: Subagente Web; verificación final Orquestador.
-  - Evidencia: `SelectField.tsx` implementa select nativo accesible con opciones, placeholder, required, disabled, error y helper text; incluye prueba y catálogo con estados. `pnpm lint` (sin errores; warning preexistente), `pnpm typecheck`, `pnpm test` (8 pruebas) y `pnpm build` exitosos.
-
-- [x] **WEB-075 — Gestionar guías de lectura en cards**
-  - Ámbito: Web
-  - Objetivo: permitir crear, editar y eliminar una guía por mes mediante cards y diálogo.
-  - Alcance: `src/app/features/resources/ReadingGuideAdminPage.tsx`.
-  - Fuera de alcance: API, persistencia real, otros módulos y nuevos campos fuera de mes/imagen.
-  - Dependencias: WEB-068 FileField y WEB-074 SelectField.
-  - Criterios de aceptación: botón Agregar guía; formulario con SelectField de meses y FileField de imagen; un máximo de una guía por mes; grid responsive; preview; acciones editar/eliminar y estado vacío.
-  - Validación: flujos crear/editar/eliminar/duplicado, teclado/foco, responsive, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
-  - Responsable: Subagente Web; verificación final Orquestador.
-  - Evidencia: `ReadingGuideAdminPage.tsx` permite agregar, editar y eliminar guías en memoria; usa SelectField para mes único y FileField para imagen, muestra preview, cards responsive, estado vacío y confirmación accesible al eliminar. `pnpm lint` (sin errores; warning preexistente), `pnpm typecheck`, `pnpm test` (8 pruebas), `pnpm build` y `git diff --check` exitosos.
-
-- [x] **WEB-076 — Listar todos los meses sin año en Guía**
-  - Ámbito: Web
-  - Objetivo: mostrar Enero a Diciembre en el SelectField de Guía de lectura, sin incluir el año.
-  - Alcance: opciones y disponibilidad de meses en `src/app/features/resources/ReadingGuideAdminPage.tsx`.
-  - Fuera de alcance: cards, FileField, otros formularios, API y persistencia.
-  - Dependencias: WEB-074 y WEB-075.
-  - Criterios de aceptación: el selector lista los 12 meses en orden cronológico con nombres sin año; meses con guía permanecen deshabilitados; el formulario conserva creación y edición.
-  - Validación: revisión del selector, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
-  - Responsable: Subagente Web; verificación final Orquestador.
-  - Evidencia: `ReadingGuideAdminPage.tsx` usa un catálogo cronológico de Enero a Diciembre sin año; los meses con guía siguen deshabilitados y el mes actual se mantiene disponible al editar. `pnpm lint` (sin errores; warning preexistente), `pnpm typecheck`, `pnpm test` (8 pruebas), `pnpm build` y `git diff --check` exitosos.
-
-- [x] **TRV-077 — Configurar herramientas base de React y formato**
+- [x] **TRV-085 — Definir frontend-developer-behavior para constantes de modelos**
   - Ámbito: Web/API
-  - Objetivo: incorporar Prettier, Zustand, TanStack Query y React Hook Form con configuración base segura.
-  - Alcance: `package.json`, lockfile, configuración/scripts de Prettier, pre-commit, proveedor global de Query y formateo inicial del repositorio.
-  - Fuera de alcance: stores de negocio, queries/endpoints, formularios funcionales nuevos y migraciones de componentes existentes.
-  - Dependencias: toolchain pnpm/Husky existente.
-  - Criterios de aceptación: `format` y `format:check` funcionan; pre-commit ejecuta `format:check`; QueryClientProvider se monta globalmente con instancia estable; dependencias disponibles; no se inventan consumidores.
-  - Validación: `pnpm format:check`; `pnpm lint`; `pnpm typecheck`; `pnpm test`; `pnpm build`.
+  - Objetivo: establecer que las constantes de dominio, catálogos y configuración reutilizable se ubiquen en `models` según su alcance.
+  - Alcance: `skills/frontend-developer-behavior/SKILL.md`, `AGENTS.md` y registro disponible de skills si existe.
+  - Fuera de alcance: migración de código de aplicación.
+  - Dependencias: skills de composición, Atomic Design y comportamiento React existentes.
+  - Criterios de aceptación: la skill define clasificación de constantes, ubicación por alcance, excepciones para valores locales y prohibición de duplicados; AGENTS referencia la skill sin contradicciones.
+  - Validación: revisión de frontmatter, referencias y `git diff --check`.
   - Responsable: Subagente Tooling; verificación final Orquestador.
-  - Evidencia: Prettier configurado en `.prettierrc.json`/`.prettierignore`, scripts `format` y `format:check`, pre-commit con verificación de formato, dependencias `zustand`, `@tanstack/react-query`, `react-hook-form` y `prettier` instaladas, y `QueryProvider` global con `QueryClient` estable. Se formateó el repositorio completo. `pnpm format:check`, `pnpm lint` (sin errores; warning preexistente), `pnpm typecheck`, `pnpm test` (8 pruebas) y `pnpm build` exitosos.
+  - Evidencia: creada `skills/frontend-developer-behavior/SKILL.md`, registrada en `AGENTS.md` y en `.atl/skill-registry.md`; define ubicación por alcance, distinción entre dominio y valores locales, prevención de duplicados e imports directos. Validación de frontmatter, referencias y diff exitosa fuera del cambio preexistente de `todo.md`.
+
+- [x] **WEB-086 — Centralizar catálogos constantes de Segmentos y Recursos**
+  - Ámbito: Web
+  - Objetivo: mover constantes de dominio/configuración reutilizables desde páginas hacia modelos de sus módulos.
+  - Alcance: `src/app/features/segments/models`, `src/app/features/resources/models` y consumidores actuales de esas constantes.
+  - Fuera de alcance: cambios funcionales, API, estilos, navegación y refactor de componentes.
+  - Dependencias: TRV-085.
+  - Criterios de aceptación: nombres de meses no se duplican entre páginas de Segmentos; weekdays, page size y catálogos de Recursos están en modelos con imports directos; no quedan constantes de dominio equivalentes en páginas.
+  - Validación: búsqueda global de duplicados, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`, `git diff --check`.
+  - Responsable: Subagente Web; verificación final Orquestador.
+  - Evidencia: creados `segmentCatalog.ts` y `resourceCatalog.ts`; centralizados meses, días de semana, tamaño de página, meses de guías y secciones de recursos. Migrados consumidores de Segmentos, Recursos y componentes especializados; no quedan duplicados equivalentes en los módulos. `pnpm lint` (warning preexistente), `pnpm typecheck`, `pnpm test` (16 pruebas), `pnpm build` y `git diff --check` sobre archivos de implementación exitosos; el diff completo conserva el aviso preexistente de `todo.md`.
+
+- [x] **WEB-087 — Crear DataPagination y migrar SegmentListPage**
+  - Ámbito: Web
+  - Objetivo: crear un componente compuesto de paginación reutilizable y reemplazar el markup específico de la lista administrativa de Segmentos.
+  - Alcance: `src/app/shared/components/pagination/DataPagination.tsx`, prueba, catálogo y `src/app/features/segments/pages/admin/SegmentListPage.tsx`.
+  - Fuera de alcance: API, TanStack Query, estado de página, búsqueda, tabla, acciones de Segmentos y cambios en los primitives de `ui/pagination`.
+  - Dependencias: primitives existentes de `ui/pagination` y contrato de paginación de SegmentListPage.
+  - Criterios de aceptación: recibe página, total de páginas, tamaño, total, visibles, etiqueta y callback; muestra rango y controles accesibles; respeta límites y disabled; SegmentListPage conserva el comportamiento y deja de importar directamente primitives de paginación.
+  - Validación: prueba propia, catálogo, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`, `git diff --check`.
+  - Responsable: Subagente Web; verificación final Orquestador.
+  - Evidencia: creado `DataPagination` compuesto sobre los primitives existentes, con resumen de rango, normalización de páginas, límites accesibles y callback sin estado interno; incluye prueba y catálogo. `SegmentListPage.tsx` conserva Query, búsqueda y estado de página, y reemplaza el markup/imports directos de paginación. `pnpm lint` (warning preexistente), `pnpm typecheck`, `pnpm test` (18 pruebas), `pnpm build` y `git diff --check` sobre archivos de implementación exitosos.
+
+- [x] **WEB-088 — Corregir layout visual de DataPagination**
+  - Ámbito: Web
+  - Objetivo: evitar el solapamiento de los enlaces Anterior/Siguiente causado por el tamaño cuadrado del primitive de paginación.
+  - Alcance: `src/app/shared/components/pagination/DataPagination.tsx`, prueba y catálogo si aplica.
+  - Fuera de alcance: API de paginación, `SegmentListPage`, primitives globales y lógica de consulta.
+  - Dependencias: WEB-087.
+  - Criterios de aceptación: Anterior/Siguiente usan tamaño normal con texto visible; página actual conserva tamaño icono; disabled muestra estado visual y no solapa contenido en escritorio ni móvil.
+  - Validación: prueba de regresión, revisión del catálogo, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`, `git diff --check`.
+  - Responsable: Subagente Web; verificación final Orquestador.
+  - Evidencia: `DataPagination` usa tamaño normal para Anterior/Siguiente y tamaño icono para la página actual; añadió estados visuales disabled y prueba de regresión contra el solapamiento. `pnpm lint` (warning preexistente), `pnpm typecheck`, `pnpm test` (19 pruebas), `pnpm build` y `git diff --check` exitosos.
+
+- [x] **TRV-089 — Documentar composición de modales promise-based y componentes base**
+  - Ámbito: Web/API
+  - Objetivo: documentar cómo diseñar modales promise-based y componentes base reutilizables sin depender de una librería UI concreta.
+  - Alcance: `skills/promise-modal-composition/SKILL.md`, `skills/frontend-base-components/SKILL.md`, `AGENTS.md` y registro de skills.
+  - Fuera de alcance: implementación React del modal y migración de consumidores.
+  - Dependencias: skills de composición y frontend existentes.
+  - Criterios de aceptación: ambas skills tienen frontmatter válido, contratos LLM-first, capas, decision gates, accesibilidad, pruebas y referencias; quedan registradas sin contradicciones.
+  - Validación: revisión de skills, frontmatter, referencias y `git diff --check`.
+  - Responsable: Subagente Tooling; verificación final Orquestador.
+  - Evidencia: creadas y registradas `skills/promise-modal-composition/SKILL.md` y `skills/frontend-base-components/SKILL.md`; documentan contratos promise-based, capas base/composed/specialized, accesibilidad, pruebas, catálogo y límites de abstracción. Frontmatter, referencias y diff verificados.
+
+- [x] **WEB-090 — Crear contrato y modal global promise-based**
+  - Ámbito: Web
+  - Objetivo: exponer `useModal().open()` con templates tipados, cola global y resolución única mediante `dismiss`, `close` o `confirm`.
+  - Alcance: modelos, componentes base/composed de modal, contexto/provider, hook, pruebas y catálogo.
+  - Fuera de alcance: alertas especializadas, montaje en App y migración de consumidores.
+  - Dependencias: TRV-089; `Dialog` existente.
+  - Criterios de aceptación: provider sin lógica de negocio; template recibe data y acciones; promesas resuelven una vez; cola preserva solicitudes; Escape/backdrop/cancelación restauran foco y devuelven la acción correcta.
+  - Validación: pruebas unitarias/componentes, catálogo, lint, typecheck, test y build.
+  - Responsable: Subagente Web; verificación final Orquestador.
+  - Evidencia: creados tipos en `models/modal.ts`, `ModalDialog`, `ModalProvider`, `useModal`, pruebas y catálogo. Implementa cola FIFO, resolución única, acciones `confirm`/`close`/`dismiss`, templates tipados y delega foco/Escape/backdrop al Dialog existente. `pnpm lint` (warnings preexistentes), `pnpm typecheck`, `pnpm test` (28 pruebas), `pnpm build` y `git diff --check` exitosos.
+
+- [x] **WEB-091 — Crear useModalAlert especializado y migrar confirmaciones**
+  - Ámbito: Web
+  - Objetivo: ofrecer `warning`, `error`, `success` e `info` y reemplazar confirmaciones nativas/duplicadas existentes.
+  - Alcance: alert template/hook, `App.tsx`, `SegmentListPage.tsx`, `ReadingGuideAdminPage.tsx`, pruebas y catálogo aplicables.
+  - Fuera de alcance: cambiar reglas de negocio, API, otros diálogos funcionales y primitives UI.
+  - Dependencias: WEB-090.
+  - Criterios de aceptación: hooks especializados componen el modal genérico; alertas tienen tono, icono Tabler, acciones accesibles; eliminar Segmento y Guía usan el resultado promise-based; no queda `window.confirm` en esos flujos.
+  - Validación: pruebas de hook/flujo, revisión de foco/teclado, lint, typecheck, test y build.
+  - Responsable: Subagente Web; verificación final Orquestador.
+  - Evidencia: creados `AlertModalTemplate`, `useModalAlert`, pruebas y catálogo; montado `ModalProvider` en `App.tsx`; migrados `SegmentListPage` y `ReadingGuideAdminPage` sin `window.confirm`, condicionando eliminación a `action === 'confirm'`. Incluye tonos warning/error/success/info con iconos Tabler y acciones accesibles. `pnpm lint` (warnings preexistentes), `pnpm typecheck`, `pnpm test` (28 pruebas), `pnpm build` y `git diff --check` exitosos.
+
+- [x] **WEB-089 — Sincronizar el mes del segmento y sus días**
+  - Ámbito: Web
+  - Objetivo: mantener el campo Mes y el calendario sincronizados, confirmando el cambio cuando existan días configurados.
+  - Alcance: formulario administrativo y componentes especializados de Segmentos; prueba específica del flujo.
+  - Fuera de alcance: API, persistencia, esquema remoto, rutas, estilos globales y otros módulos.
+  - Dependencias: formulario RHF, catálogo de meses y calendario existentes.
+  - Criterios de aceptación: el calendario refleja el mes indicado; selector y flechas cambian ambos controles; con días configurados se solicita confirmación; cancelar conserva mes y días; confirmar conserva días válidos y elimina informando los que no existen en el nuevo mes.
+  - Validación: prueba del flujo; `pnpm lint`; `pnpm typecheck`; `pnpm test`; `pnpm build`; `git diff --check`.
+  - Responsable: Subagente Web; verificación final Orquestador.
+  - Evidencia: `SegmentMonthCoordinator` mantiene el mes RHF como fuente única para selector y calendario; selector y flechas comparten solicitud de cambio; el diálogo permite cancelar o confirmar, anticipa días inválidos y al confirmar conserva solo los válidos. Pruebas completas exitosas (21), `pnpm typecheck`, `pnpm lint` (una advertencia preexistente), `pnpm build` y `git diff --check` exitosos.
+
+- [x] **WEB-092 — Representar activación de segmentos con un interruptor**
+  - Ámbito: Web
+  - Objetivo: reemplazar el icono de ojo por un control ON/OFF que comunique y cambie el estado activo del segmento.
+  - Alcance: listado administrativo de Segmentos y componente/prueba especializada dentro del módulo.
+  - Fuera de alcance: API, persistencia, confirmaciones de eliminación, componentes globales, catálogo y otros módulos.
+  - Dependencias: mutación de estado y tabla de Segmentos existentes.
+  - Criterios de aceptación: cada fila muestra un interruptor con estado ON para `active` y OFF para `draft`; expone semántica `switch`, etiqueta contextual, foco visible y estado disabled durante la actualización; al accionarlo conserva la mutación e invalidación actuales.
+  - Validación: prueba específica; `pnpm lint`; `pnpm typecheck`; `pnpm test`; `pnpm build`; `git diff --check`.
+  - Responsable: Subagente Web; verificación final Orquestador.
+  - Evidencia: `SegmentStatusSwitch` reemplaza `IconEye` por un control ON/OFF especializado, con `role="switch"`, `aria-checked`, etiquetas contextuales, foco visible y área táctil de 44 px. El listado conserva la mutación e invalidación y bloquea clics repetidos por fila durante la actualización. Pruebas completas: 26; `pnpm typecheck`, `pnpm lint` (dos advertencias preexistentes), `pnpm build` y `git diff --check` exitosos.
+
+- [x] **WEB-093 — Alinear acciones del formulario de segmento**
+  - Ámbito: Web
+  - Objetivo: alinear a la derecha los botones Guardar segmento y Cancelar.
+  - Alcance: contenedor de acciones en `src/app/features/segments/pages/admin/SegmentFormPage.tsx`.
+  - Fuera de alcance: estilos de botones, componentes del formulario, comportamiento, API y otros módulos.
+  - Dependencias: layout actual del formulario administrativo.
+  - Criterios de aceptación: las acciones se muestran alineadas a la derecha en escritorio; conservan orden, separación, foco, comportamiento y adaptación móvil.
+  - Validación: revisión del diff; `pnpm lint`; `pnpm typecheck`; `pnpm test`; `pnpm build`; `git diff --check`.
+  - Responsable: Subagente Web; verificación final Orquestador.
+  - Evidencia: el contenedor de acciones usa `lg:justify-end`; los botones quedan alineados a la derecha en escritorio y conservan gap, orden, foco, disabled, navegación y adaptación móvil. `pnpm lint` (dos advertencias preexistentes), `pnpm typecheck`, `pnpm test` (27 pruebas), `pnpm build` y `git diff --check` exitosos.
+
+- [x] **TRV-094 — Documentar validación escalonada para React**
+  - Ámbito: Web/API
+  - Objetivo: distinguir validación iterativa de validación de cierre para evitar ejecutar innecesariamente toda la batería en cada cambio pequeño, documentándolo en la skill frontend transversal.
+  - Alcance: `skills/frontend-developer-behavior/SKILL.md`, `skills/react-behavior-implementation/SKILL.md` y sección de verificación Web en `AGENTS.md`.
+  - Fuera de alcance: cambiar criterios de aceptación de tareas ya existentes, scripts de package.json o eliminar la validación completa de cierre.
+  - Dependencias: reglas actuales de lint, typecheck, test, build y diff check.
+  - Criterios de aceptación: la skill documenta niveles según riesgo; AGENTS exige validación completa al cerrar tareas/fases y permite validación enfocada durante iteraciones, sin contradicciones.
+  - Validación: revisión de consistencia; frontmatter/referencias; `git diff --check`.
+  - Responsable: Subagente Tooling; verificación final Orquestador.
+  - Evidencia: `skills/frontend-developer-behavior/SKILL.md` documenta iteración local, cierre de componente/flujo y cierre de tarea/fase; `react-behavior-implementation` solo referencia la estrategia transversal; `AGENTS.md` permite validación enfocada durante desarrollo y mantiene la batería completa como requisito de cierre. Frontmatter, referencias y `git diff --check` verificados.

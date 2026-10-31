@@ -4,8 +4,14 @@ Estas reglas son obligatorias para toda actividad del proyecto.
 
 ## Skills de proyecto
 
-- `./.agents/skills/react-behavior-implementation/SKILL.md`: comportamiento e implementación general para proyectos React.
+- `./skills/component-composition/SKILL.md`: composición y capas reutilizables agnósticas de framework.
+- `./skills/atomic-design/SKILL.md`: estructura Atomic Design traducida a `base/composed/specialized/layouts/pages`.
+- `./skills/react-hook-form-composition/SKILL.md`: composición RHF mediante contexto y schemas Zod.
+- `./skills/react-behavior-implementation/SKILL.md`: comportamiento e implementación general para proyectos React; referencia composición y Atomic Design.
+- `./skills/frontend-developer-behavior/SKILL.md`: ubicación y reutilización de constantes, catálogos y configuración frontend según alcance.
 - `./skills/version-observer/SKILL.md`: versionado SemVer por commit y observación no bloqueante de versiones desplegadas.
+- `./skills/promise-modal-composition/SKILL.md`: contratos promise-based y composición agnóstica de modales.
+- `./skills/frontend-base-components/SKILL.md`: creación y validación de componentes base reutilizables.
 
 ## 1. Precedencia, ámbitos y planificación
 
@@ -79,7 +85,7 @@ Implementa únicamente: <resultado observable>.
 Alcance permitido: <archivos o módulo>.
 Fuera de alcance: <cambios prohibidos>.
 No modifiques todo.md. No corrijas fallos ajenos.
-Ejecuta: pnpm lint; pnpm typecheck; pruebas específicas.
+Ejecuta durante la implementación: `pnpm lint`, `pnpm typecheck` y pruebas específicas. El orquestador ejecuta y verifica la batería completa requerida al cierre de la tarea o fase.
 Reporta: archivos; decisiones; validaciones/resultados; riesgos/bloqueos.
 ```
 
@@ -192,7 +198,7 @@ app/shared/components/fields/{base,rhf}/
 
 ### Cierre de UI Web
 
-Una tarea UI no termina hasta verificar, cuando aplique: búsqueda y selección según la jerarquía de componentes; no duplicación/elusión; justificación de MUI/nuevo; alcance y reutilización correctos; tema/spacing; teclado/foco; nombres/relaciones accesibles; estados loading/error/vacío/disabled/permisos; responsive; pruebas de componente/flujo; catálogo global; y `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build` exitosos.
+Durante el desarrollo se permite validación enfocada, pero no sustituye el cierre completo. Una tarea UI no termina hasta verificar, cuando aplique: búsqueda y selección según la jerarquía de componentes; no duplicación/elusión; justificación de MUI/nuevo; alcance y reutilización correctos; tema/spacing; teclado/foco; nombres/relaciones accesibles; estados loading/error/vacío/disabled/permisos; responsive; pruebas de componente/flujo; catálogo global; y ejecutar con éxito `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build` y `git diff --check`.
 
 ## 6. Reglas API
 
