@@ -6,7 +6,7 @@ import { Input } from '@/app/shared/components/ui/input'
 import { DataPagination } from '@/app/shared/components/pagination/DataPagination'
 import { DataTable } from '@/app/shared/components/table/DataTable'
 import { tv } from '@/app/shared/lib/tv'
-import { AdminBreadcrumb } from '@/app/shared/components/navigation/AdminBreadcrumb'
+import { AdminPageHeader } from '@/app/shared/components/navigation/AdminPageHeader'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { deleteSegment, listSegments, updateSegmentStatus } from '../../services/segmentService'
 import { SEGMENT_LIST_PAGE_SIZE, SEGMENT_MONTHS } from '../../models/segmentCatalog'
@@ -17,11 +17,6 @@ const styles = tv({
   slots: {
     page: 'mx-auto max-w-[76rem]',
     breadcrumb: 'mb-3 flex items-center gap-2 text-sm text-muted-foreground',
-    heading:
-      'mb-8 flex items-end justify-between gap-6 max-[42rem]:mb-6 max-[42rem]:items-start max-[42rem]:flex-col',
-    title:
-      'm-0 font-[Merriweather,Georgia,serif] text-[clamp(2rem,4vw,2.75rem)] leading-[1.1] tracking-[-0.04em] text-foreground',
-    subtitle: 'mt-2 mb-0 text-muted-foreground',
     toolbar:
       'mb-4 flex items-center justify-between gap-4 max-[42rem]:flex-col max-[42rem]:items-stretch',
     search:
@@ -77,23 +72,17 @@ export function SegmentsPage() {
 
   return (
     <section className={s.page()} aria-labelledby="segments-title">
-      <AdminBreadcrumb
-        items={[{ label: 'Inicio', to: '/admin' }]}
-        currentLabel="Segmentos"
-        backTo="/admin"
+      <AdminPageHeader
+        title="Segmentos"
+        titleId="segments-title"
+        description="Organiza y consulta los segmentos de tu contenido."
+        action={
+          <Button onClick={() => navigate('/admin/segmentos/nuevo')}>
+            <IconPlus size={18} aria-hidden="true" />
+            Crear segmento
+          </Button>
+        }
       />
-      <div className={s.heading()}>
-        <div>
-          <h1 className={s.title()} id="segments-title">
-            Segmentos
-          </h1>
-          <p className={s.subtitle()}>Organiza y consulta los segmentos de tu contenido.</p>
-        </div>
-        <Button onClick={() => navigate('/admin/segmentos/nuevo')}>
-          <IconPlus size={18} aria-hidden="true" />
-          Crear segmento
-        </Button>
-      </div>
       <div className={s.toolbar()}>
         <label className={s.search()}>
           <IconSearch size={19} aria-hidden="true" />
