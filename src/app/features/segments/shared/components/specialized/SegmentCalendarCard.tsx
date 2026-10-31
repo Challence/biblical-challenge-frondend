@@ -27,6 +27,16 @@ import { Textarea } from '@/app/shared/components/ui/textarea'
 import type { SegmentFormValues } from '../../../models/segmentFormSchema'
 import { SEGMENT_MONTHS, SEGMENT_WEEKDAYS } from '../../../models/segmentCatalog'
 type Block = SegmentFormValues['days'][number]['blocks'][number]
+export function getDaysValidationMessage(error: unknown): string | undefined {
+  if (!error || typeof error !== 'object') return undefined
+  const message = (error as { message?: unknown }).message
+  if (typeof message === 'string') return message
+  for (const child of Object.values(error)) {
+    const childMessage = getDaysValidationMessage(child)
+    if (childMessage) return childMessage
+  }
+  return undefined
+}
 interface SegmentCalendarCardProps {
   onMonthChange: (month: string) => void
 }
@@ -175,7 +185,10 @@ export function SegmentCalendarCard({ onMonthChange }: SegmentCalendarCardProps)
             {daysValue.length} {daysValue.length === 1 ? 'día seleccionado' : 'días seleccionados'}
           </p>
           {formState.isSubmitted && formState.errors.days && (
-            <p className="mt-2 text-sm text-destructive">Selecciona al menos un día.</p>
+            <p className="mt-2 text-sm text-destructive">
+              {getDaysValidationMessage(formState.errors.days) ??
+                'Revisa que cada día tenga al menos un bloque.'}
+            </p>
           )}
         </CardContent>
       </Card>

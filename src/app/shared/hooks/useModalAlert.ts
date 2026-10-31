@@ -28,6 +28,7 @@ export function useModalAlert() {
         },
         title: options.title,
         dismissible: true,
+        size: 'compact',
         template: AlertModalTemplate,
       }),
     [open],

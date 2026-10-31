@@ -89,6 +89,7 @@ function ModalRenderer({
       title={options.title}
       description={options.description}
       dismissible={options.dismissible}
+      size={options.size ?? 'default'}
       onOpenChange={() => settle('dismiss')}
     >
       {options.template({

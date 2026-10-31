@@ -13,3 +13,7 @@ dist/
 
 # Generated skill registry
 .atl/
+
+# Local planning and browser automation artifacts
+todo.md
+.playwright-cli/

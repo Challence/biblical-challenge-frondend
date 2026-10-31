@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest'
 
 import { ModalProvider } from './ModalProvider'
 import { useModal } from '@/app/shared/hooks/useModal'
+import { useModalAlert } from '@/app/shared/hooks/useModalAlert'
 
 function Trigger() {
   const { open } = useModal()
@@ -60,6 +61,32 @@ function QueueTrigger({
   )
 }
 
+function SizeTrigger({ size }: { size: 'compact' | 'default' | 'large' | 'fullscreen' }) {
+  const { open } = useModal()
+  return (
+    <button
+      onClick={() =>
+        void open({
+          data: null,
+          size,
+          template: () => <div>Contenido</div>,
+        })
+      }
+    >
+      Abrir tamaño
+    </button>
+  )
+}
+
+function AlertTrigger() {
+  const { info } = useModalAlert()
+  return (
+    <button onClick={() => void info({ title: 'Aviso', message: 'Mensaje breve' })}>
+      Abrir alerta
+    </button>
+  )
+}
+
 describe('ModalProvider', () => {
   it('resolves distinct actions and queues requests FIFO', async () => {
     render(
@@ -106,5 +133,42 @@ describe('ModalProvider', () => {
 
   it('fails clearly outside the provider', () => {
     expect(() => render(<Trigger />)).toThrow('useModal debe usarse dentro de un ModalProvider')
+  })
+
+  it.each([
+    ['compact', 'max-w-md'],
+    ['default', 'max-w-2xl'],
+    ['large', 'max-w-4xl'],
+  ] as const)('applies the %s shell size', (size, className) => {
+    render(
+      <ModalProvider>
+        <SizeTrigger size={size} />
+      </ModalProvider>,
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: 'Abrir tamaño' }))
+    expect(screen.getByRole('dialog')).toHaveClass(className)
+  })
+
+  it('keeps fullscreen modal behavior for the fullscreen size', () => {
+    render(
+      <ModalProvider>
+        <SizeTrigger size="fullscreen" />
+      </ModalProvider>,
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: 'Abrir tamaño' }))
+    expect(screen.getByRole('dialog')).toHaveClass('max-w-none', 'h-[100dvh]')
+  })
+
+  it('uses the compact shell size for alerts', () => {
+    render(
+      <ModalProvider>
+        <AlertTrigger />
+      </ModalProvider>,
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: 'Abrir alerta' }))
+    expect(screen.getByRole('dialog')).toHaveClass('max-w-md')
   })
 })

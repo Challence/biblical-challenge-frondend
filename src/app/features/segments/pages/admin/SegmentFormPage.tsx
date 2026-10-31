@@ -6,7 +6,11 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@/app/shared/components/ui/button'
 import { SegmentMonthCoordinator } from '../../shared/components/specialized/SegmentMonthCoordinator'
 import { createSegment, getSegment, updateSegment } from '../../services/segmentService'
-import { segmentFormSchema, type SegmentFormValues } from '../../models/segmentFormSchema'
+import {
+  normalizeSegmentFormValues,
+  segmentFormSchema,
+  type SegmentFormValues,
+} from '../../models/segmentFormSchema'
 import { SEGMENT_MONTHS } from '../../models/segmentCatalog'
 
 export function SegmentFormPage() {
@@ -24,22 +28,7 @@ export function SegmentFormPage() {
   const { reset, handleSubmit, formState } = form
   useEffect(() => {
     if (!existing.data) return
-    reset({
-      title: existing.data.title,
-      month: SEGMENT_MONTHS[existing.data.month - 1] ?? '',
-      cover: existing.data.cover_path ?? '',
-      days: existing.data.segment_days.map((day) => ({
-        day: day.day,
-        blocks: [...day.segment_blocks]
-          .sort((a, b) => a.position - b.position)
-          .map((block) => ({
-            id: `${day.day}-${block.position}`,
-            type: block.type,
-            value: block.content,
-            name: block.file_name,
-          })),
-      })),
-    })
+    reset(normalizeSegmentFormValues(existing.data))
   }, [existing.data, reset])
   const save = (values: SegmentFormValues) => {
     const payload = {

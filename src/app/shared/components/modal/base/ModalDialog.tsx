@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import { isValidElement, type ReactNode } from 'react'
 
 import {
   Dialog,
@@ -7,6 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/app/shared/components/ui/dialog'
+import type { ModalSize } from '@/app/shared/models/modal'
 
 interface ModalDialogProps {
   open: boolean
@@ -14,6 +15,7 @@ interface ModalDialogProps {
   title?: ReactNode
   description?: ReactNode
   dismissible?: boolean
+  size?: ModalSize
   children: ReactNode
 }
 
@@ -24,8 +26,12 @@ export function ModalDialog({
   title,
   description,
   dismissible = true,
+  size = 'default',
   children,
 }: ModalDialogProps) {
+  const isAlertTemplate =
+    isValidElement<{ 'data-modal-template'?: string }>(children) &&
+    children.props['data-modal-template'] === 'alert'
   return (
     <Dialog
       open={open}
@@ -33,14 +39,24 @@ export function ModalDialog({
         if (!nextOpen && dismissible) onOpenChange(false)
       }}
     >
-      <DialogContent aria-label={typeof title === 'string' ? title : undefined}>
-        {(title || description) && (
-          <DialogHeader>
-            {title && <DialogTitle>{title}</DialogTitle>}
-            {description && <DialogDescription>{description}</DialogDescription>}
-          </DialogHeader>
+      <DialogContent
+        variant={size === 'fullscreen' ? 'fullscreen' : 'default'}
+        className={size === 'compact' ? 'max-w-md' : size === 'large' ? 'max-w-4xl' : undefined}
+        aria-label={typeof title === 'string' ? title : undefined}
+      >
+        {isAlertTemplate ? (
+          children
+        ) : (
+          <>
+            {(title || description) && (
+              <DialogHeader className="text-center">
+                {title && <DialogTitle>{title}</DialogTitle>}
+                {description && <DialogDescription>{description}</DialogDescription>}
+              </DialogHeader>
+            )}
+            {children}
+          </>
         )}
-        {children}
       </DialogContent>
     </Dialog>
   )

@@ -2,6 +2,8 @@ import type { ReactNode } from 'react'
 
 export type ModalAction = 'dismiss' | 'close' | 'confirm'
 
+export type ModalSize = 'compact' | 'default' | 'large' | 'fullscreen'
+
 export interface ModalResult<TResult> {
   action: ModalAction
   value?: TResult
@@ -22,4 +24,5 @@ export interface ModalOpenOptions<TData, TResult> {
   title?: ReactNode
   description?: ReactNode
   dismissible?: boolean
+  size?: ModalSize
 }
