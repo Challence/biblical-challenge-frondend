@@ -5,6 +5,7 @@ import {
   IconMenu2,
   IconPhoto,
   IconSettings,
+  IconTags,
   IconSun,
   IconX,
 } from '@tabler/icons-react'
@@ -44,6 +45,7 @@ const links = [
   { to: '/guia', label: 'Guía de lectura', Icon: IconBook2 },
   { to: '/lectura-hoy', label: 'Lectura de hoy', Icon: IconSun },
   { to: '/recursos', label: 'Recursos', Icon: IconPhoto },
+  { to: '/segmentos', label: 'Segmentos', Icon: IconTags },
   { to: '/configuracion', label: 'Configuración', Icon: IconSettings },
 ]
 
