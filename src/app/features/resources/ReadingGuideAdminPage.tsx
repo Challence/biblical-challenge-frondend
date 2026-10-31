@@ -13,34 +13,21 @@ import {
 import { FileField } from '@/app/shared/components/fields/base/FileField'
 import { SelectField } from '@/app/shared/components/fields/base/SelectField'
 import { makeId } from './resources'
+import { READING_GUIDE_MONTHS } from './models/resourceCatalog'
+import { useModalAlert } from '@/app/shared/hooks/useModalAlert'
 
 type ReadingGuide = { id: string; month: string; image: string }
-
-const readingGuideMonths = [
-  { id: 'january', title: 'Enero' },
-  { id: 'february', title: 'Febrero' },
-  { id: 'march', title: 'Marzo' },
-  { id: 'april', title: 'Abril' },
-  { id: 'may', title: 'Mayo' },
-  { id: 'june', title: 'Junio' },
-  { id: 'july', title: 'Julio' },
-  { id: 'august', title: 'Agosto' },
-  { id: 'september', title: 'Septiembre' },
-  { id: 'october', title: 'Octubre' },
-  { id: 'november', title: 'Noviembre' },
-  { id: 'december', title: 'Diciembre' },
-] as const
 
 export function ReadingGuideAdminPage() {
   const [guides, setGuides] = useState<ReadingGuide[]>([])
   const [editing, setEditing] = useState<ReadingGuide | null>(null)
   const [editorOpen, setEditorOpen] = useState(false)
-  const [deleting, setDeleting] = useState<ReadingGuide | null>(null)
   const [month, setMonth] = useState('')
   const [file, setFile] = useState<File | null>(null)
   const [imageError, setImageError] = useState('')
 
   const [filePreview, setFilePreview] = useState<string | null>(null)
+  const { warning } = useModalAlert()
   const objectUrls = useRef(new Set<string>())
   useEffect(
     () => () => {
@@ -71,7 +58,7 @@ export function ReadingGuideAdminPage() {
     setImageError('')
     setEditorOpen(false)
   }
-  const available = readingGuideMonths.filter(
+  const available = READING_GUIDE_MONTHS.filter(
     (item) => !guides.some((guide) => guide.month === item.id) || item.id === editing?.month,
   )
   const save = (event: FormEvent) => {
@@ -89,16 +76,22 @@ export function ReadingGuideAdminPage() {
     else setGuides((items) => [...items, { id: makeId(), month, image }])
     closeEditor()
   }
-  const remove = () => {
-    if (!deleting) return
-    if (deleting.image.startsWith('blob:')) {
-      URL.revokeObjectURL(deleting.image)
-      objectUrls.current.delete(deleting.image)
+  const remove = (guide: ReadingGuide) => {
+    if (guide.image.startsWith('blob:')) {
+      URL.revokeObjectURL(guide.image)
+      objectUrls.current.delete(guide.image)
     }
-    setGuides((items) => items.filter((item) => item.id !== deleting.id))
-    setDeleting(null)
+    setGuides((items) => items.filter((item) => item.id !== guide.id))
   }
-  const monthName = (id: string) => readingGuideMonths.find((item) => item.id === id)?.title ?? id
+  const requestRemove = async (guide: ReadingGuide) => {
+    const result = await warning({
+      title: 'Eliminar guía',
+      message: `¿Seguro que quieres eliminar la guía de ${monthName(guide.month)}?`,
+      confirmLabel: 'Eliminar',
+    })
+    if (result.action === 'confirm') remove(guide)
+  }
+  const monthName = (id: string) => READING_GUIDE_MONTHS.find((item) => item.id === id)?.title ?? id
 
   return (
     <main className="mx-auto max-w-[76rem]">
@@ -169,7 +162,7 @@ export function ReadingGuideAdminPage() {
                       size="icon"
                       aria-label={`Eliminar guía de ${monthName(guide.month)}`}
                       title="Eliminar"
-                      onClick={() => setDeleting(guide)}
+                      onClick={() => void requestRemove(guide)}
                     >
                       <IconTrash size={18} aria-hidden="true" />
                     </Button>
@@ -199,7 +192,7 @@ export function ReadingGuideAdminPage() {
               id="guide-month"
               label="Mes"
               required
-              options={readingGuideMonths.map((item) => ({
+              options={READING_GUIDE_MONTHS.map((item) => ({
                 value: item.id,
                 label: item.title,
                 disabled:
@@ -242,24 +235,6 @@ export function ReadingGuideAdminPage() {
               <Button type="submit">Guardar guía</Button>
             </div>
           </form>
-        </DialogContent>
-      </Dialog>
-      <Dialog open={deleting !== null} onOpenChange={(open) => !open && setDeleting(null)}>
-        <DialogContent aria-labelledby="delete-guide-title">
-          <DialogHeader>
-            <DialogTitle id="delete-guide-title">Eliminar guía</DialogTitle>
-            <DialogDescription>
-              ¿Seguro que quieres eliminar la guía de {deleting ? monthName(deleting.month) : ''}?
-            </DialogDescription>
-          </DialogHeader>
-          <div className="flex justify-end gap-2">
-            <Button type="button" variant="outline" onClick={() => setDeleting(null)}>
-              Cancelar
-            </Button>
-            <Button type="button" variant="destructive" onClick={remove}>
-              Eliminar
-            </Button>
-          </div>
         </DialogContent>
       </Dialog>
     </main>
