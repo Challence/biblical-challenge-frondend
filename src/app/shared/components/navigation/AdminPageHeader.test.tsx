@@ -8,12 +8,17 @@ describe('AdminPageHeader', () => {
     render(
       <AdminPageHeader
         title="Recursos"
+        titleId="resources-title"
         description="Gestiona los recursos administrativos."
         action={<button type="button">Nuevo recurso</button>}
       />,
     )
 
     expect(screen.getByRole('heading', { level: 1, name: 'Recursos' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Recursos' })).toHaveAttribute(
+      'id',
+      'resources-title',
+    )
     expect(screen.getByText('Gestiona los recursos administrativos.')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Nuevo recurso' })).toBeInTheDocument()
   })

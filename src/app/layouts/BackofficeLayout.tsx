@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { NavLink, Outlet, useNavigate } from 'react-router-dom'
+import { NavLink, Outlet, useMatches, useNavigate } from 'react-router-dom'
 import {
   IconBell,
   IconChevronDown,
@@ -15,6 +15,10 @@ import {
 } from '@tabler/icons-react'
 import logo from '@/assets/desafio-biblico-logo.webp'
 import { tv } from '@/app/shared/lib/tv'
+import {
+  AdminBreadcrumb,
+  type AdminBreadcrumbItem,
+} from '@/app/shared/components/navigation/AdminBreadcrumb'
 
 declare const __APP_VERSION__: string
 
@@ -67,9 +71,19 @@ const links = [
   { to: '/admin/configuracion', label: 'Configuración', Icon: IconSettings },
 ]
 
+export type AdminRouteHandle = {
+  breadcrumb?: {
+    items: AdminBreadcrumbItem[]
+    currentLabel: string
+    backTo: string
+  }
+  segmentTitle?: string
+}
+
 export function BackofficeLayout() {
   const styles = layoutStyles()
   const navigate = useNavigate()
+  const matches = useMatches()
   const [open, setOpen] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
   const triggerRef = useRef<HTMLButtonElement>(null)
@@ -85,6 +99,10 @@ export function BackofficeLayout() {
   const onKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === 'Escape') close()
   }
+  const breadcrumbMatch = [...matches]
+    .reverse()
+    .find((match) => (match.handle as AdminRouteHandle | undefined)?.breadcrumb)
+  const breadcrumb = (breadcrumbMatch?.handle as AdminRouteHandle | undefined)?.breadcrumb
   return (
     <div className={styles.shell()} onKeyDown={onKeyDown}>
       {open && <button className={styles.overlay()} aria-label="Cerrar menú" onClick={close} />}
@@ -168,6 +186,13 @@ export function BackofficeLayout() {
           </div>
         </header>
         <main className={styles.content()}>
+          {breadcrumb && (
+            <AdminBreadcrumb
+              items={breadcrumb.items}
+              currentLabel={breadcrumb.currentLabel}
+              backTo={breadcrumb.backTo}
+            />
+          )}
           <Outlet />
         </main>
         <footer className={styles.bottomBar()}>

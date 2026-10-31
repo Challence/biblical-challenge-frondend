@@ -19,6 +19,7 @@ export function AdminPageHeaderCatalog() {
         </h2>
         <AdminPageHeader
           title="Recursos"
+          titleId="catalog-resources-title"
           description="Administra el contenido disponible para la comunidad."
           action={<Button>Nuevo recurso</Button>}
         />
@@ -27,7 +28,7 @@ export function AdminPageHeaderCatalog() {
         <h2 id="admin-page-header-minimal-title" className="text-lg font-medium">
           Solo título
         </h2>
-        <AdminPageHeader title="Configuración" />
+        <AdminPageHeader title="Configuración" titleId="catalog-settings-title" />
       </section>
     </main>
   )

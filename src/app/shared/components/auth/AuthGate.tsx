@@ -8,8 +8,13 @@ export function AuthGate({ children }: { children: ReactNode }) {
   const [signedIn, setSignedIn] = useState(false)
   useEffect(() => {
     if (!supabase) return
-    void supabase.auth.getSession().then(({ data }) => { setSignedIn(Boolean(data.session)); setReady(true) })
-    const { data } = supabase.auth.onAuthStateChange((_event, session) => setSignedIn(Boolean(session)))
+    void supabase.auth.getSession().then(({ data }) => {
+      setSignedIn(Boolean(data.session))
+      setReady(true)
+    })
+    const { data } = supabase.auth.onAuthStateChange((_event, session) =>
+      setSignedIn(Boolean(session)),
+    )
     return () => data.subscription.unsubscribe()
   }, [])
   if (location.pathname === '/configuracion') return children

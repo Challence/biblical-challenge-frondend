@@ -1,6 +1,6 @@
 import { IconBook2, IconEdit, IconPlus, IconTrash } from '@tabler/icons-react'
 import { useEffect, useRef, useState, type FormEvent } from 'react'
-import { AdminBreadcrumb } from '@/app/shared/components/navigation/AdminBreadcrumb'
+import { AdminPageHeader } from '@/app/shared/components/navigation/AdminPageHeader'
 import { Button } from '@/app/shared/components/ui/button'
 import { Card, CardContent } from '@/app/shared/components/ui/card'
 import {
@@ -95,25 +95,16 @@ export function ReadingGuideAdminPage() {
 
   return (
     <main className="mx-auto max-w-[76rem]">
-      <AdminBreadcrumb
-        items={[{ label: 'Recursos', to: '/admin/recursos' }]}
-        currentLabel="Guía de lectura"
-        backTo="/admin/recursos"
+      <AdminPageHeader
+        title="Guía de lectura"
+        description="Gestiona la imagen de apoyo de cada mes."
+        action={
+          <Button type="button" onClick={openNew} disabled={!available.length}>
+            <IconPlus size={18} aria-hidden="true" />
+            Agregar guía
+          </Button>
+        }
       />
-      <header className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <h1 className="m-0 font-[Merriweather,Georgia,serif] text-[clamp(2rem,4vw,2.75rem)] leading-[1.1] tracking-[-0.04em]">
-            Guía de lectura
-          </h1>
-          <p className="mt-2 mb-0 text-muted-foreground">
-            Gestiona la imagen de apoyo de cada mes.
-          </p>
-        </div>
-        <Button type="button" onClick={openNew} disabled={!available.length}>
-          <IconPlus size={18} aria-hidden="true" />
-          Agregar guía
-        </Button>
-      </header>
       {guides.length === 0 ? (
         <section
           className="rounded-lg border border-dashed p-8 text-center"

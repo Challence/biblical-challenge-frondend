@@ -22,7 +22,7 @@ import {
   DialogTitle,
 } from '@/app/shared/components/ui/dialog'
 import { initialMonths, makeId, type Month, type Resource, type ResourceType } from './resources'
-import { AdminBreadcrumb } from '@/app/shared/components/navigation/AdminBreadcrumb'
+import { AdminPageHeader } from '@/app/shared/components/navigation/AdminPageHeader'
 
 const blankMonth = () => ({ title: '', description: '' })
 const blankResource = (): Omit<Resource, 'id'> => ({
@@ -140,25 +140,16 @@ export function ResourcesAdminPage() {
 
   return (
     <main className="mx-auto max-w-[76rem]">
-      <AdminBreadcrumb
-        items={[{ label: 'Recursos', to: '/admin/recursos' }]}
-        currentLabel="Recursos por mes"
-        backTo="/admin/recursos"
+      <AdminPageHeader
+        title="Recursos por mes"
+        description="Organiza meses y sus recursos antes de publicarlos."
+        action={
+          <Button onClick={openNewMonth}>
+            <IconPlus aria-hidden="true" />
+            Nuevo mes
+          </Button>
+        }
       />
-      <header className="mb-8 flex items-end justify-between gap-6 max-[42rem]:mb-6 max-[42rem]:items-start max-[42rem]:flex-col">
-        <div>
-          <h1 className="m-0 font-[Merriweather,Georgia,serif] text-[clamp(2rem,4vw,2.75rem)] leading-[1.1] tracking-[-0.04em]">
-            Recursos por mes
-          </h1>
-          <p className="mt-2 mb-0 text-muted-foreground">
-            Organiza meses y sus recursos antes de publicarlos.
-          </p>
-        </div>
-        <Button onClick={openNewMonth}>
-          <IconPlus aria-hidden="true" />
-          Nuevo mes
-        </Button>
-      </header>
       <Card>
         <CardHeader>
           <CardTitle>Meses ({months.length})</CardTitle>
