@@ -331,7 +331,7 @@ export function SegmentCalendarCard({ onMonthChange }: SegmentCalendarCardProps)
               )}
             </>
           )}
-          <div className="flex justify-end gap-2">
+          <div className="mt-6 flex justify-end gap-2">
             <Button type="button" variant="outline" onClick={() => setEditingBlock(null)}>
               Cancelar
             </Button>

@@ -1,3 +1,14 @@
+- [x] **WEB-098 — Separar contenido y acciones del modal de bloques**
+  - Ámbito: Web
+  - Objetivo: aumentar el espacio vertical entre el campo del bloque y los botones del diálogo “Nuevo bloque”/“Editar bloque”.
+  - Alcance: `src/app/features/segments/shared/components/specialized/SegmentCalendarCard.tsx` y prueba relacionada si aplica.
+  - Fuera de alcance: comportamiento del editor, campos, textos, botones, otros diálogos y API.
+  - Dependencias: diálogo de edición de bloques existente.
+  - Criterios de aceptación: las acciones mantienen alineación a la derecha y quedan claramente separadas del contenido en móvil y escritorio.
+  - Validación: prueba específica; `pnpm lint`; `pnpm typecheck`; `pnpm test`; `pnpm build`; `git diff --check`.
+  - Responsable: Subagente Web; verificación final Orquestador.
+  - Evidencia: el contenedor de acciones del diálogo de bloques incorpora `mt-6` (24 px), conserva alineación derecha y separación de 8 px entre botones. `pnpm lint` (tres warnings preexistentes), `pnpm typecheck`, `pnpm test` (39 pruebas), `pnpm build` y `git diff --check` exitosos.
+
 - [ ] **WEB-060 — Mostrar Configuración debajo de Recursos**
   - Ámbito: Web
   - Objetivo: ordenar la navegación pública para que Configuración aparezca inmediatamente después de Recursos.
