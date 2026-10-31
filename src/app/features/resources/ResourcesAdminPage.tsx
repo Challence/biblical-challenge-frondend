@@ -13,6 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/app/shared/component
 import { Input } from '@/app/shared/components/ui/input'
 import { Label } from '@/app/shared/components/ui/label'
 import { FileField } from '@/app/shared/components/fields/base/FileField'
+import { SelectField } from '@/app/shared/components/fields/base/SelectField'
 import {
   Dialog,
   DialogContent,
@@ -398,24 +399,22 @@ export function ResourcesAdminPage() {
                 }
               />
             </div>
-            <div>
-              <Label htmlFor="resource-type">Tipo</Label>
-              <select
-                id="resource-type"
-                value={resourceDraft.type}
-                onChange={(e) =>
-                  setResourceDraft({
-                    ...resourceDraft,
-                    type: e.target.value as ResourceType,
-                    source: '',
-                  })
-                }
-                className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
-              >
-                <option value="image">Imagen</option>
-                <option value="video">Video</option>
-              </select>
-            </div>
+            <SelectField
+              id="resource-type"
+              label="Tipo"
+              value={resourceDraft.type}
+              onChange={(value) =>
+                setResourceDraft({
+                  ...resourceDraft,
+                  type: value as ResourceType,
+                  source: '',
+                })
+              }
+              options={[
+                { value: 'image', label: 'Imagen' },
+                { value: 'video', label: 'Video' },
+              ]}
+            />
             {resourceDraft.type === 'image' ? (
               <div>
                 <FileField
