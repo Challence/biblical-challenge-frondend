@@ -1,22 +1,7 @@
-import { IconBook2, IconPhoto } from '@tabler/icons-react'
 import { Link } from 'react-router-dom'
 import { Card, CardContent, CardHeader, CardTitle } from '@/app/shared/components/ui/card'
 import { AdminBreadcrumb } from '@/app/shared/components/navigation/AdminBreadcrumb'
-
-const resourceSections = [
-  {
-    to: '/admin/recursos/por-mes',
-    title: 'Recursos por mes',
-    description: 'Organiza los recursos de cada mes antes de publicarlos.',
-    Icon: IconPhoto,
-  },
-  {
-    to: '/admin/recursos/guia-lectura',
-    title: 'Guía de lectura',
-    description: 'Consulta y prepara la guía que acompaña el plan de lectura.',
-    Icon: IconBook2,
-  },
-]
+import { RESOURCE_SECTIONS } from './models/resourceCatalog'
 
 export function ResourcesHubPage() {
   return (
@@ -35,7 +20,7 @@ export function ResourcesHubPage() {
         </p>
       </header>
       <div className="grid gap-5 sm:grid-cols-2">
-        {resourceSections.map(({ to, title, description, Icon }) => (
+        {RESOURCE_SECTIONS.map(({ to, title, description, Icon }) => (
           <Link
             key={to}
             to={to}
