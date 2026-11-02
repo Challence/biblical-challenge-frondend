@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { IconArrowLeft, IconArrowRight } from '@tabler/icons-react'
 import { Link } from 'react-router-dom'
+import readingEmptyState from '@/assets/reading-empty-state.webp'
 import { Button } from '@/app/shared/components/ui/button'
 import { usePublicSegmentDetails, usePublicSegments } from '../segments/hooks/usePublicSegments'
 import { DEFAULT_SEGMENT_COVER } from '../segments/segmentStorage'
@@ -61,6 +62,11 @@ function TodayEmptyState({
     `${item.day.day}/${String(item.segment.month).padStart(2, '0')}/${item.segment.year}`
   return (
     <main className="mx-auto flex max-w-2xl flex-col items-center gap-6 p-6 text-center">
+      <img
+        src={readingEmptyState}
+        alt="Ilustración de una Biblia con hojas y una lupa con signo de interrogación"
+        className="h-auto w-full max-w-sm object-contain"
+      />
       <div className="space-y-2">
         <h1 className="text-2xl font-semibold">No tenemos una lectura para hoy.</h1>
         {(previous || next) && (

@@ -76,6 +76,11 @@ describe('ReadingTodayPage', () => {
 
     expect(screen.getByTestId('day-template')).toHaveTextContent('Lectura del día 8')
     expect(screen.queryByText('No tenemos una lectura para hoy.')).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('img', {
+        name: 'Ilustración de una Biblia con hojas y una lupa con signo de interrogación',
+      }),
+    ).not.toBeInTheDocument()
   })
 
   it('ofrece los días configurados anterior y siguiente más cercanos sin depender del orden', () => {
@@ -92,6 +97,11 @@ describe('ReadingTodayPage', () => {
       'href',
       '/segmentos/november/dias/12',
     )
+    expect(
+      screen.getByRole('img', {
+        name: 'Ilustración de una Biblia con hojas y una lupa con signo de interrogación',
+      }),
+    ).toBeVisible()
   })
 
   it.each([
