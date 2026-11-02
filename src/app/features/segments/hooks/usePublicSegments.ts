@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { useQueries, useQuery } from '@tanstack/react-query'
 import { getPublicSegment, listPublicSegments } from '../services/segmentService'
 
 export function usePublicSegments() {
@@ -10,5 +10,14 @@ export function usePublicSegment(id: string | undefined) {
     queryKey: ['public-segment', id],
     queryFn: () => getPublicSegment(id as string),
     enabled: Boolean(id),
+  })
+}
+
+export function usePublicSegmentDetails(segments: Array<{ id: string }>) {
+  return useQueries({
+    queries: segments.map((segment) => ({
+      queryKey: ['public-segment', segment.id],
+      queryFn: () => getPublicSegment(segment.id),
+    })),
   })
 }
