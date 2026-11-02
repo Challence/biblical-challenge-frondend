@@ -11,6 +11,8 @@ metadata:
 
 Activa esta skill al crear, mover o revisar constantes de dominio, catálogos o configuración reutilizable en frontend. Aplica antes de elegir archivo, carpeta o import.
 
+La ubicación arquitectónica de módulos y submódulos se rige por `../frontend-module-architecture/SKILL.md`; esta skill decide específicamente el alcance de valores y modelos.
+
 ## Hard Rules
 
 - Ubica constantes de dominio, catálogos y configuración reutilizable en `models`, según su alcance.
@@ -21,7 +23,6 @@ Activa esta skill al crear, mover o revisar constantes de dominio, catálogos o 
 - Evita boilerplate estructural: no crees layouts, wrappers, hooks, componentes o archivos nuevos solo para reducir unas pocas líneas. Una extracción debe reducir la complejidad total, la duplicación o el acoplamiento del módulo.
 - Antes de extraer, compara el costo de archivos, imports, props e indirección contra el beneficio observable. Mantén una estructura local cuando pertenece a una sola operación y no existe un consumidor real adicional.
 - Justifica una extracción por al menos una frontera útil: varios consumidores, comportamiento complejo encapsulado, una fuente de verdad compartida o una convención de rutas que elimina duplicación real.
-- Usa imports directos; no crees ni uses barrel files (`index.ts`, `index.tsx` o equivalentes).
 - Antes de mover, revisa todos los consumidores y preserva tipado, contratos e inmutabilidad cuando corresponda.
 
 ## Decision Gates

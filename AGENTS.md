@@ -9,6 +9,7 @@ Estas reglas son obligatorias para toda actividad del proyecto.
 - `./skills/react-hook-form-composition/SKILL.md`: composición RHF mediante contexto y schemas Zod.
 - `./skills/react-behavior-implementation/SKILL.md`: comportamiento e implementación general para proyectos React; referencia composición y Atomic Design.
 - `./skills/frontend-developer-behavior/SKILL.md`: ubicación y reutilización de constantes, catálogos y configuración frontend según alcance.
+- `./skills/frontend-module-architecture/SKILL.md`: arquitectura normativa de módulos, submódulos, dependencias y reestructuración frontend.
 - `./skills/version-observer/SKILL.md`: versionado SemVer por commit y observación no bloqueante de versiones desplegadas.
 - `./skills/promise-modal-composition/SKILL.md`: contratos promise-based y composición agnóstica de modales.
 - `./skills/frontend-base-components/SKILL.md`: creación y validación de componentes base reutilizables.

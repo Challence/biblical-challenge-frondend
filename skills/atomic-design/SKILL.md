@@ -20,6 +20,7 @@ Activa esta skill al planificar, implementar o revisar una interfaz organizada c
 - `pages` orquesta datos, estados y composición de pantalla; no duplica componentes inferiores.
 - Define variantes explícitas y acotadas; no uses variantes para ocultar responsabilidades distintas ni acumules flags incompatibles.
 - Respeta el alcance mínimo: no eleves una pieza a global sin consumidores reales en más de un contexto.
+- La ubicación del módulo/submódulo es una decisión arquitectónica independiente; aplica `../frontend-module-architecture/SKILL.md` antes de elegir estas capas.
 
 ## Decision Gates
 

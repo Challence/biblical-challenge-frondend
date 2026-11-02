@@ -13,22 +13,23 @@ Activa esta skill al crear, modificar, revisar o depurar componentes, hooks, pá
 
 Antes de diseñar componentes, carga `../component-composition/SKILL.md` y `../atomic-design/SKILL.md`; si el formulario usa React Hook Form, carga también `../react-hook-form-composition/SKILL.md`.
 
+Para decidir módulos, submódulos, dependencias y movimientos, carga `../frontend-module-architecture/SKILL.md`; esta skill conserva únicamente reglas de comportamiento y composición React.
+
 ## Hard Rules
 
 - Define primero estados, eventos, reglas y resultados observables; después el JSX.
-- Inspecciona arquitectura, componentes, hooks, utilidades y fuente de verdad existentes antes de crear abstracciones.
+- Inspecciona componentes, hooks, utilidades y fuente de verdad existentes antes de crear abstracciones.
 - Divide componentes y páginas por responsabilidad y dominio cuando la división reduzca complejidad, acoplamiento o superficie de prueba; no extraigas por tamaño de archivo solamente.
 - Cada sección extraída debe tener una responsabilidad clara, entradas y salidas explícitas, ser individualmente testeable y funcionar de forma autosuficiente dentro de su contrato.
 - Mantén componentes y Hooks puros durante el render; no mutar props, estado, contexto ni datos recibidos.
 - Cuando una página contenga secciones complejas con lógica propia (por ejemplo tarjetas de información, calendarios o editores), extráelas como componentes `specialized` del módulo. Deben consumir el contexto/formulario cercano y mantener internamente su interacción, estados locales y validación visual; la página conserva únicamente carga, submit, navegación y composición.
 - Una tarjeta especializada no ejecuta persistencia ni navegación de página. Expone solo los contratos mínimos del módulo y evita trasladar su lógica al padre mediante prop drilling.
-- Los shells compartidos de ruta —contenedor, breadcrumb, título y navegación contextual— pueden pertenecer a `layouts` cuando sirven a varias rutas; la decisión debe seguir el balance de extracción documentado en `frontend-developer-behavior`, no una extracción automática.
 - Usa la jerarquía de estado de menor alcance: valor derivado → estado local (afecta un componente) → Context cercano (afecta varios componentes cercanos) → estado de feature/módulo (afecta varias páginas o componentes del módulo) → estado global (cruza módulos).
 - Permite que componentes consuman datos y acciones desde Context cuando sea el contrato apropiado, para evitar prop drilling; coloca el Provider lo más cerca posible de todos sus consumidores y no uses Context por defecto.
 - No eleves estado ni crees Context/store si los consumidores pueden coordinarse mediante props, composición o estado local; no conviertas un estado de feature en global sin consumidores que crucen módulos.
 - Usa `useEffect` únicamente para sincronizar sistemas externos; no para valores derivados ni acciones de eventos.
 - Conserva accesibilidad, tipado, responsive y estados aplicables: loading, success, empty, error, disabled y permisos.
-- No añadas dependencias, arquitectura ni refactors ajenos al objetivo.
+- No añadas dependencias ni refactors ajenos al objetivo.
 
 ## Decision Gates
 
@@ -62,6 +63,7 @@ Reporta: archivos modificados, comportamiento implementado, decisiones de estado
 ## References
 
 - `../frontend-developer-behavior/SKILL.md` — estrategia común de validación escalonada para frontend.
+- `../frontend-module-architecture/SKILL.md` — arquitectura normativa de módulos y submódulos.
 - `../component-composition/SKILL.md`
 - `../atomic-design/SKILL.md`
 - `../react-hook-form-composition/SKILL.md`
