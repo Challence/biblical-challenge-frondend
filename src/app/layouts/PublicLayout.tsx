@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import {
   IconBook2,
+  IconHome,
   IconInfoCircle,
   IconMenu2,
   IconPhoto,
@@ -49,6 +50,11 @@ const links = [
   { to: '/configuracion', label: 'Configuración', Icon: IconSettings },
 ]
 
+const sidebarLinks = [
+  { to: '/', label: 'Inicio', Icon: IconHome },
+  ...links.filter(({ to }) => to !== '/segmentos'),
+]
+
 export function PublicLayout() {
   const s = styles()
   const [menuOpen, setMenuOpen] = useState(false)
@@ -72,8 +78,8 @@ export function PublicLayout() {
       <aside className={s.sidebar()} aria-label="Navegación principal">
         <img className={s.sidebarLogo()} src={logo} alt="" aria-hidden="true" />
         <nav className={s.nav()}>
-          {links.map(({ to, label, Icon }) => (
-            <NavLink key={to} to={to} className={s.link()}>
+          {sidebarLinks.map(({ to, label, Icon }) => (
+            <NavLink key={to} to={to} end={to === '/'} className={s.link()}>
               <Icon size={20} aria-hidden="true" />
               <span>{label}</span>
             </NavLink>
