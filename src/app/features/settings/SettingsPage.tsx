@@ -13,6 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/app/shared/components/ui/dialog'
+import { usePushNotifications } from '@/app/shared/hooks/usePushNotifications'
 
 export function SettingsPage() {
   const navigate = useNavigate()
@@ -21,6 +22,11 @@ export function SettingsPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const notifications = usePushNotifications()
+  const notificationsBusy = ['loading', 'enabling', 'disabling'].includes(notifications.status)
+  const notificationsActive = notifications.status === 'active'
+  const notificationsDisabled =
+    notificationsBusy || ['unsupported', 'denied'].includes(notifications.status)
   const signIn = async (event: FormEvent) => {
     event.preventDefault()
     if (!supabase) {
@@ -61,14 +67,40 @@ export function SettingsPage() {
               </p>
             </div>
           </div>
-          <span
-            className="relative h-7 w-12 shrink-0 rounded-full bg-primary"
-            role="img"
-            aria-label="Recordatorios de lectura activados"
+          <button
+            type="button"
+            role="switch"
+            aria-checked={notificationsActive}
+            aria-label="Recordatorios de lectura"
+            disabled={notificationsDisabled}
+            onClick={() =>
+              void (notificationsActive ? notifications.disable() : notifications.enable())
+            }
+            className={`relative h-7 w-12 shrink-0 rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${notificationsActive ? 'bg-primary' : 'bg-muted-foreground/35'}`}
           >
-            <span className="absolute top-1 translate-x-6 h-5 w-5 rounded-full bg-white shadow" />
-          </span>
+            <span
+              className={`absolute top-1 h-5 w-5 rounded-full bg-white shadow transition-transform ${notificationsActive ? 'translate-x-6' : 'translate-x-1'}`}
+            />
+          </button>
         </Card>
+        <div className="mt-2 text-sm text-muted-foreground" aria-live="polite">
+          {notifications.status === 'unsupported' &&
+            'Este dispositivo no admite notificaciones Web Push.'}
+          {notifications.status === 'denied' &&
+            'El permiso está bloqueado. Actívalo desde la configuración del navegador.'}
+          {notifications.status === 'loading' && 'Consultando el estado de las notificaciones…'}
+          {notifications.status === 'enabling' && 'Activando recordatorios…'}
+          {notifications.status === 'disabling' && 'Desactivando recordatorios…'}
+          {notifications.status === 'inactive' &&
+            `Recibe un aviso diario a las 8:00 a. m. (${Intl.DateTimeFormat().resolvedOptions().timeZone}).`}
+          {notifications.status === 'active' &&
+            `Recordatorio diario activo a las 8:00 a. m. (${Intl.DateTimeFormat().resolvedOptions().timeZone}).`}
+        </div>
+        {notifications.error && (
+          <p className="mt-2 text-sm text-destructive" role="alert">
+            {notifications.error}
+          </p>
+        )}
       </section>
 
       <section aria-labelledby="admin-title">
