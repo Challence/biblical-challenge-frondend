@@ -19,6 +19,7 @@ Use when creating or reviewing reusable frontend components such as fields, dial
 - Put integration in separate adapters (for example RHF), without duplicating base markup, styling, or behavior.
 - Cover accessible names, labels, keyboard/focus behavior, and relevant loading, empty, error, disabled, and permission states. Test behavior, not implementation.
 - Add shared components to the development catalog with variants, states, and usage examples.
+- `PasswordField` is the reusable controlled password base at `src/app/shared/components/fields/base/PasswordField.tsx`; it composes `Input` and `Label`, owns only local visibility state, and exposes `value`, `onChange`, `required`, `disabled`, `error`, and `helperText` states. Feature-specific validation and form-library integration belong in adapters or specialized wrappers.
 - For file fields controlled by or adapted to RHF, do not combine the native `required` attribute with clearing the file input after selection. Validate requiredness in the schema/adapter and communicate it through `aria-required` and the visual error state.
 
 ## Decision Gates

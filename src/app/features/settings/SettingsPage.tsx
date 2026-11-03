@@ -5,6 +5,7 @@ import { Button } from '@/app/shared/components/ui/button'
 import { Card } from '@/app/shared/components/ui/card'
 import { Input } from '@/app/shared/components/ui/input'
 import { Label } from '@/app/shared/components/ui/label'
+import { PasswordField } from '@/app/shared/components/fields/base/PasswordField'
 import { supabase } from '@/app/shared/lib/supabase'
 import {
   Dialog,
@@ -143,16 +144,13 @@ export function SettingsPage() {
                   onChange={(event) => setEmail(event.target.value)}
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="settings-password">Contraseña</Label>
-                <Input
-                  id="settings-password"
-                  type="password"
-                  required
-                  value={password}
-                  onChange={(event) => setPassword(event.target.value)}
-                />
-              </div>
+              <PasswordField
+                id="settings-password"
+                label="Contraseña"
+                value={password}
+                onChange={setPassword}
+                required
+              />
               {error && (
                 <p role="alert" className="text-sm text-destructive">
                   {error}

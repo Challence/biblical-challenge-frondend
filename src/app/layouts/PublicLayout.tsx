@@ -6,7 +6,6 @@ import {
   IconMenu2,
   IconPhoto,
   IconSettings,
-  IconTags,
   IconSun,
   IconX,
 } from '@tabler/icons-react'
@@ -36,23 +35,18 @@ const styles = tv({
     footer:
       'flex min-h-11 items-center gap-2 border-t border-[#e5d7bd] px-[clamp(1rem,3vw,2.5rem)] py-2 text-xs text-[#806b51]',
     bottomNav:
-      'hidden max-[48rem]:grid min-h-14 grid-cols-4 overflow-x-hidden rounded-2xl border border-[#e5d7bd] bg-[#fffaf0] p-1 pb-[max(0.25rem,env(safe-area-inset-bottom))] shadow-lg',
+      'hidden max-[48rem]:grid min-h-14 grid-cols-5 overflow-x-hidden rounded-2xl border border-[#e5d7bd] bg-[#fffaf0] p-1 pb-[max(0.25rem,env(safe-area-inset-bottom))] shadow-lg',
     bottomLink:
       'flex min-h-11 min-w-0 items-center justify-center rounded-xl px-2 py-2 text-[#806b51] no-underline focus-visible:z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#d4a84f] aria-[current=page]:bg-primary aria-[current=page]:text-primary-foreground',
   },
 })
 
-const links = [
+const publicLinks = [
+  { to: '/', label: 'Inicio', Icon: IconHome },
   { to: '/guia', label: 'Guía de lectura', Icon: IconBook2 },
   { to: '/lectura-hoy', label: 'Lectura de hoy', Icon: IconSun },
   { to: '/recursos', label: 'Recursos', Icon: IconPhoto },
-  { to: '/segmentos', label: 'Segmentos', Icon: IconTags },
   { to: '/configuracion', label: 'Configuración', Icon: IconSettings },
-]
-
-const sidebarLinks = [
-  { to: '/', label: 'Inicio', Icon: IconHome },
-  ...links.filter(({ to }) => to !== '/segmentos'),
 ]
 
 export function PublicLayout() {
@@ -78,7 +72,7 @@ export function PublicLayout() {
       <aside className={s.sidebar()} aria-label="Navegación principal">
         <img className={s.sidebarLogo()} src={logo} alt="" aria-hidden="true" />
         <nav className={s.nav()}>
-          {sidebarLinks.map(({ to, label, Icon }) => (
+          {publicLinks.map(({ to, label, Icon }) => (
             <NavLink key={to} to={to} end={to === '/'} className={s.link()}>
               <Icon size={20} aria-hidden="true" />
               <span>{label}</span>
@@ -125,7 +119,7 @@ export function PublicLayout() {
         className={`${s.bottomNav()} fixed bottom-[max(0.75rem,env(safe-area-inset-bottom))] left-[max(0.75rem,env(safe-area-inset-left))] right-[max(0.75rem,env(safe-area-inset-right))] z-10`}
         aria-label="Navegación principal"
       >
-        {links.map(({ to, label, Icon }) => (
+        {publicLinks.map(({ to, label, Icon }) => (
           <NavLink key={to} to={to} aria-label={label} className={s.bottomLink()}>
             <Icon size={22} aria-hidden="true" />
           </NavLink>
@@ -156,7 +150,7 @@ export function PublicLayout() {
               </button>
             </div>
             <nav className="grid gap-2" aria-label="Navegación móvil">
-              {links.map(({ to, label, Icon }) => (
+              {publicLinks.map(({ to, label, Icon }) => (
                 <NavLink
                   key={to}
                   to={to}

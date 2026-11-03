@@ -63,7 +63,7 @@ const layoutStyles = tv({
   },
 })
 
-const links = [
+const adminLinks = [
   { to: '/admin', label: 'Dashboard', Icon: IconLayoutDashboard, end: true },
   { to: '/admin/segmentos', label: 'Segmentos', Icon: IconTags },
   { to: '/admin/anuncios', label: 'Anuncios', Icon: IconSpeakerphone },
@@ -119,7 +119,7 @@ export function BackofficeLayout() {
           <img className={styles.brandLogo()} src={logo} alt="Desafío Bíblico" />
         </NavLink>
         <nav className={styles.nav()}>
-          {links.map(({ to, label, Icon, end }, index) => (
+          {adminLinks.map(({ to, label, Icon, end }, index) => (
             <NavLink
               ref={index === 0 ? firstLinkRef : undefined}
               key={to}

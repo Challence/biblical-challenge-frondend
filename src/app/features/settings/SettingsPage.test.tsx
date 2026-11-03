@@ -35,4 +35,15 @@ describe('SettingsPage notifications', () => {
     expect(screen.getByRole('switch')).toBeDisabled()
     expect(screen.getByText(/El permiso está bloqueado/)).toBeVisible()
   })
+
+  it('usa el campo de contraseña con visibilidad alternable en el login', () => {
+    renderPage('inactive')
+
+    fireEvent.click(screen.getByRole('button', { name: 'Iniciar sesión' }))
+
+    const password = screen.getByLabelText('Contraseña *')
+    expect(password).toHaveAttribute('type', 'password')
+    fireEvent.click(screen.getByRole('button', { name: 'Mostrar contraseña' }))
+    expect(password).toHaveAttribute('type', 'text')
+  })
 })
