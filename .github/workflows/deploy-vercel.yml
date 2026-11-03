@@ -87,10 +87,10 @@ jobs:
           pnpm exec supabase functions deploy send-push-reminders --project-ref "$SUPABASE_PROJECT_REF"
 
       - name: Pull Vercel production configuration
-        run: pnpm dlx vercel@41.7.2 pull --yes --environment=production --token="$VERCEL_TOKEN"
+        run: pnpm dlx vercel@65.9.0 pull --yes --environment=production --token="$VERCEL_TOKEN"
 
       - name: Build Vercel production artifact
-        run: pnpm dlx vercel@41.7.2 build --prod --token="$VERCEL_TOKEN"
+        run: pnpm dlx vercel@65.9.0 build --prod --token="$VERCEL_TOKEN"
 
       - name: Deploy prebuilt artifact to Vercel
-        run: pnpm dlx vercel@41.7.2 deploy --prebuilt --prod --token="$VERCEL_TOKEN"
+        run: pnpm dlx vercel@65.9.0 deploy --prebuilt --prod --token="$VERCEL_TOKEN"
