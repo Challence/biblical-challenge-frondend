@@ -85,22 +85,24 @@ El comando devuelve una clave pública y una privada. Conserva ambas: la clave p
 
 GitHub Actions es la fuente única del despliegue. Configura en **Settings → Secrets and variables → Actions**:
 
-| Tipo     | Nombre                     | Valor                                                     |
-| -------- | -------------------------- | --------------------------------------------------------- |
-| Variable | `SUPABASE_PROJECT_REF`     | Identificador del proyecto remoto.                        |
-| Variable | `SUPABASE_URL`             | URL de **Project Settings → API** en Supabase.            |
-| Variable | `SUPABASE_PUBLISHABLE_KEY` | Publishable key de Supabase.                              |
-| Variable | `VAPID_PUBLIC_KEY`         | Clave pública generada por `web-push`.                    |
-| Variable | `VAPID_SUBJECT`            | Contacto, por ejemplo `mailto:correo@dominio.com`.        |
-| Variable | `APP_ORIGINS`              | Orígenes web autorizados separados por comas.             |
-| Secreto  | `VAPID_PRIVATE_KEY`        | Clave privada generada por `web-push`.                    |
-| Secreto  | `PUSH_CRON_SECRET`         | Valor aleatorio usado por el cron.                        |
-| Secreto  | `SUPABASE_ACCESS_TOKEN`    | Token con escritura de migraciones, funciones y secretos. |
-| Secreto  | `VERCEL_TOKEN`             | Token para desplegar en Vercel.                           |
-| Variable | `VERCEL_ORG_ID`            | Identificador de la cuenta/equipo de Vercel.              |
-| Variable | `VERCEL_PROJECT_ID`        | Identificador del proyecto Vercel.                        |
+| Tipo     | Nombre                     | Valor                                                    |
+| -------- | -------------------------- | -------------------------------------------------------- |
+| Variable | `SUPABASE_PROJECT_REF`     | Identificador del proyecto remoto.                       |
+| Variable | `SUPABASE_URL`             | URL de **Project Settings → API** en Supabase.           |
+| Variable | `SUPABASE_PUBLISHABLE_KEY` | Publishable key de Supabase.                             |
+| Variable | `VAPID_PUBLIC_KEY`         | Clave pública generada por `web-push`.                   |
+| Variable | `VAPID_SUBJECT`            | Contacto, por ejemplo `mailto:correo@dominio.com`.       |
+| Variable | `APP_ORIGINS`              | Orígenes web autorizados separados por comas.            |
+| Secreto  | `VAPID_PRIVATE_KEY`        | Clave privada generada por `web-push`.                   |
+| Secreto  | `PUSH_CRON_SECRET`         | Valor aleatorio usado por el cron.                       |
+| Secreto  | `SUPABASE_ACCESS_TOKEN`    | Token scoped para vincular, migrar y desplegar Supabase. |
+| Secreto  | `VERCEL_TOKEN`             | Token para desplegar en Vercel.                          |
+| Variable | `VERCEL_ORG_ID`            | Identificador de la cuenta/equipo de Vercel.             |
+| Variable | `VERCEL_PROJECT_ID`        | Identificador del proyecto Vercel.                       |
 
 El workflow crea los alias `VITE_*` durante el build, previsualiza y aplica las migraciones pendientes con `supabase db push`, configura los secretos de las Edge Functions y despliega Vercel y Supabase. No es necesario duplicar esos valores en Vercel. Si una migración falla, no se despliegan las funciones ni el frontend.
+
+GitHub Actions no ofrece conectividad IPv6. Antes de migrar, el workflow ejecuta `supabase link` para obtener la configuración del pooler IPv4. El token scoped requiere `project_admin_read`, lectura de API gateway keys, `database_pooling_config_read`, `database_write` y escritura de Edge Functions y sus secretos.
 
 ### 3. Generar el secreto del cron
 
