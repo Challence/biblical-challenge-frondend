@@ -82,7 +82,7 @@ export function PublicSegmentDayTemplate({
           <div>
             <h1
               id="reading-title"
-              className="font-[Merriweather,Georgia,serif] text-[clamp(1.8rem,4vw,2.6rem)] font-bold leading-tight tracking-[-0.04em]"
+              className="font-heading text-[clamp(1.8rem,4vw,2.6rem)] font-bold leading-tight tracking-[-0.04em]"
             >
               {segment.title}
             </h1>
@@ -96,10 +96,7 @@ export function PublicSegmentDayTemplate({
         className="mx-3 mb-4 mt-3 rounded-[var(--shape-16)] border border-border bg-card p-4 sm:mx-8 sm:mb-8 sm:mt-5 sm:p-6"
         aria-labelledby="reading-section-title"
       >
-        <h2
-          id="reading-section-title"
-          className="font-[Merriweather,Georgia,serif] text-2xl font-bold sm:text-3xl"
-        >
+        <h2 id="reading-section-title" className="font-heading text-2xl font-bold sm:text-3xl">
           Lectura
         </h2>
         <div className="mt-4 space-y-5 text-[0.98rem] leading-relaxed text-foreground/85">

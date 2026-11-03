@@ -12,7 +12,7 @@ export function ResourcesPage() {
     <main className="mx-auto max-w-6xl space-y-12 px-4 py-10 sm:px-6">
       <header className="max-w-2xl space-y-3">
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">Recursos</p>
-        <h1 className="font-[Merriweather,Georgia,serif] text-3xl font-bold tracking-tight sm:text-4xl">
+        <h1 className="font-heading text-3xl font-bold tracking-tight sm:text-4xl">
           Recursos de cada mes
         </h1>
         <p className="text-muted-foreground">

@@ -31,9 +31,7 @@ export function PublicReadingGuideCard({ guide }: { guide: ReadingGuide }) {
             className="h-48 w-full bg-muted object-contain sm:h-56"
           />
           <CardContent className="p-4">
-            <h2 className="font-[Merriweather,Georgia,serif] text-base font-bold sm:text-lg">
-              {period}
-            </h2>
+            <h2 className="font-heading text-base font-bold sm:text-lg">{period}</h2>
           </CardContent>
         </Card>
       </button>

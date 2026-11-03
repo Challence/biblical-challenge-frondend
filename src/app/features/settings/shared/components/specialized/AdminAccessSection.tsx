@@ -11,7 +11,7 @@ export function AdminAccessSection() {
 
   return (
     <section aria-labelledby="admin-title">
-      <h2 id="admin-title" className="mb-3 font-[Merriweather,Georgia,serif] text-xl font-bold">
+      <h2 id="admin-title" className="mb-3 font-heading text-xl font-bold">
         Administración
       </h2>
       <Card className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">

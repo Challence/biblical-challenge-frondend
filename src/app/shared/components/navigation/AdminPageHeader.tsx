@@ -14,7 +14,7 @@ export function AdminPageHeader({ title, titleId, description, action }: AdminPa
       <div className="min-w-0 space-y-2">
         <h1
           id={titleId}
-          className="m-0 font-[Merriweather,Georgia,serif] text-[clamp(2rem,4vw,2.75rem)] leading-[1.1] tracking-[-0.04em]"
+          className="m-0 font-heading text-[clamp(2rem,4vw,2.75rem)] leading-[1.1] tracking-[-0.04em]"
         >
           {title}
         </h1>

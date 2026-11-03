@@ -8,7 +8,7 @@ const dashboardStyles = tv({
       'mb-8 flex items-end justify-between gap-6 max-[42rem]:mb-6 max-[42rem]:items-start max-[42rem]:flex-col',
     eyebrow: 'mb-1 mt-0 text-xs font-extrabold uppercase tracking-[0.12em] text-primary',
     title:
-      'm-0 font-[Merriweather,Georgia,serif] text-[clamp(2rem,4vw,2.75rem)] leading-[1.1] tracking-[-0.04em] text-foreground',
+      'm-0 font-heading text-[clamp(2rem,4vw,2.75rem)] leading-[1.1] tracking-[-0.04em] text-foreground',
     subtitle: 'mt-2 mb-0 text-muted-foreground',
     mockNotice: 'mt-3 mb-0 text-[0.8125rem] font-bold text-primary',
     periodButton:
@@ -16,11 +16,11 @@ const dashboardStyles = tv({
     metrics: 'grid grid-cols-2 gap-5 max-[42rem]:grid-cols-1 max-[42rem]:gap-4',
     card: 'min-w-0 rounded-[var(--shape-16)] border border-border bg-card p-6 shadow-[var(--elevation-card)] max-[42rem]:p-5',
     cardHeader:
-      'flex items-center justify-between gap-4 [&>h2]:m-0 [&>h2]:font-[Merriweather,Georgia,serif] [&>h2]:text-[0.9375rem] [&>h2]:font-bold [&>h2]:text-muted-foreground',
+      'flex items-center justify-between gap-4 [&>h2]:m-0 [&>h2]:font-heading [&>h2]:text-[0.9375rem] [&>h2]:font-bold [&>h2]:text-muted-foreground',
     iconBlock:
       'grid size-11 shrink-0 place-items-center rounded-[var(--shape-8)] bg-secondary text-accent',
     valueRow: 'mt-3 flex items-baseline justify-between gap-4',
-    value: 'font-[Merriweather,Georgia,serif] text-4xl tracking-[-0.04em] text-foreground',
+    value: 'font-heading text-4xl tracking-[-0.04em] text-foreground',
     change: 'inline-flex items-center gap-[0.2rem] text-[0.8125rem] font-extrabold text-primary',
     chart: 'mt-6 flex h-20 items-end gap-2 border-b border-border pt-1',
     bar: 'h-[var(--bar-height)] min-w-[0.4rem] flex-1 rounded-t text-primary opacity-80 even:bg-secondary last:bg-accent last:opacity-100',

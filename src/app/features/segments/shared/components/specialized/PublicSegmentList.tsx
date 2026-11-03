@@ -28,7 +28,7 @@ export function PublicSegmentList({ segments }: { segments: PublicSegment[] }) {
                   className="size-16 shrink-0 rounded-[var(--shape-8)] object-cover transition-transform group-hover:scale-[1.03] sm:size-20"
                 />
                 <div className="min-w-0 flex-1">
-                  <h3 className="truncate font-[Merriweather,Georgia,serif] text-base font-bold sm:text-lg">
+                  <h3 className="truncate font-heading text-base font-bold sm:text-lg">
                     {segment.title}
                   </h3>
                   <p className="mt-0.5 truncate text-xs text-muted-foreground sm:text-sm">

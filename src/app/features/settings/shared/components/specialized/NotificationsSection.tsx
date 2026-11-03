@@ -12,10 +12,7 @@ export function NotificationsSection() {
 
   return (
     <section aria-labelledby="notifications-title">
-      <h2
-        id="notifications-title"
-        className="mb-3 font-[Merriweather,Georgia,serif] text-xl font-bold"
-      >
+      <h2 id="notifications-title" className="mb-3 font-heading text-xl font-bold">
         Notificaciones
       </h2>
       <Card className="flex items-center justify-between gap-4 p-4 sm:p-5">

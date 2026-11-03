@@ -12,9 +12,7 @@ export function PublicReadingGuidePage() {
   return (
     <div className="mx-auto w-full max-w-6xl px-1 pb-6 sm:px-8 sm:pb-5">
       <header>
-        <h1 className="font-[Merriweather,Georgia,serif] text-2xl font-bold sm:text-3xl">
-          Guías de lectura
-        </h1>
+        <h1 className="font-heading text-2xl font-bold sm:text-3xl">Guías de lectura</h1>
         <p className="mt-2 text-muted-foreground">
           Consulta las guías disponibles para acompañar tu lectura.
         </p>

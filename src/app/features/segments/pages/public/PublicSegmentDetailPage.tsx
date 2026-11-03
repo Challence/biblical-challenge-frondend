@@ -21,7 +21,7 @@ export function PublicSegmentDetailPage() {
       <Card className="mt-4 overflow-hidden">
         <SegmentCover src={data.coverPath} alt={`Portada de ${data.title}`} />
         <CardContent className="p-5">
-          <h1 className="font-[Merriweather,Georgia,serif] text-3xl font-bold">{data.title}</h1>
+          <h1 className="font-heading text-3xl font-bold">{data.title}</h1>
           <p className="mt-2 text-muted-foreground">
             {SEGMENT_MONTHS[data.month - 1]} {data.year}
           </p>

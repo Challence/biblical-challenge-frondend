@@ -139,7 +139,7 @@ export function PublicLayout() {
             aria-label="Menú principal"
           >
             <div className="mb-8 flex items-center justify-between">
-              <span className="font-[Merriweather,Georgia,serif] text-lg font-bold">Menú</span>
+              <span className="font-heading text-lg font-bold">Menú</span>
               <button
                 type="button"
                 onClick={() => setMenuOpen(false)}

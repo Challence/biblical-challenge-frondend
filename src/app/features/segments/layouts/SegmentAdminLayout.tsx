@@ -12,7 +12,7 @@ export function SegmentAdminLayout() {
     <section className="mx-auto max-w-[76rem]" aria-labelledby="segment-form-title">
       <h1
         id="segment-form-title"
-        className="mb-5 font-[Merriweather,Georgia,serif] text-[clamp(1.75rem,3.5vw,2.25rem)] leading-tight tracking-[-0.04em]"
+        className="mb-5 font-heading text-[clamp(1.75rem,3.5vw,2.25rem)] leading-tight tracking-[-0.04em]"
       >
         {title}
       </h1>

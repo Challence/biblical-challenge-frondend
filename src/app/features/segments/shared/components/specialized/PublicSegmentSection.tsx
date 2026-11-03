@@ -8,7 +8,7 @@ export function PublicSegmentSection() {
     <section aria-labelledby="public-segments-title">
       <h2
         id="public-segments-title"
-        className="font-[Merriweather,Georgia,serif] text-xl tracking-[-0.03em] sm:text-2xl"
+        className="font-heading text-xl tracking-[-0.03em] sm:text-2xl"
       >
         Lectura por mes
       </h2>

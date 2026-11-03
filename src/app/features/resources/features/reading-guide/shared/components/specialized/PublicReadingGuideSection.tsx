@@ -19,7 +19,7 @@ export function PublicReadingGuideSection() {
         <div className="min-w-0">
           <h2
             id="reading-guide-card-title"
-            className="font-[Merriweather,Georgia,serif] text-lg font-bold leading-tight sm:text-xl"
+            className="font-heading text-lg font-bold leading-tight sm:text-xl"
           >
             Guía de lectura
           </h2>
