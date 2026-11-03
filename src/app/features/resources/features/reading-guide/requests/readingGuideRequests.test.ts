@@ -10,11 +10,19 @@ describe('reading guide month persistence', () => {
     expect(toDomainMonth('2026-10-01')).toBe('2026-10')
   })
 
-  it.each(['2026-1', '2026-13', '2026-10-01', 'invalid'])('rejects invalid domain month %s', (month) => {
-    expect(() => toPersistedMonthDate(month)).toThrow('El período debe tener el formato YYYY-MM.')
-  })
+  it.each(['2026-1', '2026-13', '2026-10-01', 'invalid'])(
+    'rejects invalid domain month %s',
+    (month) => {
+      expect(() => toPersistedMonthDate(month)).toThrow('El período debe tener el formato YYYY-MM.')
+    },
+  )
 
-  it.each(['2026-10', '2026-10-02', '2026-13-01', 'invalid'])('rejects invalid persisted month %s', (monthDate) => {
-    expect(() => toDomainMonth(monthDate)).toThrow('El período almacenado debe tener el formato YYYY-MM-01.')
-  })
+  it.each(['2026-10', '2026-10-02', '2026-13-01', 'invalid'])(
+    'rejects invalid persisted month %s',
+    (monthDate) => {
+      expect(() => toDomainMonth(monthDate)).toThrow(
+        'El período almacenado debe tener el formato YYYY-MM-01.',
+      )
+    },
+  )
 })

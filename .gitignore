@@ -17,3 +17,5 @@ dist/
 # Local planning and browser automation artifacts
 todo.md
 .playwright-cli/
+.vercel
+.env*

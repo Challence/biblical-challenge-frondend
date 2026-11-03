@@ -37,7 +37,9 @@ export function usePushNotifications() {
       setStatus('active')
     } catch (cause) {
       setStatus(Notification.permission === 'denied' ? 'denied' : 'error')
-      setError(cause instanceof Error ? cause.message : 'No se pudieron activar las notificaciones.')
+      setError(
+        cause instanceof Error ? cause.message : 'No se pudieron activar las notificaciones.',
+      )
     }
   }
 

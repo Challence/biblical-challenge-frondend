@@ -1,9 +1,15 @@
 /// <reference lib="webworker" />
 
-import { cleanupOutdatedCaches, createHandlerBoundToURL, precacheAndRoute } from 'workbox-precaching'
+import {
+  cleanupOutdatedCaches,
+  createHandlerBoundToURL,
+  precacheAndRoute,
+} from 'workbox-precaching'
 import { NavigationRoute, registerRoute } from 'workbox-routing'
 
-declare const self: ServiceWorkerGlobalScope & { __WB_MANIFEST: Array<{ url: string; revision?: string }> }
+declare const self: ServiceWorkerGlobalScope & {
+  __WB_MANIFEST: Array<{ url: string; revision?: string }>
+}
 
 precacheAndRoute(self.__WB_MANIFEST)
 cleanupOutdatedCaches()

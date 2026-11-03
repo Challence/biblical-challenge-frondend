@@ -20,7 +20,10 @@ export function getPublicVideoSource(value: string): PublicVideoSource {
   }
 
   if (host === 'vimeo.com' || host === 'player.vimeo.com') {
-    const id = url.pathname.split('/').filter(Boolean).find((part) => /^\d+$/.test(part))
+    const id = url.pathname
+      .split('/')
+      .filter(Boolean)
+      .find((part) => /^\d+$/.test(part))
     if (id) return { type: 'embed', url: `https://player.vimeo.com/video/${id}` }
   }
 

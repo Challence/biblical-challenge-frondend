@@ -56,7 +56,10 @@ Deno.serve(async (request) => {
         .from('push_subscriptions')
         .update({
           last_sent_at: new Date().toISOString(),
-          next_send_at: nextReminderAt(subscription.timezone, subscription.local_hour).toISOString(),
+          next_send_at: nextReminderAt(
+            subscription.timezone,
+            subscription.local_hour,
+          ).toISOString(),
           claimed_at: null,
           failure_count: 0,
         })
@@ -71,7 +74,10 @@ Deno.serve(async (request) => {
           active: !expired,
           claimed_at: null,
           failure_count: subscription.failure_count + 1,
-          next_send_at: nextReminderAt(subscription.timezone, subscription.local_hour).toISOString(),
+          next_send_at: nextReminderAt(
+            subscription.timezone,
+            subscription.local_hour,
+          ).toISOString(),
         })
         .eq('id', subscription.id)
       if (expired) disabled += 1

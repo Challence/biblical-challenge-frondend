@@ -42,13 +42,22 @@ export const getReadingGuideRow = async (id: string) => {
 }
 export const createReadingGuideRow = async (monthDate: string, imagePath: string) => {
   const persistedMonthDate = toPersistedMonthDate(monthDate)
-  const { data, error } = await client().from('reading_guides').insert({ month_date: persistedMonthDate, image_path: imagePath, created_by: await userId() }).select('*').single()
+  const { data, error } = await client()
+    .from('reading_guides')
+    .insert({ month_date: persistedMonthDate, image_path: imagePath, created_by: await userId() })
+    .select('*')
+    .single()
   if (error) throw error
   return toDomainRow(data as ReadingGuideRemoteRow)
 }
 export const updateReadingGuideRow = async (id: string, monthDate: string, imagePath?: string) => {
   const persistedMonthDate = toPersistedMonthDate(monthDate)
-  const { data, error } = await client().from('reading_guides').update({ month_date: persistedMonthDate, ...(imagePath ? { image_path: imagePath } : {}) }).eq('id', id).select('*').single()
+  const { data, error } = await client()
+    .from('reading_guides')
+    .update({ month_date: persistedMonthDate, ...(imagePath ? { image_path: imagePath } : {}) })
+    .eq('id', id)
+    .select('*')
+    .single()
   if (error) throw error
   return toDomainRow(data as ReadingGuideRemoteRow)
 }
@@ -58,7 +67,9 @@ export const deleteReadingGuideRow = async (id: string) => {
 }
 export const uploadResourceAsset = async (file: File) => {
   const path = `${await userId()}/${crypto.randomUUID()}-${file.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`
-  const { error } = await client().storage.from(BUCKET).upload(path, file, { contentType: file.type, upsert: false })
+  const { error } = await client()
+    .storage.from(BUCKET)
+    .upload(path, file, { contentType: file.type, upsert: false })
   if (error) throw error
   return path
 }
@@ -66,4 +77,5 @@ export const removeResourceAsset = async (path: string) => {
   const { error } = await client().storage.from(BUCKET).remove([path])
   if (error) throw error
 }
-export const getResourceAssetUrl = (path: string) => client().storage.from(BUCKET).getPublicUrl(path).data.publicUrl
+export const getResourceAssetUrl = (path: string) =>
+  client().storage.from(BUCKET).getPublicUrl(path).data.publicUrl

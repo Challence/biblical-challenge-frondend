@@ -31,10 +31,7 @@ async function registration() {
   return navigator.serviceWorker.ready
 }
 
-async function updateBackend(
-  action: 'subscribe' | 'unsubscribe',
-  subscription?: PushSubscription,
-) {
+async function updateBackend(action: 'subscribe' | 'unsubscribe', subscription?: PushSubscription) {
   const url = import.meta.env.VITE_SUPABASE_URL
   const key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY
   if (!url || !key) throw new Error('Supabase no está configurado.')

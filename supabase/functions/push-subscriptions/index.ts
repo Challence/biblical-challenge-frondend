@@ -42,7 +42,8 @@ Deno.serve(async (request) => {
       return json(request, { active: false })
     }
 
-    if (!body.subscription || !body.timezone) return json(request, { error: 'Suscripción incompleta.' }, 400)
+    if (!body.subscription || !body.timezone)
+      return json(request, { error: 'Suscripción incompleta.' }, 400)
     assertTimezone(body.timezone)
     const endpoint = new URL(body.subscription.endpoint)
     if (endpoint.protocol !== 'https:') return json(request, { error: 'Endpoint inválido.' }, 400)

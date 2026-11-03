@@ -22,12 +22,12 @@ Activa esta skill antes de crear, mover, dividir o revisar módulos y submódulo
 
 ## Decision Gates
 
-| Señal | Decisión |
-| --- | --- |
-| Dominio/ruta con frontera propia | Módulo |
-| Cohesión interna con frontera y ciclo propio | Submódulo |
-| Uso transversal real | `app/shared` |
-| Una sola operación | Mantener junto a la operación |
+| Señal                                        | Decisión                      |
+| -------------------------------------------- | ----------------------------- |
+| Dominio/ruta con frontera propia             | Módulo                        |
+| Cohesión interna con frontera y ciclo propio | Submódulo                     |
+| Uso transversal real                         | `app/shared`                  |
+| Una sola operación                           | Mantener junto a la operación |
 
 ## Execution Steps
 

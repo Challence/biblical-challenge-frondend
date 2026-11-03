@@ -1,4 +1,8 @@
 {
+  "installCommand": "pnpm install --frozen-lockfile",
+  "buildCommand": "pnpm build",
+  "outputDirectory": "dist",
+  "framework": "vite",
   "headers": [
     {
       "source": "/version.json",
@@ -8,6 +12,12 @@
           "value": "no-store, no-cache, must-revalidate, max-age=0"
         }
       ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }

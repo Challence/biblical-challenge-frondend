@@ -14,10 +14,22 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    # env:s
-    # VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-    # VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-    # VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ vars.VERCEL_PROJECT_ID }}
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_REF: ${{ vars.SUPABASE_PROJECT_REF }}
+      SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+      SUPABASE_PUBLISHABLE_KEY: ${{ vars.SUPABASE_PUBLISHABLE_KEY }}
+      VAPID_PUBLIC_KEY: ${{ vars.VAPID_PUBLIC_KEY }}
+      VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
+      VAPID_SUBJECT: ${{ vars.VAPID_SUBJECT }}
+      APP_ORIGINS: ${{ vars.APP_ORIGINS }}
+      PUSH_CRON_SECRET: ${{ secrets.PUSH_CRON_SECRET }}
+      VITE_SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+      VITE_SUPABASE_PUBLISHABLE_KEY: ${{ vars.SUPABASE_PUBLISHABLE_KEY }}
+      VITE_VAPID_PUBLIC_KEY: ${{ vars.VAPID_PUBLIC_KEY }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -47,6 +59,32 @@ jobs:
 
       - name: Build
         run: pnpm build
+
+      - name: Preview Supabase migrations
+        run: >
+          pnpm exec supabase db push
+          --project-ref "$SUPABASE_PROJECT_REF"
+          --dry-run
+
+      - name: Apply Supabase migrations
+        run: >
+          pnpm exec supabase db push
+          --project-ref "$SUPABASE_PROJECT_REF"
+
+      - name: Configure Supabase Edge Function secrets
+        run: |
+          pnpm exec supabase secrets set \
+            VAPID_PUBLIC_KEY="$VAPID_PUBLIC_KEY" \
+            VAPID_PRIVATE_KEY="$VAPID_PRIVATE_KEY" \
+            VAPID_SUBJECT="$VAPID_SUBJECT" \
+            APP_ORIGINS="$APP_ORIGINS" \
+            PUSH_CRON_SECRET="$PUSH_CRON_SECRET" \
+            --project-ref "$SUPABASE_PROJECT_REF"
+
+      - name: Deploy Supabase Edge Functions
+        run: |
+          pnpm exec supabase functions deploy push-subscriptions --project-ref "$SUPABASE_PROJECT_REF"
+          pnpm exec supabase functions deploy send-push-reminders --project-ref "$SUPABASE_PROJECT_REF"
 
       - name: Pull Vercel production configuration
         run: pnpm dlx vercel@41.7.2 pull --yes --environment=production --token="$VERCEL_TOKEN"

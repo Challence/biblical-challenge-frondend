@@ -24,7 +24,9 @@ describe('PublicResourceCard', () => {
   it('abre una imagen en pantalla completa', () => {
     render(<PublicResourceCard resource={resource({})} />)
 
-    fireEvent.click(screen.getByRole('button', { name: 'Ver Recurso mensual en pantalla completa' }))
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Ver Recurso mensual en pantalla completa' }),
+    )
     const dialog = screen.getByRole('dialog', { name: 'Recurso mensual' })
     expect(
       within(dialog).getByRole('img', { name: 'Recurso mensual en pantalla completa' }),
@@ -43,7 +45,9 @@ describe('PublicResourceCard', () => {
       />,
     )
 
-    fireEvent.click(screen.getByRole('button', { name: 'Ver Recurso mensual en pantalla completa' }))
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Ver Recurso mensual en pantalla completa' }),
+    )
     expect(screen.getByTitle('Recurso mensual')).toHaveAttribute(
       'src',
       'https://www.youtube.com/embed/video123',
