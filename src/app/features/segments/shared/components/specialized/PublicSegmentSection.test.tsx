@@ -32,6 +32,12 @@ describe('PublicSegmentSection', () => {
 
     render(<PublicSegmentSection />)
 
-    expect(screen.getByText('No hay lecturas publicadas.')).toBeVisible()
+    const emptyState = screen.getByRole('region', { name: 'No hay set de lecturas' })
+    expect(emptyState).toBeVisible()
+    expect(emptyState.querySelector('img')).toHaveAttribute(
+      'alt',
+      'Ilustración de una Biblia con una lupa y un signo de interrogación',
+    )
+    expect(screen.queryByText('0')).toBeNull()
   })
 })

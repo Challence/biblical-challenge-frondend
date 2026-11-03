@@ -48,7 +48,12 @@ describe('PublicReadingGuidePage', () => {
 
     renderPage()
 
-    expect(await screen.findByText('No hay guías de lectura disponibles.')).toBeVisible()
+    expect(await screen.findByText('No hay guías de lecturas agregadas')).toBeVisible()
+    expect(screen.queryByRole('heading', { name: 'Guías de lectura' })).not.toBeInTheDocument()
+    expect(screen.getByText('No hay guías de lecturas agregadas').closest('div')).toHaveClass(
+      'items-center',
+      'justify-center',
+    )
   })
 
   it('abre y cierra una guía en pantalla completa', async () => {

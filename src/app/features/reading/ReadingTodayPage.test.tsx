@@ -78,7 +78,7 @@ describe('ReadingTodayPage', () => {
     expect(screen.queryByText('No tenemos una lectura para hoy.')).not.toBeInTheDocument()
     expect(
       screen.queryByRole('img', {
-        name: 'Ilustración de una Biblia con hojas y una lupa con signo de interrogación',
+        name: 'Ilustración de una Biblia con una lupa y un signo de interrogación',
       }),
     ).not.toBeInTheDocument()
   })
@@ -88,7 +88,7 @@ describe('ReadingTodayPage', () => {
 
     renderPage()
 
-    expect(screen.getByRole('heading', { name: 'No tenemos una lectura para hoy.' })).toBeVisible()
+    expect(screen.getByRole('region', { name: 'No tenemos una lectura para hoy.' })).toBeVisible()
     expect(screen.getByRole('link', { name: 'Lectura anterior: 8/11/2026' })).toHaveAttribute(
       'href',
       '/segmentos/november/dias/8',
@@ -99,7 +99,7 @@ describe('ReadingTodayPage', () => {
     )
     expect(
       screen.getByRole('img', {
-        name: 'Ilustración de una Biblia con hojas y una lupa con signo de interrogación',
+        name: 'Ilustración de una Biblia con una lupa y un signo de interrogación',
       }),
     ).toBeVisible()
   })
@@ -146,7 +146,7 @@ describe('ReadingTodayPage', () => {
 
     renderPage()
 
-    expect(screen.getByRole('heading', { name: 'No tenemos una lectura para hoy.' })).toBeVisible()
+    expect(screen.getByRole('region', { name: 'No tenemos una lectura para hoy.' })).toBeVisible()
     expect(screen.getByRole('link', { name: 'Lectura anterior: 31/10/2026' })).toHaveAttribute(
       'href',
       '/segmentos/october/dias/31',

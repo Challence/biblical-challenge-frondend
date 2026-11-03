@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { IconArrowLeft, IconArrowRight } from '@tabler/icons-react'
 import { Link } from 'react-router-dom'
-import readingEmptyState from '@/assets/reading-empty-state.webp'
 import { Button } from '@/app/shared/components/ui/button'
+import { Empty } from '@/app/shared/components/empty/Empty'
 import { usePublicSegmentDetails, usePublicSegments } from '../segments/hooks/usePublicSegments'
 import { DEFAULT_SEGMENT_COVER } from '../segments/segmentStorage'
 import { PublicSegmentDayTemplate } from '../segments/shared/components/specialized/PublicSegmentDayTemplate'
@@ -61,14 +61,9 @@ function TodayEmptyState({
   const label = (item: NonNullable<typeof previous>) =>
     `${item.day.day}/${String(item.segment.month).padStart(2, '0')}/${item.segment.year}`
   return (
-    <main className="mx-auto flex max-w-2xl flex-col items-center gap-6 p-6 text-center">
-      <img
-        src={readingEmptyState}
-        alt="Ilustración de una Biblia con hojas y una lupa con signo de interrogación"
-        className="h-auto w-full max-w-sm object-contain"
-      />
+    <main className="mx-auto flex min-h-full max-w-2xl flex-col items-center justify-center gap-6 p-6 text-center">
+      <Empty size="lg" msg="No tenemos una lectura para hoy." />
       <div className="space-y-2">
-        <h1 className="text-2xl font-semibold">No tenemos una lectura para hoy.</h1>
         {(previous || next) && (
           <p className="text-muted-foreground">Puedes continuar con una lectura cercana.</p>
         )}

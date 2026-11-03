@@ -9,7 +9,7 @@ import {
   IconSun,
   IconX,
 } from '@tabler/icons-react'
-import { NavLink, Outlet } from 'react-router-dom'
+import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import logo from '@/assets/desafio-biblico-logo.webp'
 import { tv } from '@/app/shared/lib/tv'
 import { PwaInstallPrompt } from '@/app/shared/components/pwa-install/PwaInstallPrompt'
@@ -51,17 +51,33 @@ const publicLinks = [
 
 export function PublicLayout() {
   const s = styles()
+  const location = useLocation()
   const [menuOpen, setMenuOpen] = useState(false)
+  const [menuMounted, setMenuMounted] = useState(false)
+  const [menuClosing, setMenuClosing] = useState(false)
   const menuButtonRef = useRef<HTMLButtonElement>(null)
+  const closeMenu = () => {
+    setMenuOpen(false)
+    setMenuClosing(true)
+  }
 
   useEffect(() => {
     if (!menuOpen) return
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setMenuOpen(false)
+      if (event.key === 'Escape') closeMenu()
     }
     document.addEventListener('keydown', onKeyDown)
     return () => document.removeEventListener('keydown', onKeyDown)
   }, [menuOpen])
+
+  useEffect(() => {
+    if (menuOpen || !menuMounted) return
+    const timeout = window.setTimeout(() => {
+      setMenuMounted(false)
+      setMenuClosing(false)
+    }, 200)
+    return () => window.clearTimeout(timeout)
+  }, [menuOpen, menuMounted])
 
   useEffect(() => {
     if (!menuOpen) menuButtonRef.current?.focus()
@@ -87,7 +103,11 @@ export function PublicLayout() {
         <button
           ref={menuButtonRef}
           type="button"
-          onClick={() => setMenuOpen(true)}
+          onClick={() => {
+            setMenuMounted(true)
+            setMenuClosing(false)
+            setMenuOpen(true)
+          }}
           className="hidden min-h-11 min-w-11 items-center justify-center rounded-md text-primary-foreground hover:bg-primary-foreground/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-foreground max-[48rem]:inline-flex"
           aria-label="Abrir menú"
           aria-expanded={menuOpen}
@@ -119,21 +139,42 @@ export function PublicLayout() {
         className={`${s.bottomNav()} fixed bottom-[max(0.75rem,env(safe-area-inset-bottom))] left-[max(0.75rem,env(safe-area-inset-left))] right-[max(0.75rem,env(safe-area-inset-right))] z-10`}
         aria-label="Navegación principal"
       >
+        <span
+          className="pointer-events-none absolute inset-y-1 left-1 rounded-xl bg-primary transition-transform duration-200 ease-out motion-reduce:transition-none"
+          style={{
+            width: 'calc((100% - 0.5rem) / 5)',
+            transform: `translateX(${
+              Math.max(
+                0,
+                publicLinks.findIndex(
+                  ({ to }) =>
+                    location.pathname === to || (to !== '/' && location.pathname.startsWith(to)),
+                ),
+              ) * 100
+            }%)`,
+          }}
+          aria-hidden="true"
+        />
         {publicLinks.map(({ to, label, Icon }) => (
-          <NavLink key={to} to={to} aria-label={label} className={s.bottomLink()}>
+          <NavLink
+            key={to}
+            to={to}
+            aria-label={label}
+            className={`${s.bottomLink()} relative z-10`}
+          >
             <Icon size={22} aria-hidden="true" />
           </NavLink>
         ))}
       </nav>
-      {menuOpen && (
+      {menuMounted && (
         <div
-          className="fixed inset-0 z-40 bg-black/45"
+          className={`fixed inset-0 z-40 bg-black/45 transition-opacity duration-200 motion-reduce:transition-none ${menuClosing ? 'opacity-0' : 'opacity-100'}`}
           role="presentation"
-          onMouseDown={(event) => event.target === event.currentTarget && setMenuOpen(false)}
+          onMouseDown={(event) => event.target === event.currentTarget && closeMenu()}
         >
           <div
             id="public-mobile-menu"
-            className="flex h-full w-[min(20rem,85vw)] flex-col bg-secondary p-6 text-secondary-foreground shadow-2xl"
+            className={`flex h-full w-[min(20rem,85vw)] flex-col bg-secondary p-6 text-secondary-foreground shadow-2xl transition-transform duration-200 ease-out motion-reduce:transition-none ${menuClosing ? '-translate-x-full' : 'translate-x-0'}`}
             role="dialog"
             aria-modal="true"
             aria-label="Menú principal"
@@ -142,7 +183,7 @@ export function PublicLayout() {
               <span className="font-heading text-lg font-bold">Menú</span>
               <button
                 type="button"
-                onClick={() => setMenuOpen(false)}
+                onClick={closeMenu}
                 className="flex min-h-11 min-w-11 items-center justify-center rounded-md hover:bg-secondary-foreground/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                 aria-label="Cerrar menú"
               >
@@ -154,7 +195,7 @@ export function PublicLayout() {
                 <NavLink
                   key={to}
                   to={to}
-                  onClick={() => setMenuOpen(false)}
+                  onClick={closeMenu}
                   className="flex min-h-11 items-center gap-3 rounded-lg px-3 py-2.5 text-secondary-foreground hover:bg-secondary-foreground/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                 >
                   <Icon size={20} aria-hidden="true" />
