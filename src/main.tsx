@@ -5,6 +5,10 @@ import { createRoot } from 'react-dom/client'
 import { App } from '@/app/App'
 import '@/app/styles.css'
 
+if ('serviceWorker' in navigator) {
+  void navigator.serviceWorker.register('/sw.js').catch(() => undefined)
+}
+
 const rootElement = document.getElementById('root')
 
 if (!rootElement) {

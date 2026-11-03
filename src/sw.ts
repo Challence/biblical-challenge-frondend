@@ -11,6 +11,16 @@ declare const self: ServiceWorkerGlobalScope & {
   __WB_MANIFEST: Array<{ url: string; revision?: string }>
 }
 
+self.addEventListener('message', (event: ExtendableMessageEvent) => {
+  if (event.data?.type !== 'SKIP_WAITING') return
+
+  event.waitUntil(self.skipWaiting())
+})
+
+self.addEventListener('activate', (event: ExtendableEvent) => {
+  event.waitUntil(self.clients.claim())
+})
+
 precacheAndRoute(self.__WB_MANIFEST)
 cleanupOutdatedCaches()
 registerRoute(new NavigationRoute(createHandlerBoundToURL('index.html')))

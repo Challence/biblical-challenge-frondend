@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Button } from '@/app/shared/components/ui/button'
 import {
   Dialog,
@@ -11,27 +11,56 @@ import {
 declare const __APP_VERSION__: string
 
 const CHECK_INTERVAL = 5 * 60 * 1000
+const RELOAD_WAIT = 1500
+const ATTEMPTED_VERSION_KEY = 'version-monitor:attempted-version'
 
 type VersionResponse = { version?: unknown }
 
 async function reloadWithUpdatedServiceWorker() {
-  if ('serviceWorker' in navigator) {
-    try {
-      const registration = await navigator.serviceWorker.getRegistration()
-      if (registration) {
-        await registration.update().catch(() => undefined)
-        registration.waiting?.postMessage({ type: 'SKIP_WAITING' })
-      }
-    } catch {
-      // A service worker is optional; a failed update must not block reload.
-    }
+  if (!('serviceWorker' in navigator)) {
+    window.location.reload()
+    return
   }
+
+  try {
+    const registration = await navigator.serviceWorker.getRegistration()
+    if (!registration) {
+      window.location.reload()
+      return
+    }
+
+    await registration.update().catch(() => undefined)
+    const waiting = registration.waiting
+    if (!waiting) {
+      window.location.reload()
+      return
+    }
+
+    await new Promise<void>((resolve) => {
+      let settled = false
+      const finish = () => {
+        if (settled) return
+        settled = true
+        window.clearTimeout(timeout)
+        navigator.serviceWorker.removeEventListener('controllerchange', finish)
+        resolve()
+      }
+      const timeout = window.setTimeout(finish, RELOAD_WAIT)
+      navigator.serviceWorker.addEventListener('controllerchange', finish, { once: true })
+      waiting.postMessage({ type: 'SKIP_WAITING' })
+    })
+  } catch {
+    // A service worker is optional; a failed update must not block reload.
+  }
+
   window.location.reload()
 }
 
 export function VersionMonitor() {
   const [updateAvailable, setUpdateAvailable] = useState(false)
   const [seconds, setSeconds] = useState(5)
+  const reloadStarted = useRef(false)
+  const pendingVersion = useRef<string | null>(null)
 
   useEffect(() => {
     let disposed = false
@@ -41,7 +70,19 @@ export function VersionMonitor() {
         const response = await fetch(`/version.json?ts=${Date.now()}`, { cache: 'no-store' })
         if (!response.ok) return
         const data = (await response.json()) as VersionResponse
-        if (!disposed && typeof data.version === 'string' && data.version !== __APP_VERSION__) {
+        let attemptedVersion: string | null = null
+        try {
+          attemptedVersion = window.sessionStorage.getItem(ATTEMPTED_VERSION_KEY)
+        } catch {
+          // Storage can be unavailable; version monitoring remains best effort.
+        }
+        if (
+          !disposed &&
+          typeof data.version === 'string' &&
+          data.version !== __APP_VERSION__ &&
+          attemptedVersion !== data.version
+        ) {
+          pendingVersion.current = data.version
           setSeconds(5)
           setUpdateAvailable(true)
         }
@@ -60,17 +101,26 @@ export function VersionMonitor() {
 
   useEffect(() => {
     if (!updateAvailable) return
-    const timer = window.setInterval(() => {
-      setSeconds((current) => {
-        if (current <= 1) {
-          window.clearInterval(timer)
-          void reloadWithUpdatedServiceWorker()
-          return 0
+    const timer = window.setTimeout(() => {
+      if (reloadStarted.current) return
+      reloadStarted.current = true
+      try {
+        if (pendingVersion.current) {
+          window.sessionStorage.setItem(ATTEMPTED_VERSION_KEY, pendingVersion.current)
         }
-        return current - 1
-      })
-    }, 1000)
-    return () => window.clearInterval(timer)
+      } catch {
+        // Storage can be unavailable; the in-memory guard still prevents loops.
+      }
+      void reloadWithUpdatedServiceWorker()
+    }, 5000)
+    const countdown = window.setInterval(
+      () => setSeconds((current) => Math.max(current - 1, 0)),
+      1000,
+    )
+    return () => {
+      window.clearTimeout(timer)
+      window.clearInterval(countdown)
+    }
   }, [updateAvailable])
 
   return (
