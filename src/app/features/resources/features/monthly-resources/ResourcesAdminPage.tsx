@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Button } from '@/app/shared/components/ui/button'
-import { Card, CardContent } from '@/app/shared/components/ui/card'
+import { EmptyState } from '@/app/shared/components/empty-state/EmptyState'
 import { AdminPageHeader } from '@/app/shared/components/navigation/AdminPageHeader'
 import { DataPagination } from '@/app/shared/components/pagination/DataPagination'
 import { ResourceMonthFilters } from './shared/components/specialized/ResourceMonthFilters'
@@ -121,11 +121,10 @@ export function ResourcesAdminPage({
             </Button>
           </div>
         ) : items.length === 0 ? (
-          <Card>
-            <CardContent className="p-8 text-center text-muted-foreground">
-              No hay meses para mostrar.
-            </CardContent>
-          </Card>
+          <EmptyState
+            title="No hay meses para mostrar"
+            description="Agrega un mes para comenzar a organizar los recursos."
+          />
         ) : (
           <ResourceMonthList
             months={items}

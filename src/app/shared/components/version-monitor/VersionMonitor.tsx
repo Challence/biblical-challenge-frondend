@@ -11,49 +11,58 @@ import {
 declare const __APP_VERSION__: string
 
 const CHECK_INTERVAL = 5 * 60 * 1000
-const RELOAD_WAIT = 1500
+const ACTIVATION_TIMEOUT = 5000
 const ATTEMPTED_VERSION_KEY = 'version-monitor:attempted-version'
 
 type VersionResponse = { version?: unknown }
 
-async function reloadWithUpdatedServiceWorker() {
+export async function reloadWithUpdatedServiceWorker(onActivated?: () => void) {
   if (!('serviceWorker' in navigator)) {
     window.location.reload()
-    return
+    return true
   }
 
   try {
     const registration = await navigator.serviceWorker.getRegistration()
     if (!registration) {
       window.location.reload()
-      return
+      return true
     }
 
-    await registration.update().catch(() => undefined)
+    await registration.update()
     const waiting = registration.waiting
-    if (!waiting) {
-      window.location.reload()
-      return
-    }
+    if (!waiting) return false
 
-    await new Promise<void>((resolve) => {
+    const activated = await new Promise<boolean>((resolve) => {
       let settled = false
-      const finish = () => {
+      const finish = (success: boolean) => {
         if (settled) return
         settled = true
         window.clearTimeout(timeout)
-        navigator.serviceWorker.removeEventListener('controllerchange', finish)
-        resolve()
+        navigator.serviceWorker.removeEventListener('controllerchange', onControllerChange)
+        waiting.removeEventListener('statechange', onStateChange)
+        resolve(success)
       }
-      const timeout = window.setTimeout(finish, RELOAD_WAIT)
-      navigator.serviceWorker.addEventListener('controllerchange', finish, { once: true })
+      const onControllerChange = () => finish(true)
+      const onStateChange = () => {
+        if (waiting.state === 'activated') finish(true)
+        if (waiting.state === 'redundant') finish(false)
+      }
+      const timeout = window.setTimeout(() => finish(false), ACTIVATION_TIMEOUT)
+      navigator.serviceWorker.addEventListener('controllerchange', onControllerChange)
+      waiting.addEventListener('statechange', onStateChange)
       waiting.postMessage({ type: 'SKIP_WAITING' })
+      onStateChange()
     })
+    if (!activated) return false
   } catch {
-    // A service worker is optional; a failed update must not block reload.
+    // A service worker is optional; a failed update must not block the app.
+    return false
   }
 
+  onActivated?.()
   window.location.reload()
+  return true
 }
 
 export function VersionMonitor() {
@@ -104,14 +113,18 @@ export function VersionMonitor() {
     const timer = window.setTimeout(() => {
       if (reloadStarted.current) return
       reloadStarted.current = true
-      try {
-        if (pendingVersion.current) {
-          window.sessionStorage.setItem(ATTEMPTED_VERSION_KEY, pendingVersion.current)
+      void reloadWithUpdatedServiceWorker(() => {
+        try {
+          if (pendingVersion.current) {
+            window.sessionStorage.setItem(ATTEMPTED_VERSION_KEY, pendingVersion.current)
+          }
+        } catch {
+          // Storage can be unavailable; the in-memory guard still prevents loops.
         }
-      } catch {
-        // Storage can be unavailable; the in-memory guard still prevents loops.
-      }
-      void reloadWithUpdatedServiceWorker()
+      }).then((reloaded) => {
+        if (!reloaded) reloadStarted.current = false
+        setUpdateAvailable(false)
+      })
     }, 5000)
     const countdown = window.setInterval(
       () => setSeconds((current) => Math.max(current - 1, 0)),

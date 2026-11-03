@@ -12,6 +12,7 @@ import { Button } from '@/app/shared/components/ui/button'
 import { Input } from '@/app/shared/components/ui/input'
 import { DataPagination } from '@/app/shared/components/pagination/DataPagination'
 import { DataTable } from '@/app/shared/components/table/DataTable'
+import { EmptyState } from '@/app/shared/components/empty-state/EmptyState'
 import { tv } from '@/app/shared/lib/tv'
 import { AdminPageHeader } from '@/app/shared/components/navigation/AdminPageHeader'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
@@ -217,7 +218,13 @@ export function SegmentsPage() {
           ]}
           data={visible}
           error={isError ? 'No se pudieron cargar los segmentos.' : undefined}
-          empty="No encontramos segmentos con esa búsqueda."
+          empty={
+            <EmptyState
+              title="No encontramos segmentos"
+              description="Prueba con otros términos de búsqueda."
+              className="border-0 bg-transparent"
+            />
+          }
           getRowId={(segment) => segment.id}
           loading={isLoading}
           loadingMessage="Cargando segmentos…"

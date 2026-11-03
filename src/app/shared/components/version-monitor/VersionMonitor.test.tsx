@@ -1,0 +1,84 @@
+import '@testing-library/jest-dom/vitest'
+import { render, screen } from '@testing-library/react'
+import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest'
+
+import { VersionMonitor, reloadWithUpdatedServiceWorker } from './VersionMonitor'
+
+describe('VersionMonitor', () => {
+  beforeEach(() => {
+    vi.useFakeTimers()
+    vi.stubGlobal('fetch', vi.fn())
+    window.sessionStorage.clear()
+  })
+
+  afterEach(() => {
+    vi.useRealTimers()
+    vi.restoreAllMocks()
+  })
+
+  it('does not show an update when the version is equal', async () => {
+    vi.mocked(fetch).mockResolvedValue({ ok: true, json: async () => ({ version: '0.0.26' }) } as Response)
+    render(<VersionMonitor />)
+    await vi.runOnlyPendingTimersAsync()
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  })
+
+  it('shows a new version and reloads only after the worker activates', async () => {
+    const waiting = new EventTarget() as ServiceWorker
+    Object.defineProperty(waiting, 'state', { value: 'installed', writable: true })
+    waiting.postMessage = vi.fn()
+    const registration = { waiting, update: vi.fn().mockResolvedValue(undefined) }
+    vi.stubGlobal('navigator', { serviceWorker: {
+      getRegistration: vi.fn().mockResolvedValue(registration),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+    } })
+    vi.mocked(fetch).mockResolvedValue({ ok: true, json: async () => ({ version: '0.0.27' }) } as Response)
+    const reload = vi.fn()
+    Object.defineProperty(window, 'location', { configurable: true, value: { reload } })
+    render(<VersionMonitor />)
+    await vi.runOnlyPendingTimersAsync()
+    expect(screen.getByRole('dialog')).toBeInTheDocument()
+    await vi.advanceTimersByTimeAsync(5000)
+    expect(waiting.postMessage).toHaveBeenCalledWith({ type: 'SKIP_WAITING' })
+    expect(reload).not.toHaveBeenCalled()
+    Object.defineProperty(waiting, 'state', { value: 'activated' })
+    waiting.dispatchEvent(new Event('statechange'))
+    await Promise.resolve()
+    expect(reload).toHaveBeenCalledOnce()
+    expect(window.sessionStorage.getItem('version-monitor:attempted-version')).toBe('0.0.27')
+  })
+
+  it('does not mark a version when worker activation fails', async () => {
+    const waiting = new EventTarget() as ServiceWorker
+    Object.defineProperty(waiting, 'state', { value: 'installed' })
+    waiting.postMessage = vi.fn()
+    vi.stubGlobal('navigator', {
+      serviceWorker: {
+        getRegistration: vi.fn().mockResolvedValue({
+          waiting,
+          update: vi.fn().mockResolvedValue(undefined),
+        }),
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+      },
+    })
+    const mark = vi.fn()
+    const reload = vi.fn()
+    Object.defineProperty(window, 'location', { configurable: true, value: { reload } })
+    const result = reloadWithUpdatedServiceWorker(mark)
+    await vi.advanceTimersByTimeAsync(5000)
+    expect(await result).toBe(false)
+    expect(mark).not.toHaveBeenCalled()
+    expect(window.sessionStorage.getItem('version-monitor:attempted-version')).toBeNull()
+    expect(reload).not.toHaveBeenCalled()
+  })
+
+  it('keeps the app usable when no worker is available', async () => {
+    vi.stubGlobal('navigator', {})
+    const reload = vi.fn()
+    Object.defineProperty(window, 'location', { configurable: true, value: { reload } })
+    await reloadWithUpdatedServiceWorker()
+    expect(reload).toHaveBeenCalledOnce()
+  })
+})

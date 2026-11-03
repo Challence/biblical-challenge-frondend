@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { IconPlus } from '@tabler/icons-react'
 import { Button } from '@/app/shared/components/ui/button'
-import { Card, CardContent } from '@/app/shared/components/ui/card'
 import { AdminPageHeader } from '@/app/shared/components/navigation/AdminPageHeader'
 import { DataPagination } from '@/app/shared/components/pagination/DataPagination'
 import { useModalAlert } from '@/app/shared/hooks/useModalAlert'
@@ -12,6 +11,7 @@ import { useAnnouncementModal } from '../../hooks/useAnnouncementModal'
 import type { Announcement } from '../../models/announcement'
 import { AnnouncementFilters } from '../../shared/components/specialized/AnnouncementFilters'
 import { AnnouncementCard } from '../../shared/components/specialized/AnnouncementCard'
+import { EmptyState } from '@/app/shared/components/empty-state/EmptyState'
 export function AnnouncementListPage() {
   const [page, setPage] = useState(1),
     [search, setSearch] = useState('')
@@ -66,11 +66,10 @@ export function AnnouncementListPage() {
       ) : query.isError ? (
         <p role="alert">No se pudieron cargar los anuncios.</p>
       ) : items.length === 0 ? (
-        <Card>
-          <CardContent className="p-8 text-center text-muted-foreground">
-            No hay anuncios para mostrar.
-          </CardContent>
-        </Card>
+        <EmptyState
+          title="No hay anuncios para mostrar"
+          description="Agrega un anuncio para que aparezca en esta sección."
+        />
       ) : (
         <div className="grid grid-cols-1 gap-3 min-[42rem]:grid-cols-2 min-[72rem]:grid-cols-4">
           {items.map((i, n) => (

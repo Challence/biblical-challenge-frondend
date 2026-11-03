@@ -1,9 +1,10 @@
-import { IconBook2, IconEdit, IconPlus, IconTrash } from '@tabler/icons-react'
+import { IconEdit, IconPlus, IconTrash } from '@tabler/icons-react'
 import { useEffect, useMemo, useState } from 'react'
 import { FormProvider, useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { AdminPageHeader } from '@/app/shared/components/navigation/AdminPageHeader'
 import { Button } from '@/app/shared/components/ui/button'
+import { EmptyState } from '@/app/shared/components/empty-state/EmptyState'
 import { Card, CardContent } from '@/app/shared/components/ui/card'
 import {
   Dialog,
@@ -168,17 +169,16 @@ export function ReadingGuideAdminPage() {
         </div>
       )}
       {!guides.isLoading && !guides.isError && !existing.length && (
-        <section className="rounded-lg border border-dashed p-8 text-center">
-          <IconBook2 className="mx-auto text-primary" size={40} aria-hidden="true" />
-          <h2 className="mt-4 text-xl font-bold">Aún no hay guías</h2>
-          <p className="mt-2 text-muted-foreground">Agrega una guía para comenzar.</p>
-        </section>
+        <EmptyState title="Aún no hay guías" description="Agrega una guía para comenzar." />
       )}
       {!guides.isLoading && !guides.isError && !!existing.length && (
         <>
           <ReadingGuideFilters guides={existing} value={filters} onChange={setFilters} />
           {!filteredGuides.length && (
-            <p role="status">No hay guías para los filtros seleccionados.</p>
+            <EmptyState
+              title="No hay guías para los filtros seleccionados"
+              description="Prueba con otros filtros para encontrar una guía."
+            />
           )}
           {!!filteredGuides.length && (
             <section
