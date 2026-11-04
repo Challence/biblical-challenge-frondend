@@ -34,14 +34,16 @@ self.addEventListener('push', (event: PushEvent) => {
   } catch {
     payload = { body: event.data?.text() }
   }
+  const notificationOptions: NotificationOptions & { renotify: boolean } = {
+    body: payload.body ?? 'Tu lectura de hoy está lista.',
+    tag: payload.tag ?? 'daily-reading-reminder',
+    renotify: true,
+    icon: '/icons/icon-192.png',
+    badge: '/icons/icon-192.png',
+    data: { url: payload.url ?? '/lectura-hoy' },
+  }
   event.waitUntil(
-    self.registration.showNotification(payload.title ?? 'Desafío Bíblico', {
-      body: payload.body ?? 'Tu lectura de hoy está lista.',
-      tag: payload.tag ?? 'daily-reading-reminder',
-      icon: '/icons/icon-192.png',
-      badge: '/icons/icon-192.png',
-      data: { url: payload.url ?? '/lectura-hoy' },
-    }),
+    self.registration.showNotification(payload.title ?? 'Desafío Bíblico', notificationOptions),
   )
 })
 

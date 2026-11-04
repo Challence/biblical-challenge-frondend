@@ -39,6 +39,7 @@ Deno.serve(async (request) => {
       .update({ claimed_at: claimedAt })
       .eq('id', subscription.id)
       .eq('active', true)
+      .or(`claimed_at.is.null,claimed_at.lt.${staleClaim}`)
       .select('id')
       .maybeSingle()
     if (!claimed) continue
