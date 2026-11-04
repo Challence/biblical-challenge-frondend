@@ -203,6 +203,15 @@ Durante el desarrollo se permite validación enfocada, pero no sustituye el cier
 
 ## 6. Reglas API
 
+### Seguridad de datos locales y migraciones
+
+- **Prohibición absoluta:** ningún agente puede ejecutar `supabase db reset`, `supabase db reset --local`, `supabase db reset --linked`, comandos equivalentes, recreación/eliminación de volúmenes Docker de Supabase ni borrados masivos sobre la base local del usuario.
+- Estas operaciones destruyen datos locales y requieren autorización explícita del usuario en el mismo turno, además de un respaldo verificable previo. La autorización para implementar una migración **no** autoriza un reset.
+- Para aplicar migraciones en el entorno local existente se debe usar únicamente `supabase migration up --local` después de revisar el SQL. Si la base no está en un estado compatible, se detiene el trabajo y se informa; no se resuelve con un reset automático.
+- Para validar una migración desde cero se debe usar una base temporal, un proyecto efímero o un entorno aislado que no contenga datos del usuario. Nunca se usa la base local principal como entorno descartable.
+- Antes de cualquier operación potencialmente destructiva, el agente debe detenerse, explicar qué datos se afectarían y pedir confirmación explícita. Si existe una orden previa de “proceder”, no cuenta como autorización para destruir datos.
+- Los agentes deben reportar en el resultado todos los comandos de Supabase ejecutados y confirmar expresamente que no ejecutaron resets ni borrados destructivos.
+
 ### Responsabilidades y alcance
 
 Handlers/controladores solo reciben, validan entrada, delegan y construyen respuesta. Negocio va en servicios/casos de uso; acceso/persistencia, en repositorios o capa arquitectónica existente; contratos de entrada, salida y dominio no se mezclan cuando tienen responsabilidades distintas. Antes de crear abstracción se busca una reutilizable existente; no se crean capas genéricas por necesidad futura hipotética.
