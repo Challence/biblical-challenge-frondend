@@ -28,7 +28,7 @@ describe('ShareButton', () => {
     await waitFor(() =>
       expect(share).toHaveBeenCalledWith({
         title: 'Título',
-        text: 'Texto',
+        text: 'Título',
         url: 'https://example.test',
       }),
     )
@@ -45,9 +45,7 @@ describe('ShareButton', () => {
     Object.assign(navigator, { clipboard: { writeText } })
     render(<ShareButton title="Título" text="Texto" url="https://example.test" />)
     fireEvent.click(screen.getByRole('button', { name: 'Compartir' }))
-    await waitFor(() =>
-      expect(writeText).toHaveBeenCalledWith('Título\nTexto\nhttps://example.test'),
-    )
+    await waitFor(() => expect(writeText).toHaveBeenCalledWith('Título\n\nhttps://example.test'))
     expect(track).not.toHaveBeenCalled()
   })
 

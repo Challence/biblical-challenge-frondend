@@ -40,31 +40,38 @@ const isImageUrl = (value: string) =>
 const shareableText = (value: string) =>
   value.startsWith('data:') || isImageUrl(value) ? '' : value
 
+const monthNames = [
+  'Enero',
+  'Febrero',
+  'Marzo',
+  'Abril',
+  'Mayo',
+  'Junio',
+  'Julio',
+  'Agosto',
+  'Septiembre',
+  'Octubre',
+  'Noviembre',
+  'Diciembre',
+]
+
+const formatCalendarDate = (value: string) => {
+  const match = value.match(/^(\d{4})-(\d{1,2})(?:-(\d{1,2}))?/)
+  if (!match) return ''
+  const month = Number(match[2])
+  if (month < 1 || month > 12) return ''
+  return `${String(Number(match[3] ?? 1)).padStart(2, '0')}/${monthNames[month - 1]}/${match[1]}`
+}
+
 const period = (data: ContentShareRaw) => {
   const monthDate = text(data, 'monthDate')
   const month = scalar(data, 'month') || (monthDate.match(/\d{4}-(\d{1,2})/)?.[1] ?? '')
   const year = scalar(data, 'year') || (monthDate.match(/(\d{4})/)?.[1] ?? '')
   if (!month || !year) return ''
   const monthNumber = Number(month)
-  const monthNames = [
-    'enero',
-    'febrero',
-    'marzo',
-    'abril',
-    'mayo',
-    'junio',
-    'julio',
-    'agosto',
-    'septiembre',
-    'octubre',
-    'noviembre',
-    'diciembre',
-  ]
-  const monthName =
-    Number.isInteger(monthNumber) && monthNumber >= 1 && monthNumber <= 12
-      ? monthNames[monthNumber - 1]
-      : month
-  return `${monthName} ${year}`
+  return Number.isInteger(monthNumber) && monthNumber >= 1 && monthNumber <= 12
+    ? `01/${monthNames[monthNumber - 1]}/${year}`
+    : ''
 }
 
 const day = (data: ContentShareRaw) => {
@@ -96,8 +103,41 @@ const rawFiles = (data: ContentShareRaw): Array<File | Blob | string> => {
   return [...new Set(values)] as Array<File | Blob | string>
 }
 
+const publicHomeUrl = () => `${window.location.origin}/`
+
+const publicUrl = (value: unknown) => {
+  if (typeof value !== 'string' || !value.trim()) return undefined
+  try {
+    const candidate = value.trim()
+    const url = new URL(candidate, publicHomeUrl())
+    if (!['http:', 'https:'].includes(url.protocol) || /^\/admin(?:\/|$)/i.test(url.pathname))
+      return undefined
+    return /^https?:\/\//i.test(candidate) ? candidate : url.href
+  } catch {
+    return undefined
+  }
+}
+
 const asUrl = (input: ContentShareInput) =>
-  input.publicUrl ?? text(input.data, 'publicUrl', 'url', 'slugUrl', 'href') ?? window.location.href
+  [input.publicUrl, ...['publicUrl', 'url', 'slugUrl', 'href'].map((key) => input.data[key])]
+    .map(publicUrl)
+    .find(Boolean) ?? publicHomeUrl()
+
+const announcementUrl = (input: ContentShareInput) => {
+  const item = input.data.item
+  const itemHref =
+    item && typeof item === 'object' && typeof (item as Record<string, unknown>).href === 'string'
+      ? (item as Record<string, unknown>).href
+      : ''
+  return [input.publicUrl, itemHref, text(input.data, 'publicUrl', 'url', 'slugUrl', 'href')]
+    .map(publicUrl)
+    .find(Boolean)
+}
+
+const monthlyResourceDate = (data: ContentShareRaw) => {
+  const value = text(data, 'date', 'monthDate')
+  return formatCalendarDate(value) || period(data)
+}
 
 const youtube = (data: ContentShareRaw) => {
   const values: string[] = []
@@ -111,22 +151,27 @@ const youtube = (data: ContentShareRaw) => {
 }
 
 const fileFrom = async (value: File | Blob | string): Promise<File | undefined> => {
-  if (value instanceof File) return value
-  if (value instanceof Blob) return new File([value], 'shared-content', { type: value.type })
-  if (value.startsWith('data:')) {
-    const response = await fetch(value)
-    const blob = await response.blob()
-    return new File([blob], 'shared-content', { type: blob.type })
-  }
-  if (/^https?:\/\//i.test(value)) {
+  let blob: Blob
+  if (typeof value !== 'string' && value instanceof Blob) blob = value
+  else if (value.startsWith('data:') || /^https?:\/\//i.test(value)) {
     const response = await fetch(value)
     if (!response.ok) return undefined
-    const blob = await response.blob()
-    return new File([blob], value.split('/').pop()?.split('?')[0] || 'shared-content', {
-      type: blob.type,
-    })
+    blob = await response.blob()
+  } else return undefined
+
+  if (!blob.type.startsWith('image/')) return undefined
+  try {
+    const bitmap = await createImageBitmap(blob)
+    const canvas = document.createElement('canvas')
+    canvas.width = bitmap.width
+    canvas.height = bitmap.height
+    canvas.getContext('2d')?.drawImage(bitmap, 0, 0)
+    bitmap.close()
+    const jpeg = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/jpeg'))
+    return jpeg ? new File([jpeg], 'anuncio.jpg', { type: 'image/jpeg' }) : undefined
+  } catch {
+    return undefined
   }
-  return undefined
 }
 
 const isAbortError = (error: unknown) =>
@@ -145,14 +190,37 @@ export function useContentShare({ disabled = false, onSuccess, ...input }: UseCo
   const description = shareableText(
     text(input.data, 'text', 'description', 'content', 'body', 'excerpt'),
   )
-  const date =
-    text(input.data, 'date', 'publishedAt', 'createdAt', 'displayDate') || period(input.data)
+  const rawDate = text(input.data, 'date', 'publishedAt', 'createdAt', 'displayDate')
+  const date = formatCalendarDate(rawDate) || period(input.data)
   const dayText = input.kind === 'dailyReading' ? day(input.data) : ''
+  const url =
+    input.kind === 'monthlyResource'
+      ? [input.publicUrl, ...['publicUrl', 'url', 'slugUrl', 'href'].map((key) => input.data[key])]
+          .map(publicUrl)
+          .find(Boolean)
+      : asUrl(input)
+  const announcementHref = announcementUrl(input)
   const shareText = useMemo(() => {
+    if (input.kind === 'announcement') {
+      return [...new Set(['Anuncio', announcementHref, publicHomeUrl()].filter(Boolean))].join(
+        '\n\n',
+      )
+    }
+    if (input.kind === 'segment') return title
+    if (input.kind === 'monthlyResource') {
+      const resourceDate = monthlyResourceDate(input.data)
+      const heading = [title, resourceDate].filter(Boolean).join(' — ')
+      const links = [
+        ...['videoUrl', 'video', 'videoURL'].map((key) => publicUrl(input.data[key])),
+        ...youtube(input.data).map(publicUrl),
+        url,
+      ].filter((value): value is string => Boolean(value))
+      const linkText = [...new Set(links)].join('\n')
+      return [heading, description, linkText].filter(Boolean).join('\n\n')
+    }
     const values = [description, date, dayText, ...youtube(input.data)].filter(Boolean)
     return [...new Set(values)].join('\n')
-  }, [date, dayText, description, input.data])
-  const url = asUrl(input)
+  }, [announcementHref, date, dayText, description, input.data, input.kind, title, url])
   const files = useMemo(
     () => (input.files?.length ? input.files : rawFiles(input.data)),
     [input.data, input.files],
@@ -174,7 +242,7 @@ export function useContentShare({ disabled = false, onSuccess, ...input }: UseCo
     void Promise.resolve()
       .then(() => {
         setIsPreparing(true)
-        return Promise.all([...new Set(files)].map(fileFrom))
+        return Promise.all([...new Set(files)].map((file) => fileFrom(file).catch(() => undefined)))
       })
       .then((files) => {
         if (active) {
@@ -189,12 +257,12 @@ export function useContentShare({ disabled = false, onSuccess, ...input }: UseCo
 
   const shareData = useMemo<ShareData>(
     () => ({
-      title,
+      title: input.kind === 'announcement' ? 'Anuncio' : title,
       text: shareText,
-      url,
+      ...(input.kind === 'announcement' || input.kind === 'monthlyResource' || !url ? {} : { url }),
       ...(preparedFiles.length ? { files: preparedFiles } : {}),
     }),
-    [preparedFiles, shareText, title, url],
+    [input.kind, preparedFiles, shareText, title, url],
   )
   const share = useCallback(async (): Promise<ContentShareResult | undefined> => {
     if (disabled || isPreparing || isSharing) return undefined
@@ -214,7 +282,15 @@ export function useContentShare({ disabled = false, onSuccess, ...input }: UseCo
         await navigator.share(shareData)
         method = 'native'
       } else {
-        await navigator.clipboard.writeText([title, shareText, url].filter(Boolean).join('\n'))
+        const clipboardText =
+          input.kind === 'announcement'
+            ? shareText
+            : input.kind === 'segment'
+              ? [title, url].filter(Boolean).join('\n\n')
+              : input.kind === 'monthlyResource'
+                ? shareText
+                : [title, shareText, url].filter(Boolean).join('\n')
+        await navigator.clipboard.writeText(clipboardText)
         method = 'clipboard'
       }
       if (input.entityId)

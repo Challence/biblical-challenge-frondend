@@ -91,7 +91,7 @@ describe('PublicSegmentDetailPage', () => {
     await waitFor(() => expect(share).toHaveBeenCalled())
     const shareData = share.mock.calls[0][0] as ShareData
     expect(shareData.title).toBe('Noviembre')
-    expect(shareData.text).toBe('noviembre 2026\nhttps://youtube.com/watch?v=abc')
+    expect(shareData.text).toBe('Noviembre')
     expect(shareData.text).not.toContain('data:image')
     expect(shareData.files).toBeUndefined()
   })

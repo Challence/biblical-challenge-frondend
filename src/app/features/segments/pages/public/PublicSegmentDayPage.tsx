@@ -17,6 +17,9 @@ export function PublicSegmentDayPage() {
   const isLoading = query.isLoading
   const isError = query.isError
   useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [dayParam, slug])
+  useEffect(() => {
     if (legacyId && data) navigate(`/segmentos/${data.slug}/dias/${dayParam}`, { replace: true })
   }, [data, dayParam, legacyId, navigate])
   if (isLoading) return <main className="p-6">Cargando lectura…</main>

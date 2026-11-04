@@ -81,10 +81,11 @@ export function ReminderTimeSection() {
                 disabled={loading || formState.isSubmitting}
                 helperText="La hora se interpreta según tu zona horaria local."
               />
+
+              <Button type="submit" disabled={loading || formState.isSubmitting} className="mt-3">
+                {formState.isSubmitting ? 'Guardando…' : 'Guardar hora'}
+              </Button>
             </div>
-            <Button type="submit" disabled={loading || formState.isSubmitting}>
-              {formState.isSubmitting ? 'Guardando…' : 'Guardar hora'}
-            </Button>
           </form>
         </FormProvider>
         <div className="mt-3 text-sm" aria-live="polite">

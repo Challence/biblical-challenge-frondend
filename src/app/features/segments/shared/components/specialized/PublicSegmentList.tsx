@@ -1,4 +1,5 @@
 import { Card, CardContent } from '@/app/shared/components/ui/card'
+import { IconChevronRight } from '@tabler/icons-react'
 import { SegmentCover } from './SegmentCover'
 import { SEGMENT_MONTHS } from '../../../models/segmentCatalog'
 import { PublicSegmentGuideDialog } from './PublicSegmentGuideDialog'
@@ -39,6 +40,7 @@ export function PublicSegmentList({ segments }: { segments: PublicSegment[] }) {
                     {segment.days} {segment.days === 1 ? 'día' : 'días'}
                   </p>
                 </div>
+                <IconChevronRight aria-hidden="true" className="size-5 shrink-0 text-primary" />
               </CardContent>
             </Card>
           </button>

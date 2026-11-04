@@ -66,12 +66,7 @@ export function ShareButton({
       variant={variant === 'admin' ? 'ghost' : undefined}
       size="icon"
     >
-      <IconShare
-        aria-hidden="true"
-        className={variant === 'admin' ? 'text-muted-foreground' : undefined}
-        size={variant === 'admin' ? 16 : 20}
-        stroke={2}
-      />
+      <IconShare aria-hidden="true" size={variant === 'admin' ? 16 : 20} stroke={2} />
     </Button>
   )
 }

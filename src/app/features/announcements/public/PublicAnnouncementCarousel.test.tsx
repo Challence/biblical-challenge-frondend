@@ -44,6 +44,7 @@ describe('PublicAnnouncementCarousel', () => {
     renderCarousel()
 
     const link = await screen.findByLabelText('Abrir anuncio')
+    expect(screen.queryByLabelText('Compartir anuncio')).not.toBeInTheDocument()
     fireEvent.click(link)
 
     expect(track).toHaveBeenCalledTimes(1)

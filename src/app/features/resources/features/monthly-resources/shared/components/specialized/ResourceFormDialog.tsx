@@ -105,7 +105,10 @@ export function ResourceFormDialog({
     )
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent aria-labelledby="resource-dialog-title">
+      <DialogContent
+        aria-labelledby="resource-dialog-title"
+        className="flex max-h-[90dvh] flex-col overflow-hidden"
+      >
         <DialogHeader>
           <DialogTitle id="resource-dialog-title">
             {resource ? 'Editar recurso' : 'Nuevo recurso'}
@@ -113,50 +116,54 @@ export function ResourceFormDialog({
           <DialogDescription>Administra la imagen o el vídeo de este mes.</DialogDescription>
         </DialogHeader>
         <FormProvider {...form}>
-          <form className="space-y-4" onSubmit={form.handleSubmit(submit)}>
-            <RhfTextField name="title" id="resource-title" label="Título" />
-            <RhfTextareaField
-              name="description"
-              id="resource-description"
-              label="Descripción"
-              rows={3}
-            />
-            <RhfSelectField
-              name="type"
-              id="resource-type"
-              label="Tipo"
-              options={[
-                { value: 'image', label: 'Imagen' },
-                { value: 'video', label: 'Vídeo' },
-              ]}
-            />
-            <div className={type === 'image' ? '' : 'hidden'}>
-              <RhfFileField
-                name="imageFile"
-                id="resource-image"
-                label="Imagen"
-                accept="image/*"
-                required={!resource}
+          <form className="flex min-h-0 flex-1 flex-col" onSubmit={form.handleSubmit(submit)}>
+            <div className="min-h-0 flex-1 space-y-4 overflow-y-auto pr-1">
+              <RhfTextField name="title" id="resource-title" label="Título" />
+              <RhfTextareaField
+                name="description"
+                id="resource-description"
+                label="Descripción"
+                rows={3}
               />
-              {preview && (
-                <img
-                  src={preview}
-                  alt="Vista previa del recurso"
-                  className="mt-2 max-h-40 rounded object-contain"
+              <RhfSelectField
+                name="type"
+                id="resource-type"
+                label="Tipo"
+                options={[
+                  { value: 'image', label: 'Imagen' },
+                  { value: 'video', label: 'Vídeo' },
+                ]}
+              />
+              <div className={type === 'image' ? '' : 'hidden'}>
+                <RhfFileField
+                  name="imageFile"
+                  id="resource-image"
+                  label="Imagen"
+                  accept="image/*"
+                  required={!resource}
+                />
+                {preview && (
+                  <img
+                    src={preview}
+                    alt="Vista previa del recurso"
+                    className="mt-2 max-h-40 rounded object-contain"
+                  />
+                )}
+              </div>
+              {type === 'video' && (
+                <RhfTextareaField
+                  name="videoUrl"
+                  id="resource-video-url"
+                  label="URL HTTPS del vídeo"
+                  placeholder="https://…"
+                  rows={2}
                 />
               )}
+              {form.formState.errors.root && (
+                <p role="alert">{form.formState.errors.root.message}</p>
+              )}
             </div>
-            {type === 'video' && (
-              <RhfTextareaField
-                name="videoUrl"
-                id="resource-video-url"
-                label="URL HTTPS del vídeo"
-                placeholder="https://…"
-                rows={2}
-              />
-            )}
-            {form.formState.errors.root && <p role="alert">{form.formState.errors.root.message}</p>}
-            <div className="flex justify-end gap-2">
+            <div className="mt-4 flex shrink-0 justify-end gap-2">
               <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
                 Cancelar
               </Button>
