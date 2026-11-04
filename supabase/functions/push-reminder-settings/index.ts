@@ -37,10 +37,11 @@ Deno.serve(async (request) => {
     return json(request, data?.[0] ?? {})
   } catch (error) {
     console.error(error)
-    const message =
-      error instanceof Error && error.message.includes('insufficient privilege')
-        ? 'No autorizado.'
-        : 'No se pudo actualizar la configuración.'
-    return json(request, { error: message }, message === 'No autorizado.' ? 403 : 400)
+    const errorMessage = error instanceof Error ? error.message : String(error)
+    if (errorMessage.includes('authentication required'))
+      return json(request, { error: 'Debes iniciar sesión.' }, 401)
+    if (errorMessage.includes('reminder hour must be between'))
+      return json(request, { error: 'La hora debe ser un entero entre 0 y 23.' }, 400)
+    return json(request, { error: 'No se pudo actualizar la configuración.' }, 500)
   }
 })
