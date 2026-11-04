@@ -3,6 +3,7 @@ import { Button } from '@/app/shared/components/ui/button'
 import { Card, CardContent } from '@/app/shared/components/ui/card'
 import type { Announcement } from '../../../models/announcement'
 import { AnnouncementStatusSwitch } from './AnnouncementStatusSwitch'
+import { ShareButton } from '@/app/shared/components/share/ShareButton'
 
 type Props = {
   item: Announcement
@@ -60,6 +61,18 @@ export function AnnouncementCard({
             </Button>
           </div>
           <div className="flex">
+            <ShareButton
+              content={{
+                kind: 'announcement',
+                data: { ...item, imageUrl },
+                publicUrl: item.href ?? undefined,
+                files: [imageUrl],
+                entityId: item.id,
+              }}
+              variant="admin"
+              accessibleLabel="Compartir anuncio"
+              disabled={disabled}
+            />
             <Button
               variant="ghost"
               size="icon"

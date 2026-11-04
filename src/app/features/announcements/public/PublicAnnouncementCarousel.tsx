@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import * as service from '../services/announcementService'
 import { useAnalytics } from '@/app/shared/analytics/useAnalytics'
+import { ShareButton } from '@/app/shared/components/share/ShareButton'
 
 export function PublicAnnouncementCarousel() {
   const navigate = useNavigate()
@@ -158,6 +159,18 @@ export function PublicAnnouncementCarousel() {
         >
           <span className="sr-only">Abrir anuncio</span>
         </a>
+        <div className="absolute right-3 top-3 z-[1]">
+          <ShareButton
+            content={{
+              kind: 'announcement',
+              data: { ...slide, imageUrl: slide.desktopImage },
+              publicUrl: slide.href ?? undefined,
+              files: slide.desktopImage ? [slide.desktopImage] : undefined,
+              entityId: slide.id,
+            }}
+            accessibleLabel="Compartir anuncio"
+          />
+        </div>
         {slides.length > 1 && (
           <div
             className="absolute bottom-3 left-0 right-0 z-[1] flex justify-center gap-2"
