@@ -56,8 +56,14 @@ function TodayEmptyState({
   previous,
   next,
 }: {
-  previous?: { segment: { id: string; month: number; year: number }; day: { day: number } }
-  next?: { segment: { id: string; month: number; year: number }; day: { day: number } }
+  previous?: {
+    segment: { id: string; slug: string; month: number; year: number }
+    day: { day: number }
+  }
+  next?: {
+    segment: { id: string; slug: string; month: number; year: number }
+    day: { day: number }
+  }
 }) {
   const label = (item: NonNullable<typeof previous>) =>
     `${item.day.day}/${String(item.segment.month).padStart(2, '0')}/${item.segment.year}`
@@ -76,7 +82,9 @@ function TodayEmptyState({
         >
           {previous && (
             <Button asChild variant="outline" size="lg">
-              <Link to={`/segmentos/${previous.segment.id}/dias/${previous.day.day}`}>
+              <Link
+                to={`/segmentos/${previous.segment.slug ?? previous.segment.id}/dias/${previous.day.day}`}
+              >
                 <IconArrowLeft aria-hidden="true" />
                 Lectura anterior: {label(previous)}
               </Link>
@@ -84,7 +92,7 @@ function TodayEmptyState({
           )}
           {next && (
             <Button asChild size="lg">
-              <Link to={`/segmentos/${next.segment.id}/dias/${next.day.day}`}>
+              <Link to={`/segmentos/${next.segment.slug ?? next.segment.id}/dias/${next.day.day}`}>
                 Lectura siguiente: {label(next)}
                 <IconArrowRight aria-hidden="true" />
               </Link>
@@ -118,31 +126,6 @@ function TodayContent({ segment, day }: { segment: PublicSegment; day: PublicDay
         saveCompletedDay(segment.title, day.day)
         track({ type: 'reading_completed', segmentId: segment.id, day: day.day })
         setCompleted(true)
-      }}
-      onShare={async () => {
-        const shareData = {
-          title: segment.title,
-          text: `Lectura del día ${day.day}`,
-          url: window.location.href,
-        }
-        if (navigator.share) {
-          await navigator.share(shareData)
-          track({
-            type: 'content_shared',
-            entityType: 'reading',
-            entityId: `${segment.id}:${day.day}`,
-            method: 'native',
-          })
-          return
-        }
-        if (!navigator.clipboard?.writeText) throw new Error('Sharing is not supported')
-        await navigator.clipboard.writeText(window.location.href)
-        track({
-          type: 'content_shared',
-          entityType: 'reading',
-          entityId: `${segment.id}:${day.day}`,
-          method: 'clipboard',
-        })
       }}
     />
   )

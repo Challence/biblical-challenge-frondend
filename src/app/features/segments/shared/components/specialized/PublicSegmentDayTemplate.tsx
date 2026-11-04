@@ -1,6 +1,7 @@
-import { IconArrowLeft, IconArrowRight, IconCheck, IconShare } from '@tabler/icons-react'
+import { IconArrowLeft, IconArrowRight, IconCheck } from '@tabler/icons-react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/app/shared/components/ui/button'
+import { ShareButton } from '@/app/shared/components/share/ShareButton'
 import { SegmentBlockRenderer } from './SegmentBlockRenderer'
 
 type SegmentDay = {
@@ -14,6 +15,7 @@ type SegmentDay = {
 }
 type Segment = {
   id: string
+  slug: string
   title: string
   month: number
   year: number
@@ -27,7 +29,6 @@ type Props = {
   cover: string
   completed: boolean
   onComplete: () => void
-  onShare?: () => Promise<void>
   progressLabel?: string
 }
 
@@ -37,7 +38,6 @@ export function PublicSegmentDayTemplate({
   cover,
   completed,
   onComplete,
-  onShare,
   progressLabel = 'Guía de lectura',
 }: Props) {
   const navigate = useNavigate()
@@ -47,7 +47,6 @@ export function PublicSegmentDayTemplate({
   const month = new Intl.DateTimeFormat('es', { month: 'long' }).format(
     new Date(segment.year, segment.month - 1, 1),
   )
-
   return (
     <article
       className="mx-auto w-full max-w-5xl overflow-hidden rounded-[var(--shape-20)] border border-border bg-card shadow-[var(--elevation-card)]"
@@ -74,6 +73,19 @@ export function PublicSegmentDayTemplate({
           >
             <IconArrowLeft size={22} />
           </Button>
+          <ShareButton
+            content={{
+              kind: 'dailyReading',
+              data: {
+                ...day,
+                segmentTitle: segment.title,
+                month: segment.month,
+                year: segment.year,
+              },
+              publicUrl: `${window.location.origin}/segmentos/${segment.slug}/dias/${day.day}`,
+              entityId: `${segment.id}:${day.day}`,
+            }}
+          />
         </div>
       </div>
       <div className="relative -mt-12 mx-3 rounded-[var(--shape-16)] border border-border bg-card p-4 shadow-[var(--elevation-card)] sm:-mt-10 sm:mx-8 sm:p-6">
@@ -122,17 +134,6 @@ export function PublicSegmentDayTemplate({
           />
           {completed ? 'Lectura completada' : 'Marcar como completado'}
         </Button>
-        {onShare && (
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => void onShare().catch(() => undefined)}
-            className="mt-3 min-h-11 w-full gap-2 rounded-xl"
-          >
-            <IconShare size={20} aria-hidden="true" />
-            Compartir lectura
-          </Button>
-        )}
         <nav
           className="mt-5 flex justify-between gap-3 border-t border-border pt-4"
           aria-label="Navegación de lecturas"
@@ -140,7 +141,7 @@ export function PublicSegmentDayTemplate({
           {previous ? (
             <Button
               variant="outline"
-              onClick={() => navigate(`/segmentos/${segment.id}/dias/${previous.day}`)}
+              onClick={() => navigate(`/segmentos/${segment.slug}/dias/${previous.day}`)}
             >
               <IconArrowLeft size={16} /> Día anterior
             </Button>
@@ -150,7 +151,7 @@ export function PublicSegmentDayTemplate({
           {next && (
             <Button
               variant="outline"
-              onClick={() => navigate(`/segmentos/${segment.id}/dias/${next.day}`)}
+              onClick={() => navigate(`/segmentos/${segment.slug}/dias/${next.day}`)}
             >
               Día siguiente <IconArrowRight size={16} />
             </Button>

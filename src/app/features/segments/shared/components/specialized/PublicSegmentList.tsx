@@ -5,6 +5,7 @@ import { PublicSegmentGuideDialog } from './PublicSegmentGuideDialog'
 
 type PublicSegment = {
   id: string
+  slug: string
   title: string
   month: number
   year: number
@@ -15,7 +16,7 @@ export function PublicSegmentList({ segments }: { segments: PublicSegment[] }) {
   return (
     <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
       {segments.map((segment) => (
-        <PublicSegmentGuideDialog key={segment.id} segmentId={segment.id}>
+        <PublicSegmentGuideDialog key={segment.id} segmentId={segment.slug}>
           <button
             type="button"
             className="w-full rounded-[var(--shape-16)] text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"

@@ -4,6 +4,7 @@ import { MemoryRouter } from 'react-router-dom'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { usePublicSegmentDetails, usePublicSegments } from '../segments/hooks/usePublicSegments'
 import { ReadingTodayPage } from './ReadingTodayPage'
+import { ShareButton } from '@/app/shared/components/share/ShareButton'
 
 const track = vi.fn()
 vi.mock('@/app/shared/analytics/useAnalytics', () => ({ useAnalytics: () => ({ track }) }))
@@ -16,16 +17,22 @@ vi.mock('../segments/shared/components/specialized/PublicSegmentDayTemplate', ()
   PublicSegmentDayTemplate: ({
     day,
     onComplete,
-    onShare,
+    segment,
   }: {
     day: { day: number }
+    segment: { id: string; title: string; month: number; year: number; days: unknown[] }
     onComplete: () => void
-    onShare: () => Promise<void>
   }) => (
     <div data-testid="day-template">
       Lectura del día {day.day}
       <button onClick={onComplete}>complete</button>
-      <button onClick={() => void onShare().catch(() => undefined)}>share</button>
+      <ShareButton
+        title={segment.title}
+        text={`Lectura del día ${day.day}`}
+        url={window.location.href}
+        entityType="reading"
+        entityId={`${segment.id}:${day.day}`}
+      />
     </div>
   ),
 }))
@@ -113,7 +120,7 @@ describe('ReadingTodayPage', () => {
     Object.assign(navigator, { clipboard: { writeText: vi.fn().mockResolvedValue(undefined) } })
     renderPage()
 
-    fireEvent.click(screen.getByRole('button', { name: 'share' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Compartir' }))
 
     await Promise.resolve()
     expect(track).toHaveBeenCalledWith({
@@ -130,7 +137,7 @@ describe('ReadingTodayPage', () => {
     })
     renderPage()
 
-    fireEvent.click(screen.getByRole('button', { name: 'share' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Compartir' }))
     await Promise.resolve()
 
     expect(track).not.toHaveBeenCalledWith(expect.objectContaining({ type: 'content_shared' }))

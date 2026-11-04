@@ -10,7 +10,7 @@ export async function listSegmentRows(page: number, pageSize: number, search: st
   const from = (page - 1) * pageSize
   let query = client()
     .from('segments')
-    .select('id,title,month,year,position,status,created_at,updated_at,segment_days(count)', {
+    .select('id,slug,title,month,year,position,status,created_at,updated_at,segment_days(count)', {
       count: 'exact',
     })
     .order('position', { ascending: true })
@@ -123,7 +123,7 @@ export async function updateSegmentRow(id: string, input: SegmentInput) {
 export async function listPublicSegmentRows() {
   const { data, error } = await client()
     .from('segments')
-    .select('id,title,month,year,position,cover_path,segment_days(count)')
+    .select('id,slug,title,month,year,position,cover_path,segment_days(count)')
     .eq('status', 'active')
     .order('position', { ascending: true })
     .order('id', { ascending: true })
@@ -131,11 +131,24 @@ export async function listPublicSegmentRows() {
   return data ?? []
 }
 
-export async function getPublicSegmentRow(id: string) {
+export async function getPublicSegmentRow(slug: string) {
   const { data, error } = await client()
     .from('segments')
     .select(
-      'id,title,month,year,position,cover_path,segment_days(id,day,segment_blocks(id,type,content,file_name,position))',
+      'id,slug,title,month,year,position,cover_path,segment_days(id,day,segment_blocks(id,type,content,file_name,position))',
+    )
+    .eq('slug', slug)
+    .eq('status', 'active')
+    .single()
+  if (error) throw error
+  return data
+}
+
+export async function getPublicSegmentRowById(id: string) {
+  const { data, error } = await client()
+    .from('segments')
+    .select(
+      'id,slug,title,month,year,position,cover_path,segment_days(id,day,segment_blocks(id,type,content,file_name,position))',
     )
     .eq('id', id)
     .eq('status', 'active')

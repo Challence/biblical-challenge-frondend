@@ -52,6 +52,7 @@ export function PublicSegmentGuideDialog({
 
 type CalendarSegment = {
   id: string
+  slug?: string
   title: string
   month: number
   year: number
@@ -99,7 +100,7 @@ export function PublicSegmentCalendar({
             className={`h-10 w-10 justify-self-center rounded-md border text-sm ${active ? 'border-primary bg-primary text-primary-foreground hover:opacity-90' : 'cursor-not-allowed border-transparent text-muted-foreground opacity-50'}`}
             onClick={() => {
               if (active) {
-                navigate(`/segmentos/${segment.id}/dias/${day}`)
+                navigate(`/segmentos/${segment.slug ?? segment.id}/dias/${day}`)
                 onClose()
               }
             }}

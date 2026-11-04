@@ -2,6 +2,7 @@ import {
   createSegmentRow,
   deleteSegmentRow,
   getPublicSegmentRow,
+  getPublicSegmentRowById,
   getSegmentRow,
   listPublicSegmentRows,
   listSegmentRows,
@@ -13,6 +14,7 @@ import type { Paginated, SegmentInput, SegmentStatus } from '../models/segment'
 
 type SegmentListItem = {
   id: string
+  slug: string
   title: string
   month: number
   year: number
@@ -39,6 +41,7 @@ export async function listSegments(
 }
 function mapRow(row: {
   id: string
+  slug: string
   title: string
   month: number
   year: number
@@ -50,6 +53,7 @@ function mapRow(row: {
 }): SegmentListItem {
   return {
     id: row.id,
+    slug: row.slug,
     title: row.title,
     month: row.month,
     year: row.year,
@@ -72,6 +76,7 @@ export async function listPublicSegments() {
   const rows = await listPublicSegmentRows()
   return rows.map((row) => ({
     id: row.id,
+    slug: row.slug,
     title: row.title,
     month: row.month,
     year: row.year,
@@ -85,6 +90,24 @@ export async function getPublicSegment(id: string) {
   const row = await getPublicSegmentRow(id)
   return {
     id: row.id,
+    slug: row.slug,
+    title: row.title,
+    month: row.month,
+    year: row.year,
+    coverPath: row.cover_path,
+    days: row.segment_days.map((day) => ({
+      id: day.id,
+      day: day.day,
+      blocks: [...day.segment_blocks].sort((a, b) => a.position - b.position),
+    })),
+  }
+}
+
+export async function getPublicSegmentById(id: string) {
+  const row = await getPublicSegmentRowById(id)
+  return {
+    id: row.id,
+    slug: row.slug,
     title: row.title,
     month: row.month,
     year: row.year,

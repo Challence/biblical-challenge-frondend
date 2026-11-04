@@ -8,6 +8,7 @@ import {
   IconSearch,
   IconTrash,
 } from '@tabler/icons-react'
+import { ShareButton } from '@/app/shared/components/share/ShareButton'
 import { Button } from '@/app/shared/components/ui/button'
 import { Input } from '@/app/shared/components/ui/input'
 import { DataPagination } from '@/app/shared/components/pagination/DataPagination'
@@ -194,6 +195,26 @@ export function SegmentsPage() {
                     disabled={pendingStatusIds.has(segment.id)}
                     onToggle={() => void toggleStatus(segment.id, segment.status)}
                   />
+                  <fieldset
+                    disabled={segment.status === 'draft'}
+                    aria-label={
+                      segment.status === 'draft'
+                        ? `Compartir ${segment.title}: disponible al publicar el segmento`
+                        : `Compartir ${segment.title}`
+                    }
+                    className="border-0 p-0"
+                  >
+                    <ShareButton
+                      content={{
+                        kind: 'segment',
+                        data: segment,
+                        publicUrl: `${window.location.origin}/segmentos/${segment.slug}`,
+                        entityId: segment.id,
+                      }}
+                      variant="admin"
+                      accessibleLabel={`Compartir ${segment.title}`}
+                    />
+                  </fieldset>
                   <Button
                     variant="ghost"
                     size="icon"

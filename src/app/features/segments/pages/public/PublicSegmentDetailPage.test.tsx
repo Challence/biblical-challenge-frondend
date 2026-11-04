@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom/vitest'
-import { render } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { usePublicSegment } from '../../hooks/usePublicSegments'
@@ -42,5 +42,57 @@ describe('PublicSegmentDetailPage', () => {
 
     expect(track).toHaveBeenCalledTimes(1)
     expect(track).toHaveBeenCalledWith({ type: 'segment_viewed', segmentId: 'november' })
+  })
+
+  it('muestra compartir junto al enlace de segmentos con los datos del segmento', () => {
+    render(
+      <MemoryRouter initialEntries={['/segmentos/november']}>
+        <PublicSegmentDetailPage />
+      </MemoryRouter>,
+    )
+
+    const share = screen.getByRole('button', { name: 'Compartir segmento' })
+    expect(share).toBeInTheDocument()
+    expect(screen.getByText('← Todos los segmentos').parentElement).toContainElement(share)
+  })
+
+  it('delega el segmento crudo al contrato de compartir sin preparación local', async () => {
+    const share = vi.fn().mockResolvedValue(undefined)
+    Object.assign(navigator, { share, canShare: vi.fn().mockReturnValue(true) })
+    vi.mocked(usePublicSegment).mockReturnValue({
+      data: {
+        ...segment,
+        days: [
+          {
+            id: 'day-1',
+            day: 1,
+            blocks: [
+              {
+                type: 'image',
+                content: 'data:image/png;base64,AAEC',
+                file_name: 'lectura.png',
+              },
+              { type: 'video', content: 'https://youtube.com/watch?v=abc' },
+            ],
+          },
+        ],
+      },
+      isLoading: false,
+      isError: false,
+    } as never)
+
+    render(
+      <MemoryRouter initialEntries={['/segmentos/november']}>
+        <PublicSegmentDetailPage />
+      </MemoryRouter>,
+    )
+    fireEvent.click(screen.getByRole('button', { name: 'Compartir segmento' }))
+
+    await waitFor(() => expect(share).toHaveBeenCalled())
+    const shareData = share.mock.calls[0][0] as ShareData
+    expect(shareData.title).toBe('Noviembre')
+    expect(shareData.text).toBe('noviembre 2026\nhttps://youtube.com/watch?v=abc')
+    expect(shareData.text).not.toContain('data:image')
+    expect(shareData.files).toBeUndefined()
   })
 })

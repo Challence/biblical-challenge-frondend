@@ -13,6 +13,7 @@ export type SegmentInput = {
 }
 export type Segment = SegmentInput & {
   id: string
+  slug: string
   position: number
   createdAt: string
   updatedAt: string
