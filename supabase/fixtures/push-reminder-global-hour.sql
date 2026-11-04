@@ -1,5 +1,5 @@
--- API-270: execute in an isolated database after migrations, with an admin JWT.
-select set_config('request.jwt.claims', '{"role":"authenticated","app_metadata":{"role":"admin"}}', true);
+-- API-271: execute in an isolated database after migrations, with an authenticated JWT.
+select set_config('request.jwt.claims', '{"role":"authenticated","sub":"00000000-0000-0000-0000-000000000001"}', true);
 select * from public.get_push_reminder_settings();
 select * from public.set_push_reminder_hour(7);
 do $$ begin

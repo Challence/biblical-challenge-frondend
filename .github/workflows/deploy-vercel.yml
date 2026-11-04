@@ -66,10 +66,10 @@ jobs:
           --project-ref "$SUPABASE_PROJECT_REF"
 
       - name: Preview Supabase migrations
-        run: pnpm exec supabase db push --dry-run
+        run: pnpm exec supabase db push --linked --dry-run
 
       - name: Apply Supabase migrations
-        run: pnpm exec supabase db push
+        run: pnpm exec supabase db push --linked
 
       - name: Configure Supabase Edge Function secrets
         run: |
@@ -85,6 +85,7 @@ jobs:
         run: |
           pnpm exec supabase functions deploy push-subscriptions --project-ref "$SUPABASE_PROJECT_REF"
           pnpm exec supabase functions deploy send-push-reminders --project-ref "$SUPABASE_PROJECT_REF"
+          pnpm exec supabase functions deploy push-reminder-settings --project-ref "$SUPABASE_PROJECT_REF"
           pnpm exec supabase functions deploy analytics-events --project-ref "$SUPABASE_PROJECT_REF"
 
       - name: Pull Vercel production configuration
