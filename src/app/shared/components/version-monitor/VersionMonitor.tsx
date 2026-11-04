@@ -30,7 +30,7 @@ export async function reloadWithUpdatedServiceWorker(onActivated?: () => void) {
     }
 
     await registration.update()
-    const waiting = registration.waiting
+    const waiting = await waitForWaitingWorker(registration)
     if (!waiting) return false
 
     const activated = await new Promise<boolean>((resolve) => {
@@ -63,6 +63,41 @@ export async function reloadWithUpdatedServiceWorker(onActivated?: () => void) {
   onActivated?.()
   window.location.reload()
   return true
+}
+
+function waitForWaitingWorker(registration: ServiceWorkerRegistration) {
+  return new Promise<ServiceWorker | null>((resolve) => {
+    let settled = false
+    const finish = (worker: ServiceWorker | null) => {
+      if (settled) return
+      settled = true
+      window.clearTimeout(timeout)
+      registration.removeEventListener?.('updatefound', onUpdateFound)
+      installing?.removeEventListener('statechange', onStateChange)
+      resolve(worker)
+    }
+    let installing = registration.installing
+    const check = () => {
+      if (registration.waiting) {
+        finish(registration.waiting)
+      } else if (installing?.state === 'installed') {
+        finish(installing)
+      } else if (installing?.state === 'redundant') {
+        finish(null)
+      }
+    }
+    const onStateChange = () => check()
+    const onUpdateFound = () => {
+      installing?.removeEventListener('statechange', onStateChange)
+      installing = registration.installing
+      installing?.addEventListener('statechange', onStateChange)
+      check()
+    }
+    const timeout = window.setTimeout(() => finish(null), ACTIVATION_TIMEOUT)
+    registration.addEventListener?.('updatefound', onUpdateFound)
+    installing?.addEventListener('statechange', onStateChange)
+    check()
+  })
 }
 
 export function VersionMonitor() {

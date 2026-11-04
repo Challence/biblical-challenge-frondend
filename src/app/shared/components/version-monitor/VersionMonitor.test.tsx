@@ -95,6 +95,56 @@ describe('VersionMonitor', () => {
     expect(reload).not.toHaveBeenCalled()
   })
 
+  it('waits for an installing worker and reloads after activation', async () => {
+    const installing = new EventTarget() as ServiceWorker
+    let state = 'installing'
+    Object.defineProperty(installing, 'state', { get: () => state })
+    installing.postMessage = vi.fn()
+    const registration = {
+      installing,
+      waiting: null,
+      update: vi.fn().mockResolvedValue(undefined),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+    }
+    const serviceWorker = new EventTarget() as ServiceWorkerContainer
+    serviceWorker.getRegistration = vi.fn().mockResolvedValue(registration)
+    vi.stubGlobal('navigator', { serviceWorker })
+    const reload = vi.fn()
+    Object.defineProperty(window, 'location', { configurable: true, value: { reload } })
+    const promise = reloadWithUpdatedServiceWorker()
+    state = 'installed'
+    await act(async () => installing.dispatchEvent(new Event('statechange')))
+    expect(installing.postMessage).toHaveBeenCalledWith({ type: 'SKIP_WAITING' })
+    expect(reload).not.toHaveBeenCalled()
+    state = 'activated'
+    await act(async () => installing.dispatchEvent(new Event('statechange')))
+    expect(await promise).toBe(true)
+    expect(reload).toHaveBeenCalledOnce()
+  })
+
+  it('does not reload when an installing worker times out', async () => {
+    const installing = new EventTarget() as ServiceWorker
+    Object.defineProperty(installing, 'state', { value: 'installing' })
+    installing.postMessage = vi.fn()
+    const registration = {
+      installing,
+      waiting: null,
+      update: vi.fn().mockResolvedValue(undefined),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+    }
+    vi.stubGlobal('navigator', {
+      serviceWorker: { getRegistration: vi.fn().mockResolvedValue(registration) },
+    })
+    const reload = vi.fn()
+    Object.defineProperty(window, 'location', { configurable: true, value: { reload } })
+    const promise = reloadWithUpdatedServiceWorker()
+    await vi.advanceTimersByTimeAsync(5000)
+    expect(await promise).toBe(false)
+    expect(reload).not.toHaveBeenCalled()
+  })
+
   it('keeps the app usable when no worker is available', async () => {
     vi.stubGlobal('navigator', {})
     const reload = vi.fn()
