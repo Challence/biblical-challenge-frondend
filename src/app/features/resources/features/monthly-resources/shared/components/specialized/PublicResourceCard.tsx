@@ -101,8 +101,8 @@ export function PublicResourceCard({
           className="w-full rounded-[var(--shape-16)] text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
           aria-label={`Ver ${resource.title} en pantalla completa`}
         >
-          <Card className="h-full overflow-hidden transition-shadow hover:shadow-[var(--elevation-card-hover)]">
-            <div className="aspect-video bg-slate-900">
+          <Card className="flex h-32 flex-row overflow-hidden transition-shadow hover:shadow-[var(--elevation-card-hover)] sm:block sm:h-full">
+            <div className="h-full w-28 shrink-0 bg-slate-900 sm:aspect-video sm:h-auto sm:w-auto">
               {resource.type === 'image' && resource.imageUrl ? (
                 <img
                   src={resource.imageUrl}
@@ -115,12 +115,16 @@ export function PublicResourceCard({
                 </div>
               )}
             </div>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg">{resource.title}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">{resource.description}</p>
-            </CardContent>
+            <div className="min-w-0 flex-1 overflow-hidden sm:flex-none">
+              <CardHeader className="p-3 pb-1 sm:p-6 sm:pb-2">
+                <CardTitle className="line-clamp-2 text-base sm:text-lg">
+                  {resource.title}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-3 pt-0 sm:p-6 sm:pt-0">
+                <p className="line-clamp-2 text-sm text-muted-foreground">{resource.description}</p>
+              </CardContent>
+            </div>
           </Card>
         </button>
         <div className="absolute right-3 top-3">

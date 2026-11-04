@@ -76,6 +76,25 @@ describe('PublicResourceCard', () => {
     })
   })
 
+  it('usa una composición compacta horizontal en móvil y vertical desde tablet', () => {
+    render(<PublicResourceCard resource={resource({})} />)
+
+    const trigger = screen.getByRole('button', {
+      name: 'Ver Recurso mensual en pantalla completa',
+    })
+    const card = trigger.querySelector('[class*="h-32"]')
+    const thumbnail = card?.firstElementChild
+    const content = card?.lastElementChild
+
+    expect(card).toHaveClass('flex', 'h-32', 'flex-row', 'sm:block', 'sm:h-full')
+    expect(thumbnail).toHaveClass('h-full', 'w-28', 'shrink-0', 'sm:aspect-video', 'sm:w-auto')
+    expect(content).toHaveClass('min-w-0', 'flex-1', 'overflow-hidden', 'sm:flex-none')
+    expect(within(trigger).getByRole('img', { name: 'Recurso mensual' })).toHaveClass(
+      'size-full',
+      'object-cover',
+    )
+  })
+
   it('no duplica aperturas inmediatas', () => {
     render(<PublicResourceCard resource={resource({})} />)
     const trigger = screen.getByRole('button', { name: 'Ver Recurso mensual en pantalla completa' })
