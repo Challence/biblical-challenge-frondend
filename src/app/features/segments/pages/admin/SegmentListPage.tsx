@@ -27,6 +27,12 @@ import { SEGMENT_LIST_PAGE_SIZE, SEGMENT_MONTHS } from '../../models/segmentCata
 import { SegmentStatusSwitch } from '../../shared/components/specialized/SegmentStatusSwitch'
 import { useModalAlert } from '@/app/shared/hooks/useModalAlert'
 
+const publicSegmentQueryKeys = [
+  ['public-segments'],
+  ['public-segment'],
+  ['public-segment-by-id'],
+] as const
+
 const styles = tv({
   slots: {
     page: 'mx-auto max-w-[76rem]',
@@ -54,6 +60,12 @@ export function SegmentsPage() {
   const isReorderingRef = useRef(false)
   const pendingStatusIdsRef = useRef(new Set<string>())
   const queryClient = useQueryClient()
+  const invalidateSegments = async () => {
+    await queryClient.invalidateQueries({ queryKey: ['segments'] })
+    await Promise.all(
+      publicSegmentQueryKeys.map((queryKey) => queryClient.invalidateQueries({ queryKey })),
+    )
+  }
   const { warning } = useModalAlert()
   const { data, isLoading, isError } = useQuery({
     queryKey: ['segments', page, query],
@@ -66,7 +78,7 @@ export function SegmentsPage() {
     })
     if (result.action === 'confirm') {
       await deleteSegment(id)
-      await queryClient.invalidateQueries({ queryKey: ['segments'] })
+      await invalidateSegments()
     }
   }
   const toggleStatus = async (id: string, status: 'draft' | 'active') => {
@@ -76,7 +88,7 @@ export function SegmentsPage() {
     setPendingStatusIds(new Set(pendingStatusIdsRef.current))
     try {
       await updateSegmentStatus(id, status === 'active' ? 'draft' : 'active')
-      await queryClient.invalidateQueries({ queryKey: ['segments'] })
+      await invalidateSegments()
     } finally {
       pendingStatusIdsRef.current.delete(id)
       setPendingStatusIds(new Set(pendingStatusIdsRef.current))
@@ -93,7 +105,7 @@ export function SegmentsPage() {
     setIsReordering(true)
     try {
       await reorderSegments(current.id, current.position, other.id, other.position)
-      await queryClient.invalidateQueries({ queryKey: ['segments'] })
+      await invalidateSegments()
     } finally {
       isReorderingRef.current = false
       setIsReordering(false)

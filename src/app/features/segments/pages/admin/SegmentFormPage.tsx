@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { FormProvider, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@/app/shared/components/ui/button'
@@ -16,6 +16,7 @@ import { SEGMENT_MONTHS } from '../../models/segmentCatalog'
 export function SegmentFormPage() {
   const navigate = useNavigate()
   const { id } = useParams()
+  const queryClient = useQueryClient()
   const existing = useQuery({
     queryKey: ['segment', id],
     queryFn: () => getSegment(id as string),
@@ -46,7 +47,16 @@ export function SegmentFormPage() {
       })),
     }
     void (id ? updateSegment(id, payload) : createSegment(payload))
-      .then(() => navigate('/admin/segmentos'))
+      .then(async () => {
+        await Promise.all([
+          queryClient.invalidateQueries({ queryKey: ['segments'] }),
+          queryClient.invalidateQueries({ queryKey: ['segment'] }),
+          queryClient.invalidateQueries({ queryKey: ['public-segments'] }),
+          queryClient.invalidateQueries({ queryKey: ['public-segment'] }),
+          queryClient.invalidateQueries({ queryKey: ['public-segment-by-id'] }),
+        ])
+        navigate('/admin/segmentos')
+      })
       .catch(() => form.setError('root', { message: 'No se pudo guardar el segmento.' }))
   }
   return (

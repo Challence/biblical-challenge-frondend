@@ -9,7 +9,13 @@ export function useMonthlyResources(monthId: string, enabled: boolean) {
     enabled,
   })
   const invalidate = () =>
-    void client.invalidateQueries({ queryKey: ['monthly-resources', monthId] })
+    void Promise.all([
+      client.invalidateQueries({ queryKey: ['monthly-resources', monthId] }),
+      client.invalidateQueries({ queryKey: ['public-resource-months'] }),
+      client.invalidateQueries({ queryKey: ['public-monthly-resources'] }),
+      client.invalidateQueries({ queryKey: ['public-monthly-resource'] }),
+      client.invalidateQueries({ queryKey: ['public-resource-month'] }),
+    ])
   const create = useMutation({
     mutationFn: (input: Parameters<typeof service.createMonthlyResource>[1]) =>
       service.createMonthlyResource(monthId, input),

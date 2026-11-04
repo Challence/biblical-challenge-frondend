@@ -17,7 +17,14 @@ export function useResourceMonths(page: number, filters: ResourceMonthFilters) {
     const next = !expanded[id]
     setExpanded((current) => ({ ...current, [id]: next }))
   }
-  const invalidate = () => void queryClient.invalidateQueries({ queryKey: ['resource-months'] })
+  const invalidate = () =>
+    void Promise.all([
+      queryClient.invalidateQueries({ queryKey: ['resource-months'] }),
+      queryClient.invalidateQueries({ queryKey: ['public-resource-months'] }),
+      queryClient.invalidateQueries({ queryKey: ['public-monthly-resources'] }),
+      queryClient.invalidateQueries({ queryKey: ['public-monthly-resource'] }),
+      queryClient.invalidateQueries({ queryKey: ['public-resource-month'] }),
+    ])
   const create = useMutation({ mutationFn: service.createResourceMonth, onSuccess: invalidate })
   const update = useMutation({
     mutationFn: ({

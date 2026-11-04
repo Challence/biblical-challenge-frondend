@@ -10,7 +10,11 @@ export function useAnnouncementAdmin(page: number, search: string, onError: (e: 
     queryKey: announcementQueryKeys.list(page, search),
     queryFn: () => service.listAnnouncements(page, ANNOUNCEMENT_PAGE_SIZE, search),
   })
-  const invalidate = () => qc.invalidateQueries({ queryKey: announcementQueryKeys.all })
+  const invalidate = () =>
+    Promise.all([
+      qc.invalidateQueries({ queryKey: announcementQueryKeys.all }),
+      qc.invalidateQueries({ queryKey: ['public-announcements'] }),
+    ])
   const save = useMutation({
     mutationFn: async ({
       announcement,
