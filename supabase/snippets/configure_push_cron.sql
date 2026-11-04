@@ -1,4 +1,5 @@
--- Ejecutar una vez en Supabase después de desplegar `send-push-reminders`.
+-- El workflow de despliegue ejecuta esta misma configuración automáticamente.
+-- Ejecutar manualmente solo para una instalación inicial o recuperación.
 -- Sustituye los valores antes de quitar los comentarios; nunca los guardes en Git.
 -- select vault.create_secret('https://PROJECT_REF.supabase.co', 'push_project_url');
 -- select vault.create_secret('A_LONG_RANDOM_SECRET', 'push_cron_secret');
@@ -6,9 +7,13 @@
 create extension if not exists pg_cron with schema extensions;
 create extension if not exists pg_net with schema extensions;
 
+select cron.unschedule(jobid)
+from cron.job
+where jobname = 'send-push-reminders';
+
 select cron.schedule(
   'send-push-reminders',
-  '*/5 * * * *',
+  '* * * * *',
   $schedule$
   select net.http_post(
     url := (

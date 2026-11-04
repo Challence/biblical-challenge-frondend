@@ -1,7 +1,7 @@
 import { supabase } from '@/app/shared/lib/supabase'
 
 export interface PushReminderSettings {
-  reminder_hour: number
+  reminder_time: string
 }
 
 interface PushReminderSettingsResponse extends PushReminderSettings {
@@ -15,7 +15,7 @@ function endpoint() {
   return { url: `${url}/functions/v1/push-reminder-settings`, key }
 }
 
-async function request(method: 'GET' | 'POST', body?: { reminderHour: number }) {
+async function request(method: 'GET' | 'POST', body?: { reminderTime: string }) {
   const { url, key } = endpoint()
   const { data } = await supabase!.auth.getSession()
   const response = await fetch(url, {
@@ -39,6 +39,6 @@ export function getPushReminderSettings() {
   return request('GET')
 }
 
-export function savePushReminderSettings(reminderHour: number) {
-  return request('POST', { reminderHour })
+export function savePushReminderSettings(reminderTime: string) {
+  return request('POST', { reminderTime })
 }

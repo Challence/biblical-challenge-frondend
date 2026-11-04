@@ -33,9 +33,10 @@ const localTimeToUtc = (
   month: number,
   day: number,
   hour: number,
+  minute: number,
   timezone: string,
 ) => {
-  const desired = Date.UTC(year, month - 1, day, hour)
+  const desired = Date.UTC(year, month - 1, day, hour, minute)
   let candidate = desired
   for (let iteration = 0; iteration < 3; iteration += 1) {
     const actual = zonedParts(new Date(candidate), timezone)
@@ -56,10 +57,10 @@ export function assertTimezone(timezone: string) {
   new Intl.DateTimeFormat('en', { timeZone: timezone }).format()
 }
 
-export function nextReminderAt(timezone: string, hour = 8, now = new Date()) {
+export function nextReminderAt(timezone: string, hour = 8, minute = 0, now = new Date()) {
   assertTimezone(timezone)
   const local = zonedParts(now, timezone)
-  let next = localTimeToUtc(local.year, local.month, local.day, hour, timezone)
+  let next = localTimeToUtc(local.year, local.month, local.day, hour, minute, timezone)
   if (next <= now) {
     const tomorrow = new Date(Date.UTC(local.year, local.month - 1, local.day + 1))
     next = localTimeToUtc(
@@ -67,6 +68,7 @@ export function nextReminderAt(timezone: string, hour = 8, now = new Date()) {
       tomorrow.getUTCMonth() + 1,
       tomorrow.getUTCDate(),
       hour,
+      minute,
       timezone,
     )
   }

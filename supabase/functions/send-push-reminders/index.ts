@@ -22,7 +22,7 @@ Deno.serve(async (request) => {
   const staleClaim = new Date(Date.now() - 10 * 60_000).toISOString()
   const { data, error } = await client
     .from('push_subscriptions')
-    .select('id,endpoint,p256dh,auth,timezone,local_hour,failure_count')
+    .select('id,endpoint,p256dh,auth,timezone,local_hour,local_minute,failure_count')
     .eq('active', true)
     .lte('next_send_at', new Date().toISOString())
     .or(`claimed_at.is.null,claimed_at.lt.${staleClaim}`)
@@ -59,6 +59,7 @@ Deno.serve(async (request) => {
           next_send_at: nextReminderAt(
             subscription.timezone,
             subscription.local_hour,
+            subscription.local_minute,
           ).toISOString(),
           claimed_at: null,
           failure_count: 0,
@@ -77,6 +78,7 @@ Deno.serve(async (request) => {
           next_send_at: nextReminderAt(
             subscription.timezone,
             subscription.local_hour,
+            subscription.local_minute,
           ).toISOString(),
         })
         .eq('id', subscription.id)

@@ -23,15 +23,14 @@ Deno.serve(async (request) => {
       if (error) throw error
       return json(request, data?.[0] ?? {})
     }
-    const body = (await request.json()) as { reminderHour?: unknown }
+    const body = (await request.json()) as { reminderTime?: unknown }
     if (
-      !Number.isInteger(body.reminderHour) ||
-      (body.reminderHour as number) < 0 ||
-      (body.reminderHour as number) > 23
+      typeof body.reminderTime !== 'string' ||
+      !/^([01]\d|2[0-3]):[0-5]\d$/.test(body.reminderTime)
     )
-      return json(request, { error: 'La hora debe ser un entero entre 0 y 23.' }, 400)
-    const { data, error } = await client.rpc('set_push_reminder_hour', {
-      p_reminder_hour: body.reminderHour,
+      return json(request, { error: 'La hora debe tener formato HH:mm.' }, 400)
+    const { data, error } = await client.rpc('set_push_reminder_time', {
+      p_reminder_time: body.reminderTime,
     })
     if (error) throw error
     return json(request, data?.[0] ?? {})
@@ -40,8 +39,8 @@ Deno.serve(async (request) => {
     const errorMessage = error instanceof Error ? error.message : String(error)
     if (errorMessage.includes('authentication required'))
       return json(request, { error: 'Debes iniciar sesión.' }, 401)
-    if (errorMessage.includes('reminder hour must be between'))
-      return json(request, { error: 'La hora debe ser un entero entre 0 y 23.' }, 400)
+    if (errorMessage.includes('reminder time'))
+      return json(request, { error: 'La hora debe tener formato HH:mm.' }, 400)
     return json(request, { error: 'No se pudo actualizar la configuración.' }, 500)
   }
 })

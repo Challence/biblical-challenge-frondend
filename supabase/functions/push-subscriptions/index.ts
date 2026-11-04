@@ -7,6 +7,7 @@ type SubscriptionBody = {
   installationId: string
   token: string
   timezone?: string
+  reminderTime?: string
   subscription?: {
     endpoint: string
     keys: { p256dh: string; auth: string }
@@ -53,11 +54,12 @@ Deno.serve(async (request) => {
 
     const { data: setting, error: settingError } = await client
       .from('push_reminder_settings')
-      .select('reminder_hour')
+      .select('reminder_hour,reminder_minute')
       .eq('id', true)
       .single()
     if (settingError) throw settingError
     const reminderHour = setting.reminder_hour as number
+    const reminderMinute = setting.reminder_minute as number
     const { error } = await client.from('push_subscriptions').upsert(
       {
         installation_id: body.installationId,
@@ -67,7 +69,8 @@ Deno.serve(async (request) => {
         unsubscribe_token_hash: tokenHash,
         timezone: body.timezone,
         local_hour: reminderHour,
-        next_send_at: nextReminderAt(body.timezone, reminderHour).toISOString(),
+        local_minute: reminderMinute,
+        next_send_at: nextReminderAt(body.timezone, reminderHour, reminderMinute).toISOString(),
         claimed_at: null,
         failure_count: 0,
         active: true,

@@ -4,21 +4,16 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { Button } from '@/app/shared/components/ui/button'
 import { Card } from '@/app/shared/components/ui/card'
-import { RhfSelectField } from '@/app/shared/components/fields/rhf/RhfSelectField'
+import { RhfTextField } from '@/app/shared/components/fields/rhf/RhfTextField'
 import {
   getPushReminderSettings,
   savePushReminderSettings,
 } from '../../../requests/pushReminderSettingsRequests'
 
 const schema = z.object({
-  reminderHour: z.string().regex(/^(?:[01]\d|2[0-3])$/, 'Selecciona una hora válida.'),
+  reminderTime: z.string().regex(/^(?:[01]\d|2[0-3]):[0-5]\d$/, 'Selecciona una hora válida.'),
 })
 type FormValues = z.infer<typeof schema>
-
-const options = Array.from({ length: 24 }, (_, hour) => {
-  const value = String(hour).padStart(2, '0')
-  return { value, label: `${value}:00` }
-})
 
 export function ReminderTimeSection() {
   const [loading, setLoading] = useState(true)
@@ -26,15 +21,15 @@ export function ReminderTimeSection() {
   const [success, setSuccess] = useState('')
   const methods = useForm<FormValues>({
     resolver: zodResolver(schema),
-    defaultValues: { reminderHour: '' },
+    defaultValues: { reminderTime: '' },
   })
   const { handleSubmit, reset, formState } = methods
 
   useEffect(() => {
     let mounted = true
     void getPushReminderSettings()
-      .then(({ reminder_hour }) => {
-        if (mounted) reset({ reminderHour: String(reminder_hour).padStart(2, '0') })
+      .then(({ reminder_time }) => {
+        if (mounted) reset({ reminderTime: reminder_time })
       })
       .catch((cause: unknown) => {
         if (mounted)
@@ -47,12 +42,12 @@ export function ReminderTimeSection() {
   }, [reset])
 
   const timezone = useMemo(() => Intl.DateTimeFormat().resolvedOptions().timeZone, [])
-  const submit = handleSubmit(async ({ reminderHour }) => {
+  const submit = handleSubmit(async ({ reminderTime }) => {
     setError('')
     setSuccess('')
     try {
-      const response = await savePushReminderSettings(Number(reminderHour))
-      reset({ reminderHour: String(response.reminder_hour).padStart(2, '0') })
+      const response = await savePushReminderSettings(reminderTime)
+      reset({ reminderTime: response.reminder_time })
       setSuccess('Hora del recordatorio guardada correctamente.')
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : 'No se pudo guardar la hora.')
@@ -72,14 +67,23 @@ export function ReminderTimeSection() {
         <FormProvider {...methods}>
           <form onSubmit={submit} className="flex flex-col gap-4 sm:flex-row sm:items-end">
             <div className="w-full sm:max-w-xs">
-              <RhfSelectField<FormValues>
-                id="reminder-hour"
-                name="reminderHour"
+              <RhfTextField<FormValues>
+                id="reminder-time"
+                name="reminderTime"
                 label="Hora de envío"
-                options={options}
+                type="time"
+                step={60}
                 required
                 disabled={loading || formState.isSubmitting}
                 helperText="La hora se interpreta según tu zona horaria local."
+                className="relative pr-10 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-3 [&::-webkit-calendar-picker-indicator]:top-1/2 [&::-webkit-calendar-picker-indicator]:-translate-y-1/2"
+                onClick={(event) => {
+                  try {
+                    event.currentTarget.showPicker?.()
+                  } catch {
+                    // Algunos navegadores exponen showPicker pero no permiten invocarlo.
+                  }
+                }}
               />
 
               <Button type="submit" disabled={loading || formState.isSubmitting} className="mt-3">

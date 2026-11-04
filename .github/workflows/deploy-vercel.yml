@@ -88,6 +88,51 @@ jobs:
           pnpm exec supabase functions deploy push-reminder-settings --project-ref "$SUPABASE_PROJECT_REF"
           pnpm exec supabase functions deploy analytics-events --project-ref "$SUPABASE_PROJECT_REF"
 
+      - name: Configure push reminder cron
+        env:
+          PUSH_PROJECT_URL: ${{ vars.SUPABASE_URL }}
+        run: |
+          sql_file="$RUNNER_TEMP/configure-push-cron.sql"
+          SQL_FILE="$sql_file" PUSH_CRON_SECRET="$PUSH_CRON_SECRET" PUSH_PROJECT_URL="$PUSH_PROJECT_URL" node --input-type=module <<'NODE'
+            import { writeFileSync } from "node:fs"
+            const literal = (value) => `'${value.replaceAll("'", "''")}'`
+            const sql = `
+            do \$\$
+            declare
+              project_secret_id uuid;
+              cron_job_id bigint;
+            begin
+              select id into project_secret_id from vault.secrets where name = 'push_project_url';
+              if project_secret_id is null then
+                perform vault.create_secret(${literal(process.env.PUSH_PROJECT_URL)}, 'push_project_url');
+              else
+                perform vault.update_secret(project_secret_id, ${literal(process.env.PUSH_PROJECT_URL)}, 'push_project_url');
+              end if;
+
+              select id into project_secret_id from vault.secrets where name = 'push_cron_secret';
+              if project_secret_id is null then
+                perform vault.create_secret(${literal(process.env.PUSH_CRON_SECRET)}, 'push_cron_secret');
+              else
+                perform vault.update_secret(project_secret_id, ${literal(process.env.PUSH_CRON_SECRET)}, 'push_cron_secret');
+              end if;
+
+              select jobid into cron_job_id from cron.job where jobname = 'send-push-reminders';
+              if cron_job_id is not null then perform cron.unschedule(cron_job_id); end if;
+              perform cron.schedule(
+                'send-push-reminders', '* * * * *',
+                $cron$select net.http_post(
+                  url := (select decrypted_secret from vault.decrypted_secrets where name = 'push_project_url') || '/functions/v1/send-push-reminders',
+                  headers := jsonb_build_object('Content-Type', 'application/json', 'Authorization', 'Bearer ' || (select decrypted_secret from vault.decrypted_secrets where name = 'push_cron_secret')),
+                  body := '{}'::jsonb
+                );$cron$
+              );
+            end \$\$;
+            `
+            writeFileSync(process.env.SQL_FILE, sql)
+          NODE
+          pnpm exec supabase db query --linked --file "$sql_file"
+          rm -f "$sql_file"
+
       - name: Pull Vercel production configuration
         run: pnpm dlx vercel@65.9.0 pull --yes --environment=production --token="$VERCEL_TOKEN"
 
