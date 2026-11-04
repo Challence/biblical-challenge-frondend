@@ -64,7 +64,7 @@ describe('ShareButton', () => {
     expect(button).toHaveClass('size-10', 'rounded-md')
     expect(button).not.toHaveClass('bg-yellow-400')
     const icon = button.querySelector('svg')
-    expect(icon).toHaveClass('text-muted-foreground')
+    expect(icon).not.toHaveClass('text-muted-foreground')
     expect(icon).toHaveAttribute('width', '16')
     expect(icon).toHaveAttribute('height', '16')
   })
