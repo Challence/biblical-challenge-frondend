@@ -75,7 +75,6 @@ export function useAnnouncementAdmin(page: number, search: string, onError: (e: 
       return result
     },
     onSuccess: invalidate,
-    onError,
   })
   const remove = useMutation({
     mutationFn: async (i: Announcement) => {
