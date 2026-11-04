@@ -49,13 +49,20 @@ self.addEventListener('push', (event: PushEvent) => {
 
 self.addEventListener('notificationclick', (event: NotificationEvent) => {
   event.notification.close()
-  const target = new URL(event.notification.data?.url ?? '/lectura-hoy', self.location.origin).href
+  const target = new URL('/lectura-hoy', self.location.origin).href
+
   event.waitUntil(
     self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(async (clients) => {
-      const existing = clients.find((client) => new URL(client.url).origin === self.location.origin)
-      if (existing && 'focus' in existing) {
-        if ('navigate' in existing) await existing.navigate(target)
-        return existing.focus()
+      const existing = clients.find(
+        (client): client is WindowClient => new URL(client.url).origin === self.location.origin,
+      )
+      if (existing) {
+        try {
+          await existing.navigate(target)
+          return existing.focus()
+        } catch {
+          return self.clients.openWindow(target)
+        }
       }
       return self.clients.openWindow(target)
     }),
