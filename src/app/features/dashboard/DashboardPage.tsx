@@ -1,128 +1,161 @@
-import { IconChevronDown, IconTrendingUp } from '@tabler/icons-react'
 import { tv } from '@/app/shared/lib/tv'
+import {
+  IconAd,
+  IconDeviceDesktop,
+  IconEye,
+  IconPlayerPlay,
+  IconShare,
+  IconBook2,
+} from '@tabler/icons-react'
+import {
+  AnalyticsPeriodSelector,
+  useAnalyticsPeriodSelector,
+} from './components/AnalyticsPeriodSelector'
+import { DashboardAnalyticsState } from './components/DashboardAnalyticsState'
+import { DashboardActivityPanel } from './components/DashboardActivityPanel'
+import { DashboardAudienceCard } from './components/DashboardAudienceCard'
+import { DashboardMetricCard } from './components/DashboardMetricCard'
+import { DashboardPopularityPanel, DashboardRankingCard } from './components/DashboardRankingCard'
+import {
+  useAnalyticsAudienceDistribution,
+  useAnalyticsRankings,
+  useAnalyticsSummaryPeriod,
+  useAnalyticsTimeseries,
+} from './hooks/useAnalytics'
+import type { AnalyticsMetric } from './models/analyticsModels'
 
-const dashboardStyles = tv({
+const styles = tv({
   slots: {
-    dashboard: 'mx-auto max-w-[76rem]',
+    root: 'mx-auto max-w-[88rem] pb-8',
     heading:
-      'mb-8 flex items-end justify-between gap-6 max-[42rem]:mb-6 max-[42rem]:items-start max-[42rem]:flex-col',
-    eyebrow: 'mb-1 mt-0 text-xs font-extrabold uppercase tracking-[0.12em] text-primary',
+      'mb-5 flex items-center justify-between gap-6 max-[42rem]:mb-5 max-[42rem]:items-start max-[42rem]:flex-col',
     title:
-      'm-0 font-heading text-[clamp(2rem,4vw,2.75rem)] leading-[1.1] tracking-[-0.04em] text-foreground',
-    subtitle: 'mt-2 mb-0 text-muted-foreground',
-    mockNotice: 'mt-3 mb-0 text-[0.8125rem] font-bold text-primary',
-    periodButton:
-      'inline-flex min-h-11 items-center gap-2 whitespace-nowrap rounded-[var(--shape-8)] border border-border bg-muted px-3.5 py-2 font-bold text-muted-foreground opacity-80 max-[42rem]:w-full max-[42rem]:justify-between',
-    metrics: 'grid grid-cols-2 gap-5 max-[42rem]:grid-cols-1 max-[42rem]:gap-4',
-    card: 'min-w-0 rounded-[var(--shape-16)] border border-border bg-card p-6 shadow-[var(--elevation-card)] max-[42rem]:p-5',
-    cardHeader:
-      'flex items-center justify-between gap-4 [&>h2]:m-0 [&>h2]:font-heading [&>h2]:text-[0.9375rem] [&>h2]:font-bold [&>h2]:text-muted-foreground',
-    iconBlock:
-      'grid size-11 shrink-0 place-items-center rounded-[var(--shape-8)] bg-secondary text-accent',
-    valueRow: 'mt-3 flex items-baseline justify-between gap-4',
-    value: 'font-heading text-4xl tracking-[-0.04em] text-foreground',
-    change: 'inline-flex items-center gap-[0.2rem] text-[0.8125rem] font-extrabold text-primary',
-    chart: 'mt-6 flex h-20 items-end gap-2 border-b border-border pt-1',
-    bar: 'h-[var(--bar-height)] min-w-[0.4rem] flex-1 rounded-t text-primary opacity-80 even:bg-secondary last:bg-accent last:opacity-100',
-    summary: 'mt-3 mb-0 text-[0.8125rem] text-muted-foreground',
+      'm-0 font-heading text-[clamp(1.75rem,3vw,2.25rem)] leading-[1.1] tracking-[-0.04em] text-foreground',
+    grid: 'grid grid-cols-2 gap-4 max-[42rem]:grid-cols-1 max-[42rem]:gap-4',
   },
 })
 
-type Metric = {
-  label: string
-  value: string
-  change: string
-  bars: number[]
-  summary: string
-}
-
-const metrics: Metric[] = [
-  {
-    label: 'Personas que entraron',
-    value: '1,284',
-    change: '+12.5%',
-    bars: [38, 54, 43, 68, 58, 76, 88],
-    summary: 'Tendencia ascendente, con el valor más alto al final del periodo.',
-  },
-  {
-    label: 'Lecturas completadas',
-    value: '864',
-    change: '+8.2%',
-    bars: [42, 61, 52, 48, 70, 64, 82],
-    summary: 'Crecimiento sostenido y una mejora notable en los últimos días.',
-  },
-  {
-    label: 'Compartidos',
-    value: '326',
-    change: '+15.8%',
-    bars: [28, 46, 39, 57, 44, 69, 78],
-    summary: 'Los compartidos aumentaron progresivamente durante el periodo.',
-  },
-  {
-    label: 'Visualizaciones de videos',
-    value: '2,491',
-    change: '+21.4%',
-    bars: [35, 41, 63, 55, 72, 81, 94],
-    summary: 'Las visualizaciones alcanzaron su máximo al cierre del periodo.',
-  },
+const metrics: Array<[keyof AnalyticsMetric, string, string]> = [
+  ['activeDevices', 'Dispositivos activos', 'Dispositivos únicos con sesión iniciada.'],
+  ['completedReadings', 'Lecturas completadas', 'Lecturas marcadas como completadas.'],
+  ['viewedResources', 'Recursos vistos', 'Aperturas de recursos públicos.'],
+  ['shares', 'Compartidos', 'Contenidos compartidos correctamente.'],
+  ['videoViews', 'Videos vistos', 'Aperturas de videos públicos.'],
+  ['announcementClicks', 'Clics en anuncios', 'Clics en anuncios públicos.'],
 ]
 
+const metricIcons: Partial<Record<keyof AnalyticsMetric, typeof IconDeviceDesktop>> = {
+  activeDevices: IconDeviceDesktop,
+  completedReadings: IconBook2,
+  viewedResources: IconEye,
+  shares: IconShare,
+  videoViews: IconPlayerPlay,
+  announcementClicks: IconAd,
+}
+
 export function DashboardPage() {
-  const styles = dashboardStyles()
+  const root = styles()
+  const { query } = useAnalyticsPeriodSelector()
+  const summary = useAnalyticsSummaryPeriod(query)
+  const timeseries = useAnalyticsTimeseries(query)
+  const rankings = useAnalyticsRankings(query)
+  const audience = useAnalyticsAudienceDistribution(query)
+  const summaryData =
+    summary.analyticsState.status === 'success' || summary.analyticsState.status === 'partial'
+      ? summary.analyticsState.data
+      : undefined
+
   return (
-    <section className={styles.dashboard()} aria-labelledby="dashboard-title">
-      <div className={styles.heading()}>
-        <div>
-          <p className={styles.eyebrow()}>Resumen general</p>
-          <h1 className={styles.title()} id="dashboard-title">
-            Dashboard
-          </h1>
-          <p className={styles.subtitle()}>Una mirada clara al impacto de tu contenido.</p>
-          <p className={styles.mockNotice()}>
-            Datos demostrativos (mock): todos los valores de este dashboard son de ejemplo.
-          </p>
-        </div>
-        <button
-          type="button"
-          className={styles.periodButton()}
-          aria-label="Periodo mostrado: últimos 7 días"
-          disabled
-        >
-          Últimos 7 días <IconChevronDown size={18} aria-hidden="true" />
-        </button>
+    <section className={root.root()} aria-labelledby="dashboard-title">
+      <div className={root.heading()}>
+        <h1 className={root.title()} id="dashboard-title">
+          Dashboard
+        </h1>
+        <AnalyticsPeriodSelector />
       </div>
-      <div className={styles.metrics()}>
-        {metrics.map((metric) => (
-          <article className={styles.card()} key={metric.label}>
-            <div className={styles.cardHeader()}>
-              <h2>{metric.label}</h2>
-              <span className={styles.iconBlock()}>
-                <IconTrendingUp size={21} aria-hidden="true" />
-              </span>
+
+      <DashboardAnalyticsState
+        status={summary.analyticsState.status}
+        permissionDenied={
+          summary.analyticsState.status === 'error' && summary.analyticsState.permissionDenied
+        }
+        label="las estadísticas"
+      />
+      {summaryData ? (
+        <>
+          <div className="grid grid-cols-6 gap-4 max-[76rem]:grid-cols-3 max-[42rem]:grid-cols-1">
+            {metrics.map(([metric, label, description]) => (
+              <DashboardMetricCard
+                key={metric}
+                icon={metricIcons[metric]}
+                metric={metric}
+                label={label}
+                description={description}
+                current={summaryData.current.metrics}
+                previous={summaryData.previous.metrics}
+              />
+            ))}
+          </div>
+          <p className="mt-2 text-sm font-bold text-muted-foreground">
+            Evolución: comparación con el periodo anterior disponible para cada métrica.
+          </p>
+        </>
+      ) : null}
+
+      <div className="mt-4 grid grid-cols-[minmax(0,3fr)_minmax(0,2fr)] items-stretch gap-4 max-[64rem]:grid-cols-1">
+        <div className="min-w-0">
+          <DashboardActivityPanel state={timeseries.analyticsState} />
+        </div>
+        <div className="min-w-0">
+          {rankings.analyticsState.data ? (
+            <DashboardPopularityPanel
+              rankings={rankings.analyticsState.data}
+              status={rankings.analyticsState.status}
+            />
+          ) : (
+            <div className="flex min-h-[17rem] flex-col justify-center rounded-[var(--shape-16)] border border-border bg-card p-4 text-center shadow-[var(--elevation-card)]">
+              <h2 className="m-0 font-heading text-base font-bold">Contenido más popular</h2>
+              <DashboardAnalyticsState
+                status={rankings.analyticsState.status}
+                permissionDenied={
+                  rankings.analyticsState.status === 'error' &&
+                  rankings.analyticsState.permissionDenied
+                }
+                label="los rankings"
+              />
             </div>
-            <div className={styles.valueRow()}>
-              <strong className={styles.value()}>{metric.value}</strong>
-              <span className={styles.change()}>
-                <IconTrendingUp size={14} aria-hidden="true" /> {metric.change}
-              </span>
+          )}
+        </div>
+      </div>
+
+      <div className="mt-4 grid grid-cols-3 items-stretch gap-4 max-[64rem]:grid-cols-1">
+        <div className="min-w-0">
+          {audience.analyticsState.data ? (
+            <DashboardAudienceCard data={audience.analyticsState.data} />
+          ) : (
+            <div className="flex min-h-[11.25rem] flex-col justify-center rounded-[var(--shape-16)] border border-border bg-card p-4 text-center shadow-[var(--elevation-card)]">
+              <h2 className="m-0 font-heading text-[0.9375rem] font-bold text-muted-foreground">
+                Distribución de audiencia
+              </h2>
+              <DashboardAnalyticsState
+                status={audience.analyticsState.status}
+                permissionDenied={
+                  audience.analyticsState.status === 'error' &&
+                  audience.analyticsState.permissionDenied
+                }
+                label="la audiencia"
+              />
             </div>
-            <div
-              className={styles.chart()}
-              role="img"
-              aria-label={`${metric.label}: ${metric.summary}`}
-            >
-              {metric.bars.map((height, index) => (
-                <span
-                  className={styles.bar()}
-                  style={{ '--bar-height': `${height}%` } as React.CSSProperties}
-                  key={`${metric.label}-${index}`}
-                  aria-hidden="true"
-                />
-              ))}
-            </div>
-            <p className={styles.summary()}>{metric.summary}</p>
-          </article>
-        ))}
+          )}
+        </div>
+        <DashboardRankingCard
+          title="Segmentos con más lecturas completadas"
+          items={rankings.analyticsState.data?.segmentsCompleted ?? []}
+        />
+        <DashboardRankingCard
+          title="Anuncios con más clics"
+          items={rankings.analyticsState.data?.announcements ?? []}
+        />
       </div>
     </section>
   )

@@ -1,7 +1,7 @@
 {
   "name": "desafio-biblico",
   "private": true,
-  "version": "0.0.32",
+  "version": "0.0.33",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -16,10 +16,10 @@
     "supabase:start": "supabase start",
     "supabase:stop": "supabase stop",
     "supabase:status": "supabase status",
+    "supabase:admin:sync": "node scripts/sync-admin.mjs",
     "supabase:migration:up": "supabase migration up",
     "supabase:functions:serve": "supabase functions serve --env-file .env",
-    "prepare": "husky",
-    "supabase:admin:sync": "node scripts/sync-admin.mjs"
+    "prepare": "husky"
   },
   "dependencies": {
     "@hookform/resolvers": "^6.0.2",
@@ -34,6 +34,7 @@
     "react-dom": "^19.3.1",
     "react-hook-form": "^7.91.0",
     "react-router-dom": "^7.18.4",
+    "recharts": "3.5.0",
     "tailwind-merge": "^3.7.0",
     "tailwind-variants": "3.2.2",
     "zod": "^4.6.7",
