@@ -85,6 +85,7 @@ jobs:
         run: |
           pnpm exec supabase functions deploy push-subscriptions --project-ref "$SUPABASE_PROJECT_REF"
           pnpm exec supabase functions deploy send-push-reminders --project-ref "$SUPABASE_PROJECT_REF"
+          pnpm exec supabase functions deploy analytics-events --project-ref "$SUPABASE_PROJECT_REF"
 
       - name: Pull Vercel production configuration
         run: pnpm dlx vercel@65.9.0 pull --yes --environment=production --token="$VERCEL_TOKEN"
