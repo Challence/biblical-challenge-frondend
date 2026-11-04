@@ -3,9 +3,11 @@ import { useEffect, useRef, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import * as service from '../services/announcementService'
+import { useAnalytics } from '@/app/shared/analytics/useAnalytics'
 
 export function PublicAnnouncementCarousel() {
   const navigate = useNavigate()
+  const { track } = useAnalytics()
   const query = useQuery({
     queryKey: ['public-announcements'],
     queryFn: service.listPublicAnnouncements,
@@ -50,6 +52,16 @@ export function PublicAnnouncementCarousel() {
   const slide = slides[currentSlide]
   const isExternal = Boolean(slide.href && /^https:\/\//i.test(slide.href))
   const openSlide = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    if (suppressClick.current) {
+      event.preventDefault()
+      suppressClick.current = false
+      return
+    }
+    try {
+      track({ type: 'announcement_clicked', announcementId: slide.id })
+    } catch {
+      // Analytics must never prevent the announcement from opening.
+    }
     if (isExternal || !slide.href) return
     event.preventDefault()
     navigate(slide.href)

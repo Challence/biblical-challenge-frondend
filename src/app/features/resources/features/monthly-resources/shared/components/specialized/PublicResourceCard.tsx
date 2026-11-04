@@ -1,22 +1,93 @@
-import { useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { IconExternalLink, IconPlayerPlay, IconX } from '@tabler/icons-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/app/shared/components/ui/card'
 import { Dialog, DialogContent, DialogTitle } from '@/app/shared/components/ui/dialog'
 import type { MonthlyResource } from '../../../models/resource'
 import { getPublicVideoSource } from '../../../utils/publicVideoSource'
+import { useAnalytics } from '@/app/shared/analytics/useAnalytics'
 
 export function PublicResourceCard({ resource }: { resource: MonthlyResource }) {
   const [open, setOpen] = useState(false)
-  const videoSource =
-    resource.type === 'video' && resource.videoUrl
-      ? getPublicVideoSource(resource.videoUrl)
-      : undefined
+  const embedFrameRef = useRef<HTMLIFrameElement>(null)
+  const { track } = useAnalytics()
+  const lastTrackedAt = useRef(new Map<string, number>())
+  const trackOnceImmediately = useCallback(
+    (key: string, event: Parameters<typeof track>[0]) => {
+      const now = Date.now()
+      if (now - (lastTrackedAt.current.get(key) ?? 0) < 500) return
+      lastTrackedAt.current.set(key, now)
+      track(event)
+    },
+    [track],
+  )
+  const videoSource = useMemo(
+    () =>
+      resource.type === 'video' && resource.videoUrl
+        ? getPublicVideoSource(resource.videoUrl)
+        : undefined,
+    [resource.type, resource.videoUrl],
+  )
+  const embedUrl = useMemo(() => {
+    if (videoSource?.type !== 'embed') return undefined
+
+    const url = new URL(videoSource.url)
+    if (url.hostname === 'www.youtube.com') {
+      url.searchParams.set('enablejsapi', '1')
+      url.searchParams.set('origin', window.location.origin)
+    }
+    return url
+  }, [videoSource])
+
+  useEffect(() => {
+    if (!open || !embedUrl || !embedFrameRef.current) return
+
+    const frameWindow = embedFrameRef.current.contentWindow
+    const providerOrigin = embedUrl.origin
+    const isYouTube = embedUrl.hostname === 'www.youtube.com'
+
+    const onMessage = (message: MessageEvent<unknown>) => {
+      if (message.source !== frameWindow || message.origin !== providerOrigin) return
+
+      let data = message.data
+      if (typeof data === 'string') {
+        try {
+          data = JSON.parse(data)
+        } catch {
+          return
+        }
+      }
+      if (!data || typeof data !== 'object' || Array.isArray(data)) return
+
+      const event = data as { event?: unknown; info?: unknown }
+      const isPlaybackStarted = isYouTube
+        ? event.event === 'onStateChange' && event.info === 1
+        : event.event === 'play'
+      if (!isPlaybackStarted) return
+
+      trackOnceImmediately(`video:${resource.id}`, {
+        type: 'video_viewed',
+        resourceId: resource.id,
+        watchedSeconds: 0,
+      })
+      window.removeEventListener('message', onMessage)
+    }
+
+    window.addEventListener('message', onMessage)
+    return () => window.removeEventListener('message', onMessage)
+  }, [embedUrl, open, resource.id, trackOnceImmediately])
 
   return (
     <>
       <button
         type="button"
-        onClick={() => setOpen(true)}
+        onClick={() => {
+          setOpen(true)
+          trackOnceImmediately(`resource:${resource.id}`, {
+            type: 'resource_viewed',
+            resourceId: resource.id,
+            resourceType: resource.type,
+          })
+        }}
         className="w-full rounded-[var(--shape-16)] text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
         aria-label={`Ver ${resource.title} en pantalla completa`}
       >
@@ -54,16 +125,29 @@ export function PublicResourceCard({ resource }: { resource: MonthlyResource }) 
               alt={`${resource.title} en pantalla completa`}
               className="size-full object-contain"
             />
-          ) : videoSource?.type === 'embed' ? (
+          ) : embedUrl ? (
             <iframe
-              src={videoSource.url}
+              ref={embedFrameRef}
+              src={embedUrl.toString()}
               title={resource.title}
               className="size-full border-0"
               allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
               allowFullScreen
             />
           ) : videoSource?.type === 'native' ? (
-            <video src={videoSource.url} controls autoPlay className="size-full object-contain">
+            <video
+              src={videoSource.url}
+              controls
+              autoPlay
+              onPlay={(event) =>
+                trackOnceImmediately(`video:${resource.id}`, {
+                  type: 'video_viewed',
+                  resourceId: resource.id,
+                  watchedSeconds: Math.floor(event.currentTarget.currentTime),
+                })
+              }
+              className="size-full object-contain"
+            >
               Tu navegador no puede reproducir este video.
             </video>
           ) : videoSource ? (

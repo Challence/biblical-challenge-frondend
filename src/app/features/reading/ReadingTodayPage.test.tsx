@@ -1,17 +1,32 @@
 import '@testing-library/jest-dom/vitest'
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { usePublicSegmentDetails, usePublicSegments } from '../segments/hooks/usePublicSegments'
 import { ReadingTodayPage } from './ReadingTodayPage'
+
+const track = vi.fn()
+vi.mock('@/app/shared/analytics/useAnalytics', () => ({ useAnalytics: () => ({ track }) }))
 
 vi.mock('../segments/hooks/usePublicSegments', () => ({
   usePublicSegmentDetails: vi.fn(),
   usePublicSegments: vi.fn(),
 }))
 vi.mock('../segments/shared/components/specialized/PublicSegmentDayTemplate', () => ({
-  PublicSegmentDayTemplate: ({ day }: { day: { day: number } }) => (
-    <div data-testid="day-template">Lectura del día {day.day}</div>
+  PublicSegmentDayTemplate: ({
+    day,
+    onComplete,
+    onShare,
+  }: {
+    day: { day: number }
+    onComplete: () => void
+    onShare: () => Promise<void>
+  }) => (
+    <div data-testid="day-template">
+      Lectura del día {day.day}
+      <button onClick={onComplete}>complete</button>
+      <button onClick={() => void onShare().catch(() => undefined)}>share</button>
+    </div>
   ),
 }))
 
@@ -69,6 +84,7 @@ describe('ReadingTodayPage', () => {
   afterEach(() => {
     vi.useRealTimers()
     vi.clearAllMocks()
+    window.localStorage.clear()
   })
 
   it('conserva la plantilla pública cuando existe la lectura del día actual', () => {
@@ -81,6 +97,43 @@ describe('ReadingTodayPage', () => {
         name: 'Ilustración de una Biblia con una lupa y un signo de interrogación',
       }),
     ).not.toBeInTheDocument()
+  })
+
+  it('registra la lectura completada una sola vez por acción', () => {
+    renderPage()
+
+    fireEvent.click(screen.getByRole('button', { name: 'complete' }))
+    fireEvent.click(screen.getByRole('button', { name: 'complete' }))
+
+    expect(track).toHaveBeenCalledTimes(1)
+    expect(track).toHaveBeenCalledWith({ type: 'reading_completed', segmentId: 'november', day: 8 })
+  })
+
+  it('registra el compartido solo cuando el portapapeles confirma', async () => {
+    Object.assign(navigator, { clipboard: { writeText: vi.fn().mockResolvedValue(undefined) } })
+    renderPage()
+
+    fireEvent.click(screen.getByRole('button', { name: 'share' }))
+
+    await Promise.resolve()
+    expect(track).toHaveBeenCalledWith({
+      type: 'content_shared',
+      entityType: 'reading',
+      entityId: 'november:8',
+      method: 'clipboard',
+    })
+  })
+
+  it('no registra el compartido cuando el portapapeles falla', async () => {
+    Object.assign(navigator, {
+      clipboard: { writeText: vi.fn().mockRejectedValue(new Error('cancelled')) },
+    })
+    renderPage()
+
+    fireEvent.click(screen.getByRole('button', { name: 'share' }))
+    await Promise.resolve()
+
+    expect(track).not.toHaveBeenCalledWith(expect.objectContaining({ type: 'content_shared' }))
   })
 
   it('ofrece los días configurados anterior y siguiente más cercanos sin depender del orden', () => {

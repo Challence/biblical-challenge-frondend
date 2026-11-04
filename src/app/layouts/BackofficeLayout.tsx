@@ -19,6 +19,8 @@ import {
   AdminBreadcrumb,
   type AdminBreadcrumbItem,
 } from '@/app/shared/components/navigation/AdminBreadcrumb'
+import { AnalyticsTracker } from '@/app/shared/analytics/AnalyticsTracker'
+import { supabase } from '@/app/shared/lib/supabase'
 
 declare const __APP_VERSION__: string
 
@@ -86,6 +88,7 @@ export function BackofficeLayout() {
   const matches = useMatches()
   const [open, setOpen] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
+  const [userEmail, setUserEmail] = useState<string | null>(null)
   const triggerRef = useRef<HTMLButtonElement>(null)
   const firstLinkRef = useRef<HTMLAnchorElement>(null)
   const close = () => {
@@ -96,6 +99,28 @@ export function BackofficeLayout() {
   useEffect(() => {
     if (open) requestAnimationFrame(() => firstLinkRef.current?.focus())
   }, [open])
+  useEffect(() => {
+    if (!supabase) return
+
+    let active = true
+    const { data } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (active) setUserEmail(session?.user.email ?? null)
+    })
+
+    void supabase.auth
+      .getSession()
+      .then(({ data: sessionData }) => {
+        if (active) setUserEmail(sessionData.session?.user.email ?? null)
+      })
+      .catch(() => {
+        if (active) setUserEmail(null)
+      })
+
+    return () => {
+      active = false
+      data.subscription.unsubscribe()
+    }
+  }, [])
   const onKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === 'Escape') close()
   }
@@ -104,105 +129,109 @@ export function BackofficeLayout() {
     .find((match) => (match.handle as AdminRouteHandle | undefined)?.breadcrumb)
   const breadcrumb = (breadcrumbMatch?.handle as AdminRouteHandle | undefined)?.breadcrumb
   return (
-    <div className={styles.shell()} onKeyDown={onKeyDown}>
-      {open && <button className={styles.overlay()} aria-label="Cerrar menú" onClick={close} />}
-      <aside
-        className={`${styles.sidebar()} ${open ? styles.sidebarOpen() : ''}`}
-        aria-label="Navegación principal"
-      >
-        <NavLink
-          className={styles.brand()}
-          to="/admin"
-          onClick={close}
-          aria-label="Desafío Bíblico, ir al inicio"
+    <>
+      <AnalyticsTracker />
+      <div className={styles.shell()} onKeyDown={onKeyDown}>
+        {open && <button className={styles.overlay()} aria-label="Cerrar menú" onClick={close} />}
+        <aside
+          className={`${styles.sidebar()} ${open ? styles.sidebarOpen() : ''}`}
+          aria-label="Navegación principal"
         >
-          <img className={styles.brandLogo()} src={logo} alt="Desafío Bíblico" />
-        </NavLink>
-        <nav className={styles.nav()}>
-          {adminLinks.map(({ to, label, Icon, end }, index) => (
-            <NavLink
-              ref={index === 0 ? firstLinkRef : undefined}
-              key={to}
-              to={to}
-              end={end}
-              className={styles.navLink()}
-              onClick={close}
-            >
-              <Icon size={20} aria-hidden="true" />
-              <span>{label}</span>
-            </NavLink>
-          ))}
-        </nav>
-        <div className={styles.sidebarVersion()}>Versión {__APP_VERSION__}</div>
-      </aside>
-      <div className={styles.main()}>
-        <header className={styles.topbar()}>
-          <button
-            ref={triggerRef}
-            className={`${styles.iconButton()} ${styles.mobileMenu()}`}
-            aria-label={open ? 'Cerrar menú' : 'Abrir menú'}
-            aria-expanded={open}
-            onClick={toggle}
+          <NavLink
+            className={styles.brand()}
+            to="/admin"
+            onClick={close}
+            aria-label="Desafío Bíblico, ir al inicio"
           >
-            {open ? <IconX aria-hidden="true" /> : <IconMenu2 aria-hidden="true" />}
-          </button>
-          <div className={styles.topActions()}>
-            <button className={styles.iconButton()} aria-label="Notificaciones">
-              <IconBell aria-hidden="true" />
-            </button>
-            <div className={styles.profile()}>
-              <button
-                className={styles.profileButton()}
-                aria-label="Abrir menú de perfil"
-                aria-expanded={profileOpen}
-                aria-haspopup="menu"
-                onClick={() => setProfileOpen((value) => !value)}
+            <img className={styles.brandLogo()} src={logo} alt="Desafío Bíblico" />
+          </NavLink>
+          <nav className={styles.nav()}>
+            {adminLinks.map(({ to, label, Icon, end }, index) => (
+              <NavLink
+                ref={index === 0 ? firstLinkRef : undefined}
+                key={to}
+                to={to}
+                end={end}
+                className={styles.navLink()}
+                onClick={close}
               >
-                <span className={styles.profileText()}>
-                  <strong>María López</strong>
-                  <span>Administradora</span>
-                </span>
-                <span className={styles.avatar()} aria-hidden="true">
-                  ML
-                </span>
-                <IconChevronDown size={16} aria-hidden="true" />
+                <Icon size={20} aria-hidden="true" />
+                <span>{label}</span>
+              </NavLink>
+            ))}
+          </nav>
+          <div className={styles.sidebarVersion()}>Versión {__APP_VERSION__}</div>
+        </aside>
+        <div className={styles.main()}>
+          <header className={styles.topbar()}>
+            <button
+              ref={triggerRef}
+              className={`${styles.iconButton()} ${styles.mobileMenu()}`}
+              aria-label={open ? 'Cerrar menú' : 'Abrir menú'}
+              aria-expanded={open}
+              onClick={toggle}
+            >
+              {open ? <IconX aria-hidden="true" /> : <IconMenu2 aria-hidden="true" />}
+            </button>
+            <div className={styles.topActions()}>
+              <button className={styles.iconButton()} aria-label="Notificaciones">
+                <IconBell aria-hidden="true" />
               </button>
-              {profileOpen && (
-                <div className={styles.profileMenu()} role="menu">
-                  <button
-                    className={styles.logout()}
-                    role="menuitem"
-                    onClick={() => {
-                      setProfileOpen(false)
-                      navigate('/')
-                    }}
-                  >
-                    <IconLogout size={18} aria-hidden="true" />
-                    Cerrar sesión
-                  </button>
-                </div>
-              )}
+              <div className={styles.profile()}>
+                <button
+                  className={styles.profileButton()}
+                  aria-label="Abrir menú de perfil"
+                  aria-expanded={profileOpen}
+                  aria-haspopup="menu"
+                  onClick={() => setProfileOpen((value) => !value)}
+                >
+                  <span className={styles.profileText()}>
+                    <strong>María López</strong>
+                    <span>Administradora</span>
+                    {userEmail && <span>{userEmail}</span>}
+                  </span>
+                  <span className={styles.avatar()} aria-hidden="true">
+                    ML
+                  </span>
+                  <IconChevronDown size={16} aria-hidden="true" />
+                </button>
+                {profileOpen && (
+                  <div className={styles.profileMenu()} role="menu">
+                    <button
+                      className={styles.logout()}
+                      role="menuitem"
+                      onClick={() => {
+                        setProfileOpen(false)
+                        navigate('/')
+                      }}
+                    >
+                      <IconLogout size={18} aria-hidden="true" />
+                      Cerrar sesión
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        </header>
-        <main className={styles.content()}>
-          {breadcrumb && (
-            <AdminBreadcrumb
-              items={breadcrumb.items}
-              currentLabel={breadcrumb.currentLabel}
-              backTo={breadcrumb.backTo}
-            />
-          )}
-          <Outlet />
-        </main>
-        <footer className={styles.bottomBar()}>
-          <span className={styles.bottomBarInfo()}>
-            <IconInfoCircle size={16} aria-hidden="true" />
-            <span> · Back Office</span>
-          </span>
-          <span className={styles.bottomBarStatus()}>Sesión activa</span>
-        </footer>
+          </header>
+          <main className={styles.content()}>
+            {breadcrumb && (
+              <AdminBreadcrumb
+                items={breadcrumb.items}
+                currentLabel={breadcrumb.currentLabel}
+                backTo={breadcrumb.backTo}
+              />
+            )}
+            <Outlet />
+          </main>
+          <footer className={styles.bottomBar()}>
+            <span className={styles.bottomBarInfo()}>
+              <IconInfoCircle size={16} aria-hidden="true" />
+              <span> · Back Office</span>
+            </span>
+            <span className={styles.bottomBarStatus()}>Sesión activa</span>
+          </footer>
+        </div>
       </div>
-    </div>
+    </>
   )
 }

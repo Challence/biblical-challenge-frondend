@@ -1,4 +1,4 @@
-import { IconArrowLeft, IconArrowRight, IconCheck } from '@tabler/icons-react'
+import { IconArrowLeft, IconArrowRight, IconCheck, IconShare } from '@tabler/icons-react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/app/shared/components/ui/button'
 import { SegmentBlockRenderer } from './SegmentBlockRenderer'
@@ -27,6 +27,7 @@ type Props = {
   cover: string
   completed: boolean
   onComplete: () => void
+  onShare?: () => Promise<void>
   progressLabel?: string
 }
 
@@ -36,6 +37,7 @@ export function PublicSegmentDayTemplate({
   cover,
   completed,
   onComplete,
+  onShare,
   progressLabel = 'Guía de lectura',
 }: Props) {
   const navigate = useNavigate()
@@ -120,6 +122,17 @@ export function PublicSegmentDayTemplate({
           />
           {completed ? 'Lectura completada' : 'Marcar como completado'}
         </Button>
+        {onShare && (
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => void onShare().catch(() => undefined)}
+            className="mt-3 min-h-11 w-full gap-2 rounded-xl"
+          >
+            <IconShare size={20} aria-hidden="true" />
+            Compartir lectura
+          </Button>
+        )}
         <nav
           className="mt-5 flex justify-between gap-3 border-t border-border pt-4"
           aria-label="Navegación de lecturas"

@@ -1,11 +1,21 @@
+import { useEffect, useRef } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Card, CardContent } from '@/app/shared/components/ui/card'
 import { SegmentCover } from '../../shared/components/specialized/SegmentCover'
 import { usePublicSegment } from '../../hooks/usePublicSegments'
 import { SEGMENT_MONTHS } from '../../models/segmentCatalog'
+import { useAnalytics } from '@/app/shared/analytics/useAnalytics'
 export function PublicSegmentDetailPage() {
   const { id } = useParams()
   const { data, isLoading, isError } = usePublicSegment(id)
+  const { track } = useAnalytics()
+  const viewedSegmentId = useRef<string | undefined>(undefined)
+  useEffect(() => {
+    if (data && viewedSegmentId.current !== data.id) {
+      viewedSegmentId.current = data.id
+      track({ type: 'segment_viewed', segmentId: data.id })
+    }
+  }, [data, track])
   if (isLoading) return <main className="p-6">Cargando segmento…</main>
   if (isError || !data)
     return (

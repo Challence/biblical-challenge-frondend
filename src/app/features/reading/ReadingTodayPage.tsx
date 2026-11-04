@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { IconArrowLeft, IconArrowRight } from '@tabler/icons-react'
 import { Link } from 'react-router-dom'
 import { Button } from '@/app/shared/components/ui/button'
 import { Empty } from '@/app/shared/components/empty/Empty'
+import { useAnalytics } from '@/app/shared/analytics/useAnalytics'
 import { usePublicSegmentDetails, usePublicSegments } from '../segments/hooks/usePublicSegments'
 import { DEFAULT_SEGMENT_COVER } from '../segments/segmentStorage'
 import { PublicSegmentDayTemplate } from '../segments/shared/components/specialized/PublicSegmentDayTemplate'
@@ -96,7 +97,9 @@ function TodayEmptyState({
 }
 
 function TodayContent({ segment, day }: { segment: PublicSegment; day: PublicDay }) {
+  const { track } = useAnalytics()
   const key = getProgressKey(segment.id)
+  const completionTracked = useRef(false)
   const [completed, setCompleted] = useState(() =>
     getCompletedDays(key, getCompletedDays(segment.title).includes(day.day) ? day.day : 0).includes(
       day.day,
@@ -109,9 +112,37 @@ function TodayContent({ segment, day }: { segment: PublicSegment; day: PublicDay
       cover={segment.coverPath || DEFAULT_SEGMENT_COVER}
       completed={completed}
       onComplete={() => {
+        if (completionTracked.current || completed) return
+        completionTracked.current = true
         saveCompletedDay(key, day.day)
         saveCompletedDay(segment.title, day.day)
+        track({ type: 'reading_completed', segmentId: segment.id, day: day.day })
         setCompleted(true)
+      }}
+      onShare={async () => {
+        const shareData = {
+          title: segment.title,
+          text: `Lectura del día ${day.day}`,
+          url: window.location.href,
+        }
+        if (navigator.share) {
+          await navigator.share(shareData)
+          track({
+            type: 'content_shared',
+            entityType: 'reading',
+            entityId: `${segment.id}:${day.day}`,
+            method: 'native',
+          })
+          return
+        }
+        if (!navigator.clipboard?.writeText) throw new Error('Sharing is not supported')
+        await navigator.clipboard.writeText(window.location.href)
+        track({
+          type: 'content_shared',
+          entityType: 'reading',
+          entityId: `${segment.id}:${day.day}`,
+          method: 'clipboard',
+        })
       }}
     />
   )
