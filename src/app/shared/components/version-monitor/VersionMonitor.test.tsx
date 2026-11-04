@@ -17,7 +17,10 @@ describe('VersionMonitor', () => {
   })
 
   it('does not show an update when the version is equal', async () => {
-    vi.mocked(fetch).mockResolvedValue({ ok: true, json: async () => ({ version: '0.0.26' }) } as Response)
+    vi.mocked(fetch).mockResolvedValue({
+      ok: true,
+      json: async () => ({ version: '0.0.26' }),
+    } as Response)
     render(<VersionMonitor />)
     await vi.runOnlyPendingTimersAsync()
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
@@ -28,12 +31,17 @@ describe('VersionMonitor', () => {
     Object.defineProperty(waiting, 'state', { value: 'installed', writable: true })
     waiting.postMessage = vi.fn()
     const registration = { waiting, update: vi.fn().mockResolvedValue(undefined) }
-    vi.stubGlobal('navigator', { serviceWorker: {
-      getRegistration: vi.fn().mockResolvedValue(registration),
-      addEventListener: vi.fn(),
-      removeEventListener: vi.fn(),
-    } })
-    vi.mocked(fetch).mockResolvedValue({ ok: true, json: async () => ({ version: '0.0.27' }) } as Response)
+    vi.stubGlobal('navigator', {
+      serviceWorker: {
+        getRegistration: vi.fn().mockResolvedValue(registration),
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+      },
+    })
+    vi.mocked(fetch).mockResolvedValue({
+      ok: true,
+      json: async () => ({ version: '0.0.27' }),
+    } as Response)
     const reload = vi.fn()
     Object.defineProperty(window, 'location', { configurable: true, value: { reload } })
     render(<VersionMonitor />)
