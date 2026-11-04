@@ -34,6 +34,22 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
+      - name: Validate deployment configuration
+        shell: bash
+        run: |
+          set -euo pipefail
+          required=(
+            VERCEL_TOKEN VERCEL_ORG_ID VERCEL_PROJECT_ID SUPABASE_ACCESS_TOKEN
+            SUPABASE_PROJECT_REF SUPABASE_URL SUPABASE_PUBLISHABLE_KEY
+            VAPID_PUBLIC_KEY VAPID_PRIVATE_KEY VAPID_SUBJECT APP_ORIGINS PUSH_CRON_SECRET
+          )
+          for name in "${required[@]}"; do
+            if [[ -z "${!name:-}" ]]; then
+              echo "Missing required deployment variable: $name" >&2
+              exit 1
+            fi
+          done
+
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
         with:
@@ -118,15 +134,36 @@ jobs:
 
               select jobid into cron_job_id from cron.job where jobname = 'send-push-reminders';
               if cron_job_id is not null then perform cron.unschedule(cron_job_id); end if;
-              perform cron.schedule(
-                'send-push-reminders', '* * * * *',
-                $cron$select net.http_post(
-                  url := (select decrypted_secret from vault.decrypted_secrets where name = 'push_project_url') || '/functions/v1/send-push-reminders',
-                  headers := jsonb_build_object('Content-Type', 'application/json', 'Authorization', 'Bearer ' || (select decrypted_secret from vault.decrypted_secrets where name = 'push_cron_secret')),
-                  body := '{}'::jsonb
-                );$cron$
-              );
-            end \$\$;
+               perform cron.schedule(
+                 'send-push-reminders', '* * * * *',
+                 $cron$select net.http_post(
+                   url := (select decrypted_secret from vault.decrypted_secrets where name = 'push_project_url') || '/functions/v1/send-push-reminders',
+                   headers := jsonb_build_object('Content-Type', 'application/json', 'Authorization', 'Bearer ' || (select decrypted_secret from vault.decrypted_secrets where name = 'push_cron_secret')),
+                   body := '{}'::jsonb
+                 );$cron$
+               );
+               if not exists (select 1 from pg_extension where extname = 'pg_cron') then
+                 raise exception 'pg_cron extension is not installed';
+               end if;
+               if not exists (select 1 from pg_extension where extname = 'pg_net') then
+                 raise exception 'pg_net extension is not installed';
+               end if;
+               if not exists (
+                 select 1 from vault.secrets
+                 where name in ('push_project_url', 'push_cron_secret')
+                 group by 1 having count(*) = 2
+               ) then
+                 raise exception 'push cron Vault secrets are not configured';
+               end if;
+               if not exists (
+                 select 1 from cron.job
+                 where jobname = 'send-push-reminders'
+                   and active
+                   and schedule = '* * * * *'
+               ) then
+                 raise exception 'send-push-reminders cron is not active every minute';
+               end if;
+             end \$\$;
             `
             writeFileSync(process.env.SQL_FILE, sql)
           NODE
