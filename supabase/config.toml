@@ -7,6 +7,11 @@ project_id = "jacobito"
 [functions.push-subscriptions]
 verify_jwt = false
 
+[functions.analytics-events]
+# Events are intentionally public. Origin, payload and per-device rate limits are
+# enforced by the function before it writes through the service-role client.
+verify_jwt = false
+
 [functions.send-push-reminders]
 verify_jwt = false
 
