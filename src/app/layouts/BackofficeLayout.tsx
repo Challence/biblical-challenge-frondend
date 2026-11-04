@@ -186,9 +186,8 @@ export function BackofficeLayout() {
                   onClick={() => setProfileOpen((value) => !value)}
                 >
                   <span className={styles.profileText()}>
-                    <strong>María López</strong>
+                    <strong>{userEmail ?? 'Correo no disponible'}</strong>
                     <span>Administradora</span>
-                    {userEmail && <span>{userEmail}</span>}
                   </span>
                   <span className={styles.avatar()} aria-hidden="true">
                     ML
