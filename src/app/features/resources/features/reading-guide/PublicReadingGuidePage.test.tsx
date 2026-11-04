@@ -1,7 +1,8 @@
 import '@testing-library/jest-dom/vitest'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { fireEvent, render, screen, within } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
+import { MemoryRouter } from 'react-router-dom'
 import * as service from './services/readingGuideService'
 import { PublicReadingGuidePage } from './PublicReadingGuidePage'
 
@@ -10,9 +11,11 @@ vi.mock('./services/readingGuideService', () => ({ listReadingGuides: vi.fn() })
 const renderPage = () => {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } })
   return render(
-    <QueryClientProvider client={client}>
-      <PublicReadingGuidePage />
-    </QueryClientProvider>,
+    <MemoryRouter>
+      <QueryClientProvider client={client}>
+        <PublicReadingGuidePage />
+      </QueryClientProvider>
+    </MemoryRouter>,
   )
 }
 
@@ -60,21 +63,11 @@ describe('PublicReadingGuidePage', () => {
     vi.mocked(service.listReadingGuides).mockResolvedValue([guide('march', '2026-03')])
 
     renderPage()
-    const trigger = await screen.findByRole('button', {
+    const trigger = await screen.findByRole('link', {
       name: 'Ver guía de lectura de Marzo de 2026 en pantalla completa',
     })
     trigger.focus()
-    fireEvent.click(trigger)
-
-    const dialog = screen.getByRole('dialog', { name: 'Guía de lectura de Marzo de 2026' })
-    expect(
-      within(dialog).getByRole('img', {
-        name: 'Guía de lectura de Marzo de 2026 en pantalla completa',
-      }),
-    ).toHaveClass('object-contain')
-
-    fireEvent.click(within(dialog).getByRole('button', { name: 'Cerrar guía de lectura' }))
-    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
-    expect(trigger).toHaveFocus()
+    // La tarjeta navega a la URL pública; el visor se prueba en la página de detalle.
+    expect(trigger).toHaveAttribute('href', '/guia/march')
   })
 })

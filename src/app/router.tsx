@@ -18,7 +18,9 @@ import { PublicSegmentDetailPage } from './features/segments/pages/public/Public
 import { PublicSegmentDayPage } from './features/segments/pages/public/PublicSegmentDayPage'
 import { HomePage } from './features/home/HomePage'
 import { PublicReadingGuidePage } from './features/resources/features/reading-guide/PublicReadingGuidePage'
+import { PublicReadingGuideDetailPage } from './features/resources/features/reading-guide/PublicReadingGuideDetailPage'
 import { PublicSegmentListPage } from './features/segments/pages/public/PublicSegmentListPage'
+import { PublicResourceDetailPage } from './features/resources/features/monthly-resources/PublicResourceDetailPage'
 import type { AdminRouteHandle } from './layouts/BackofficeLayout'
 
 export const router = createBrowserRouter([
@@ -27,12 +29,14 @@ export const router = createBrowserRouter([
     children: [
       { path: '/', element: <HomePage /> },
       { path: '/guia', element: <PublicReadingGuidePage /> },
+      { path: '/guia/:guideId', element: <PublicReadingGuideDetailPage /> },
       { path: '/lectura-hoy', element: <ReadingTodayPage /> },
       { path: '/configuracion', element: <SettingsPage /> },
       { path: '/recursos', element: <ResourcesPage /> },
+      { path: '/recursos/:resourceId', element: <PublicResourceDetailPage /> },
       { path: '/segmentos', element: <PublicSegmentListPage /> },
-      { path: '/segmentos/:id', element: <PublicSegmentDetailPage /> },
-      { path: '/segmentos/:id/dias/:day', element: <PublicSegmentDayPage /> },
+      { path: '/segmentos/:slug', element: <PublicSegmentDetailPage /> },
+      { path: '/segmentos/:slug/dias/:day', element: <PublicSegmentDayPage /> },
     ],
   },
   {

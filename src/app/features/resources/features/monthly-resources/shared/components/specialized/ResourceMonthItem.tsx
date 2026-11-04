@@ -130,6 +130,7 @@ export function ResourceMonthItem({
             </div>
           ) : resources.data?.items.length ? (
             <ResourceList
+              monthDate={month.monthDate}
               resources={resources.data.items}
               onEdit={(resource) => onEditResource?.(resource)}
               onDelete={onDeleteResource}

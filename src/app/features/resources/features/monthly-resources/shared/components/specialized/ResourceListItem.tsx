@@ -1,5 +1,6 @@
 import { IconArrowDown, IconArrowUp, IconEdit, IconTrash } from '@tabler/icons-react'
 import { Button } from '@/app/shared/components/ui/button'
+import { ShareButton } from '@/app/shared/components/share/ShareButton'
 import type { MonthlyResource } from '../../../models/resource'
 
 export function ResourceListItem({
@@ -9,6 +10,7 @@ export function ResourceListItem({
   onEdit,
   onDelete,
   onMove,
+  monthDate,
 }: {
   resource: MonthlyResource
   first: boolean
@@ -16,6 +18,7 @@ export function ResourceListItem({
   onEdit: () => void
   onDelete: () => void
   onMove: (direction: -1 | 1) => void
+  monthDate?: string
 }) {
   return (
     <article className="flex items-center gap-3 rounded-lg border bg-background p-3">
@@ -42,6 +45,20 @@ export function ResourceListItem({
         )}
       </div>
       <div className="flex shrink-0 gap-1">
+        <ShareButton
+          content={{
+            kind: 'monthlyResource',
+            data: {
+              ...resource,
+              date: monthDate,
+              publicUrl: `${window.location.origin}/recursos/${resource.id}`,
+            },
+            files: resource.type === 'image' && resource.imageUrl ? [resource.imageUrl] : undefined,
+            entityId: resource.id,
+          }}
+          variant="admin"
+          accessibleLabel={`Compartir ${resource.title}`}
+        />
         <Button
           size="icon"
           variant="ghost"

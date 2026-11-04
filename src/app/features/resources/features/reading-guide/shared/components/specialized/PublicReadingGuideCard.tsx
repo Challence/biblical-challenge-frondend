@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { IconX } from '@tabler/icons-react'
+import { Link } from 'react-router-dom'
 import { Card, CardContent } from '@/app/shared/components/ui/card'
+import { ShareButton } from '@/app/shared/components/share/ShareButton'
 import { Dialog, DialogContent, DialogTitle } from '@/app/shared/components/ui/dialog'
 import type { ReadingGuide } from '../../../models/readingGuide'
 
@@ -12,29 +14,51 @@ const formatPeriod = (period: string) => {
   return label.charAt(0).toUpperCase() + label.slice(1)
 }
 
-export function PublicReadingGuideCard({ guide }: { guide: ReadingGuide }) {
+export function PublicReadingGuideCard({
+  guide,
+  initialOpen = false,
+}: {
+  guide: ReadingGuide
+  initialOpen?: boolean
+}) {
   const period = formatPeriod(guide.monthDate)
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(initialOpen)
+  const url = `${window.location.origin}/guia/${guide.id}`
 
   return (
     <>
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        className="w-full rounded-[var(--shape-16)] text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-        aria-label={`Ver guía de lectura de ${period} en pantalla completa`}
-      >
-        <Card className="overflow-hidden transition-shadow hover:shadow-[var(--elevation-card-hover)]">
-          <img
-            src={guide.imageUrl}
-            alt={`Guía de lectura de ${period}`}
-            className="h-48 w-full bg-muted object-contain sm:h-56"
+      <div className="relative">
+        <Link
+          to={`/guia/${guide.id}`}
+          className="block rounded-[var(--shape-16)] text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+          aria-label={`Ver guía de lectura de ${period} en pantalla completa`}
+        >
+          <Card className="overflow-hidden transition-shadow hover:shadow-[var(--elevation-card-hover)]">
+            <img
+              src={guide.imageUrl}
+              alt={`Guía de lectura de ${period}`}
+              className="h-48 w-full bg-muted object-contain sm:h-56"
+            />
+            <CardContent className="p-4">
+              <h2 className="font-heading text-base font-bold sm:text-lg">{period}</h2>
+            </CardContent>
+          </Card>
+        </Link>
+        <div className="absolute right-3 top-3">
+          <ShareButton
+            content={{
+              kind: 'readingGuide',
+              data: {
+                name: `Guía de lectura de ${period}`,
+                description: `Consulta la guía de lectura de ${period}.`,
+              },
+              publicUrl: url,
+              files: [guide.imageUrl],
+              entityId: guide.id,
+            }}
           />
-          <CardContent className="p-4">
-            <h2 className="font-heading text-base font-bold sm:text-lg">{period}</h2>
-          </CardContent>
-        </Card>
-      </button>
+        </div>
+      </div>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent variant="fullscreen" aria-labelledby={`guide-preview-${guide.id}`}>
           <DialogTitle id={`guide-preview-${guide.id}`} className="sr-only">

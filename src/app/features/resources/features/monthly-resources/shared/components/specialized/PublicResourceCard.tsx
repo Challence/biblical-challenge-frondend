@@ -5,9 +5,18 @@ import { Dialog, DialogContent, DialogTitle } from '@/app/shared/components/ui/d
 import type { MonthlyResource } from '../../../models/resource'
 import { getPublicVideoSource } from '../../../utils/publicVideoSource'
 import { useAnalytics } from '@/app/shared/analytics/useAnalytics'
+import { ShareButton } from '@/app/shared/components/share/ShareButton'
 
-export function PublicResourceCard({ resource }: { resource: MonthlyResource }) {
-  const [open, setOpen] = useState(false)
+export function PublicResourceCard({
+  resource,
+  monthDate,
+  autoOpen = false,
+}: {
+  resource: MonthlyResource
+  monthDate?: string
+  autoOpen?: boolean
+}) {
+  const [open, setOpen] = useState(autoOpen)
   const embedFrameRef = useRef<HTMLIFrameElement>(null)
   const { track } = useAnalytics()
   const lastTrackedAt = useRef(new Map<string, number>())
@@ -78,41 +87,58 @@ export function PublicResourceCard({ resource }: { resource: MonthlyResource }) 
 
   return (
     <>
-      <button
-        type="button"
-        onClick={() => {
-          setOpen(true)
-          trackOnceImmediately(`resource:${resource.id}`, {
-            type: 'resource_viewed',
-            resourceId: resource.id,
-            resourceType: resource.type,
-          })
-        }}
-        className="w-full rounded-[var(--shape-16)] text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-        aria-label={`Ver ${resource.title} en pantalla completa`}
-      >
-        <Card className="h-full overflow-hidden transition-shadow hover:shadow-[var(--elevation-card-hover)]">
-          <div className="aspect-video bg-slate-900">
-            {resource.type === 'image' && resource.imageUrl ? (
-              <img
-                src={resource.imageUrl}
-                alt={resource.title}
-                className="size-full object-cover"
-              />
-            ) : (
-              <div className="flex size-full items-center justify-center text-white">
-                <IconPlayerPlay aria-hidden="true" size={42} />
-              </div>
-            )}
-          </div>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-lg">{resource.title}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground">{resource.description}</p>
-          </CardContent>
-        </Card>
-      </button>
+      <div className="relative">
+        <button
+          type="button"
+          onClick={() => {
+            setOpen(true)
+            trackOnceImmediately(`resource:${resource.id}`, {
+              type: 'resource_viewed',
+              resourceId: resource.id,
+              resourceType: resource.type,
+            })
+          }}
+          className="w-full rounded-[var(--shape-16)] text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+          aria-label={`Ver ${resource.title} en pantalla completa`}
+        >
+          <Card className="h-full overflow-hidden transition-shadow hover:shadow-[var(--elevation-card-hover)]">
+            <div className="aspect-video bg-slate-900">
+              {resource.type === 'image' && resource.imageUrl ? (
+                <img
+                  src={resource.imageUrl}
+                  alt={resource.title}
+                  className="size-full object-cover"
+                />
+              ) : (
+                <div className="flex size-full items-center justify-center text-white">
+                  <IconPlayerPlay aria-hidden="true" size={42} />
+                </div>
+              )}
+            </div>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg">{resource.title}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground">{resource.description}</p>
+            </CardContent>
+          </Card>
+        </button>
+        <div className="absolute right-3 top-3">
+          <ShareButton
+            content={{
+              kind: 'monthlyResource',
+              data: {
+                ...resource,
+                date: monthDate,
+                publicUrl: `${window.location.origin}/recursos/${resource.id}`,
+              },
+              files:
+                resource.type === 'image' && resource.imageUrl ? [resource.imageUrl] : undefined,
+              entityId: resource.id,
+            }}
+          />
+        </div>
+      </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent variant="fullscreen" aria-labelledby={`resource-preview-${resource.id}`}>

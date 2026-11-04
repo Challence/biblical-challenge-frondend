@@ -13,6 +13,9 @@ const mapGuide = (row: Awaited<ReturnType<typeof requests.getReadingGuideRow>>):
 export async function listReadingGuides() {
   return (await requests.listReadingGuideRows()).map(mapGuide)
 }
+export async function getReadingGuide(id: string) {
+  return mapGuide(await requests.getReadingGuideRow(id))
+}
 export async function createReadingGuide(input: ReadingGuideInput) {
   requests.toPersistedMonthDate(input.monthDate)
   if (!input.imageFile) throw new Error('La imagen es obligatoria.')

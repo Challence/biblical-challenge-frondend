@@ -40,7 +40,11 @@ export function PublicResourceMonthSection({ month }: { month: ResourceMonth }) 
           {[...items]
             .sort((a, b) => a.position - b.position)
             .map((resource) => (
-              <PublicResourceCard key={resource.id} resource={resource} />
+              <PublicResourceCard
+                key={resource.id}
+                resource={resource}
+                monthDate={month.monthDate}
+              />
             ))}
         </div>
       ) : null}

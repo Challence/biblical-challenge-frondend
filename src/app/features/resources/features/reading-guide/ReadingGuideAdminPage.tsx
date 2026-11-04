@@ -4,6 +4,7 @@ import { FormProvider, useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { AdminPageHeader } from '@/app/shared/components/navigation/AdminPageHeader'
 import { Button } from '@/app/shared/components/ui/button'
+import { ShareButton } from '@/app/shared/components/share/ShareButton'
 import { EmptyState } from '@/app/shared/components/empty-state/EmptyState'
 import { Card, CardContent } from '@/app/shared/components/ui/card'
 import {
@@ -199,6 +200,20 @@ export function ReadingGuideAdminPage() {
                         >
                           <IconEdit size={18} aria-hidden="true" />
                         </Button>
+                        <ShareButton
+                          content={{
+                            kind: 'readingGuide',
+                            data: {
+                              name: `Guía de lectura de ${monthName(guide.monthDate)}`,
+                              description: `Consulta la guía de lectura de ${monthName(guide.monthDate)}.`,
+                            },
+                            publicUrl: `${window.location.origin}/guia/${guide.id}`,
+                            files: [guide.imageUrl],
+                            entityId: guide.id,
+                          }}
+                          variant="admin"
+                          accessibleLabel={`Compartir ${monthName(guide.monthDate)}`}
+                        />
                         <Button
                           variant="ghost"
                           size="icon"

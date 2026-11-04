@@ -6,11 +6,13 @@ export function ResourceList({
   onEdit,
   onDelete,
   onMove,
+  monthDate,
 }: {
   resources: MonthlyResource[]
   onEdit: (resource: MonthlyResource) => void
   onDelete: (resource: MonthlyResource) => void
   onMove: (resource: MonthlyResource, direction: -1 | 1) => void
+  monthDate?: string
 }) {
   const ordered = [...resources].sort((a, b) => a.position - b.position)
   return (
@@ -24,6 +26,7 @@ export function ResourceList({
           onEdit={() => onEdit(resource)}
           onDelete={() => onDelete(resource)}
           onMove={(direction) => onMove(resource, direction)}
+          monthDate={monthDate}
         />
       ))}
     </div>
