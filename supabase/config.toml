@@ -15,6 +15,9 @@ verify_jwt = false
 [functions.send-push-reminders]
 verify_jwt = false
 
+[functions.push-reminder-settings]
+verify_jwt = true
+
 [api]
 enabled = true
 # Port to use for the API URL.

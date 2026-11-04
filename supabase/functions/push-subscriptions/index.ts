@@ -51,6 +51,13 @@ Deno.serve(async (request) => {
     if (!p256dh || !auth || p256dh.length > 512 || auth.length > 512)
       return json(request, { error: 'Claves de suscripción inválidas.' }, 400)
 
+    const { data: setting, error: settingError } = await client
+      .from('push_reminder_settings')
+      .select('reminder_hour')
+      .eq('id', true)
+      .single()
+    if (settingError) throw settingError
+    const reminderHour = setting.reminder_hour as number
     const { error } = await client.from('push_subscriptions').upsert(
       {
         installation_id: body.installationId,
@@ -59,8 +66,8 @@ Deno.serve(async (request) => {
         auth,
         unsubscribe_token_hash: tokenHash,
         timezone: body.timezone,
-        local_hour: 8,
-        next_send_at: nextReminderAt(body.timezone).toISOString(),
+        local_hour: reminderHour,
+        next_send_at: nextReminderAt(body.timezone, reminderHour).toISOString(),
         claimed_at: null,
         failure_count: 0,
         active: true,
