@@ -25,7 +25,7 @@ export function ReadingGuideFilters({
     .map((year) => ({ value: year, label: year }))
 
   return (
-    <div className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+    <div className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
       <SelectField
         id="reading-guide-month-filter"
         label="Mes"
