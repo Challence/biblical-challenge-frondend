@@ -1,7 +1,7 @@
 {
   "name": "desafio-biblico",
   "private": true,
-  "version": "0.0.27",
+  "version": "0.0.28",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -18,7 +18,8 @@
     "supabase:status": "supabase status",
     "supabase:migration:up": "supabase migration up",
     "supabase:functions:serve": "supabase functions serve --env-file .env",
-    "prepare": "husky"
+    "prepare": "husky",
+    "supabase:admin:sync": "node scripts/sync-admin.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^6.0.2",
