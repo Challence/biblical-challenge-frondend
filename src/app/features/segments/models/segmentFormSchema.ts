@@ -4,6 +4,11 @@ import { SEGMENT_MONTHS } from './segmentCatalog'
 export const segmentFormSchema = z.object({
   title: z.string().trim().min(1, 'El título es obligatorio.'),
   month: z.string().min(1, 'Selecciona un mes.'),
+  year: z
+    .number()
+    .int()
+    .min(2000, 'El año debe estar entre 2000 y 2200.')
+    .max(2200, 'El año debe estar entre 2000 y 2200.'),
   cover: z.string().optional(),
   days: z
     .array(
@@ -28,6 +33,7 @@ export type SegmentFormValues = z.infer<typeof segmentFormSchema>
 type SegmentForForm = {
   title: string
   month: number
+  year: number
   cover_path: string | null
   segment_days: Array<{
     day: number
@@ -44,6 +50,7 @@ export function normalizeSegmentFormValues(data: SegmentForForm): SegmentFormVal
   return {
     title: data.title,
     month: SEGMENT_MONTHS[data.month - 1] ?? '',
+    year: data.year,
     cover: data.cover_path ?? '',
     days: data.segment_days.map((day) => ({
       day: day.day,

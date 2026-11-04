@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/app/shared/components/ui/card'
 import { FileField } from '@/app/shared/components/fields/base/FileField'
 import { SelectField } from '@/app/shared/components/fields/base/SelectField'
+import { YearField } from '@/app/shared/components/fields/base/YearField'
 import { RhfTextField } from '@/app/shared/components/fields/rhf/RhfTextField'
 import { useController, useFormContext, useWatch } from 'react-hook-form'
 import type { SegmentFormValues } from '../../../models/segmentFormSchema'
@@ -9,12 +10,17 @@ import { SEGMENT_MONTHS } from '../../../models/segmentCatalog'
 
 interface SegmentInformationCardProps {
   onMonthChange: (month: string) => void
+  onYearChange: (year: number) => void
 }
 
-export function SegmentInformationCard({ onMonthChange }: SegmentInformationCardProps) {
+export function SegmentInformationCard({
+  onMonthChange,
+  onYearChange,
+}: SegmentInformationCardProps) {
   const { control, setValue } = useFormContext<SegmentFormValues>()
   const cover = useWatch({ control, name: 'cover' })
   const { field: monthField, fieldState: monthState } = useController({ control, name: 'month' })
+  const { field: yearField, fieldState: yearState } = useController({ control, name: 'year' })
   const [error, setError] = useState('')
   const selectCover = (file: File | undefined) => {
     if (!file) return
@@ -56,6 +62,16 @@ export function SegmentInformationCard({ onMonthChange }: SegmentInformationCard
           value={monthField.value}
           onChange={onMonthChange}
           error={monthState.error?.message}
+        />
+        <YearField
+          id="segment-year"
+          label="Año"
+          required
+          min={2000}
+          max={2200}
+          value={String(yearField.value)}
+          onChange={(value) => onYearChange(Number(value))}
+          error={yearState.error?.message}
         />
         <FileField
           id="segment-cover"

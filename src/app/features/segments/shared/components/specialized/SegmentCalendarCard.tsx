@@ -44,11 +44,12 @@ export function SegmentCalendarCard({ onMonthChange }: SegmentCalendarCardProps)
   const { control, setValue, formState } = useFormContext<SegmentFormValues>()
   const daysValue = useWatch({ control, name: 'days' })
   const monthValue = useWatch({ control, name: 'month' })
+  const yearValue = useWatch({ control, name: 'year' })
   const [editingDay, setEditingDay] = useState<number | null>(null)
   const [draft, setDraft] = useState<Block[]>([])
   const [editingBlock, setEditingBlock] = useState<Block | null>(null)
   const [imageError, setImageError] = useState('')
-  const year = new Date().getFullYear()
+  const year = yearValue
   const selectedMonth = SEGMENT_MONTHS.indexOf(monthValue as (typeof SEGMENT_MONTHS)[number])
   const calendarMonth = selectedMonth >= 0 ? selectedMonth : new Date().getMonth()
   const changeMonth = (offset: number) =>

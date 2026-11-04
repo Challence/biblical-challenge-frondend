@@ -9,6 +9,7 @@ import {
   DialogTitle,
 } from '@/app/shared/components/ui/dialog'
 import { RhfSelectField } from '@/app/shared/components/fields/rhf/RhfSelectField'
+import { RhfYearField } from '@/app/shared/components/fields/rhf/RhfYearField'
 import type { ResourceMonth } from '../../../models/resource'
 import {
   resourceMonthFormSchema,
@@ -17,7 +18,6 @@ import {
 } from '../../../models/resourceMonthFormSchema'
 import { useEffect } from 'react'
 
-const supportedYears = Array.from({ length: 8 }, (_, index) => String(2024 + index))
 const monthOptions = Array.from({ length: 12 }, (_, index) => {
   const month = index + 1
   return {
@@ -27,7 +27,6 @@ const monthOptions = Array.from({ length: 12 }, (_, index) => {
     ),
   }
 })
-const yearOptions = supportedYears.map((year) => ({ value: year, label: year }))
 
 const formValuesFromMonthDate = (monthDate?: string): ResourceMonthFormInput => ({
   month: monthDate?.slice(5, 7) ?? '',
@@ -74,11 +73,12 @@ export function ResourceMonthFormDialog({
               options={monthOptions}
               placeholder="Selecciona un mes"
             />
-            <RhfSelectField
+            <RhfYearField
               name="year"
               id="resource-month-year"
               label="Año"
-              options={yearOptions}
+              min={2024}
+              max={2031}
               placeholder="Selecciona un año"
             />
             <div className="flex justify-end gap-2">

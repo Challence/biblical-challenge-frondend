@@ -23,7 +23,7 @@ export function SegmentFormPage() {
   })
   const form = useForm<SegmentFormValues>({
     resolver: zodResolver(segmentFormSchema),
-    defaultValues: { title: '', month: '', cover: '', days: [] },
+    defaultValues: { title: '', month: '', year: new Date().getFullYear(), cover: '', days: [] },
   })
   const { reset, handleSubmit, formState } = form
   useEffect(() => {
@@ -34,7 +34,7 @@ export function SegmentFormPage() {
     const payload = {
       title: values.title.trim(),
       month: SEGMENT_MONTHS.indexOf(values.month as (typeof SEGMENT_MONTHS)[number]) + 1,
-      year: new Date().getFullYear(),
+      year: values.year,
       coverPath: values.cover || undefined,
       days: values.days.map(({ day, blocks }) => ({
         day,

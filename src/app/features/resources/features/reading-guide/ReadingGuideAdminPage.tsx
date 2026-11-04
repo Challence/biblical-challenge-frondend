@@ -15,6 +15,7 @@ import {
 } from '@/app/shared/components/ui/dialog'
 import { RhfFileField } from '@/app/shared/components/fields/rhf/RhfFileField'
 import { RhfSelectField } from '@/app/shared/components/fields/rhf/RhfSelectField'
+import { RhfYearField } from '@/app/shared/components/fields/rhf/RhfYearField'
 import { useModalAlert } from '@/app/shared/hooks/useModalAlert'
 import { useReadingGuides } from './hooks/useReadingGuides'
 import { ReadingGuideFilters, type ReadingGuideFilterValues } from './ReadingGuideFilters'
@@ -45,13 +46,7 @@ export function ReadingGuideAdminPage() {
     defaultValues: { year: '', month: '', imageFile: null },
   })
   const existing = useMemo(() => guides.data ?? [], [guides.data])
-  const yearOptions = useMemo(() => {
-    const currentYear = new Date().getFullYear()
-    return Array.from({ length: 7 }, (_, index) => {
-      const value = String(currentYear - 3 + index)
-      return { value, label: value }
-    })
-  }, [])
+  const currentYear = new Date().getFullYear()
   const filteredGuides = useMemo(
     () =>
       existing.filter((guide) => {
@@ -231,12 +226,13 @@ export function ReadingGuideAdminPage() {
           </DialogHeader>
           <FormProvider {...form}>
             <form onSubmit={submit} className="grid gap-4">
-              <RhfSelectField
+              <RhfYearField
                 name="year"
                 id="guide-year"
                 label="Año"
                 required
-                options={yearOptions}
+                min={currentYear - 3}
+                max={currentYear + 3}
                 placeholder="Selecciona un año"
               />
               <RhfSelectField
