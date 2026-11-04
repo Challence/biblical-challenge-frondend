@@ -1,8 +1,13 @@
 import '@testing-library/jest-dom/vitest'
-import { render, screen } from '@testing-library/react'
+import { act, render, screen } from '@testing-library/react'
 import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest'
 
 import { VersionMonitor, reloadWithUpdatedServiceWorker } from './VersionMonitor'
+
+declare const __APP_VERSION__: string
+
+const [major, minor, patch] = __APP_VERSION__.split('-')[0].split('.').map(Number)
+const updatedVersion = `${major}.${minor}.${patch + 1}`
 
 describe('VersionMonitor', () => {
   beforeEach(() => {
@@ -19,10 +24,12 @@ describe('VersionMonitor', () => {
   it('does not show an update when the version is equal', async () => {
     vi.mocked(fetch).mockResolvedValue({
       ok: true,
-      json: async () => ({ version: '0.0.26' }),
+      json: async () => ({ version: __APP_VERSION__ }),
     } as Response)
     render(<VersionMonitor />)
-    await vi.runOnlyPendingTimersAsync()
+    await act(async () => {
+      await vi.runOnlyPendingTimersAsync()
+    })
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 
@@ -40,21 +47,27 @@ describe('VersionMonitor', () => {
     })
     vi.mocked(fetch).mockResolvedValue({
       ok: true,
-      json: async () => ({ version: '0.0.27' }),
+      json: async () => ({ version: updatedVersion }),
     } as Response)
     const reload = vi.fn()
     Object.defineProperty(window, 'location', { configurable: true, value: { reload } })
     render(<VersionMonitor />)
-    await vi.runOnlyPendingTimersAsync()
+    await act(async () => {
+      await vi.runOnlyPendingTimersAsync()
+    })
     expect(screen.getByRole('dialog')).toBeInTheDocument()
-    await vi.advanceTimersByTimeAsync(5000)
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(5000)
+    })
     expect(waiting.postMessage).toHaveBeenCalledWith({ type: 'SKIP_WAITING' })
     expect(reload).not.toHaveBeenCalled()
     Object.defineProperty(waiting, 'state', { value: 'activated' })
-    waiting.dispatchEvent(new Event('statechange'))
-    await Promise.resolve()
+    await act(async () => {
+      waiting.dispatchEvent(new Event('statechange'))
+      await Promise.resolve()
+    })
     expect(reload).toHaveBeenCalledOnce()
-    expect(window.sessionStorage.getItem('version-monitor:attempted-version')).toBe('0.0.27')
+    expect(window.sessionStorage.getItem('version-monitor:attempted-version')).toBe(updatedVersion)
   })
 
   it('does not mark a version when worker activation fails', async () => {
