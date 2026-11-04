@@ -43,9 +43,9 @@ export function NotificationsSection() {
         {notifications.status === 'enabling' && 'Activando recordatorios…'}
         {notifications.status === 'disabling' && 'Desactivando recordatorios…'}
         {notifications.status === 'inactive' &&
-          `Recibe un aviso diario a las 8:00 a. m. (${Intl.DateTimeFormat().resolvedOptions().timeZone}).`}
+          `Recibe un aviso diario a la hora configurada por administración (${Intl.DateTimeFormat().resolvedOptions().timeZone}).`}
         {notifications.status === 'active' &&
-          `Recordatorio diario activo a las 8:00 a. m. (${Intl.DateTimeFormat().resolvedOptions().timeZone}).`}
+          `Recordatorio diario activo a la hora configurada por administración (${Intl.DateTimeFormat().resolvedOptions().timeZone}).`}
       </div>
       {notifications.error && (
         <p className="mt-2 text-sm text-destructive" role="alert">

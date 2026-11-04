@@ -1,4 +1,5 @@
 import { AdminPageHeader } from '@/app/shared/components/navigation/AdminPageHeader'
+import { ReminderTimeSection } from './shared/components/specialized/ReminderTimeSection'
 
 export function SettingsAdminPage() {
   return (
@@ -8,9 +9,7 @@ export function SettingsAdminPage() {
         titleId="settings-admin-title"
         description="Ajusta las preferencias de tu espacio de trabajo."
       />
-      <p className="rounded-md border border-secondary/30 bg-secondary/10 p-4 text-sm text-muted-foreground">
-        Este espacio estará disponible próximamente.
-      </p>
+      <ReminderTimeSection />
     </section>
   )
 }
